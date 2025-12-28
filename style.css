@@ -7,8 +7,8 @@
   --primary-light: rgba(0, 148, 148, 0.1);
   --primary-dark: #007a7a;
   --secondary-color: #6c757d;
-  --success-color: #009494; /* También actualizado */
-  --info-color: #009494; /* También actualizado */
+  --success-color: #009494;
+  --info-color: #009494;
   --warning-color: #ffc107;
   --danger-color: #dc3545;
   --light-color: #f8f9fa;
@@ -85,12 +85,14 @@ body {
   position: relative;
 }
 
-/* HEADER FIJADO (similar a apps móviles) */
+/* ============================================
+   HEADER REDISEÑADO CON FECHA ABAJO
+   ============================================ */
 .app-header {
   background: linear-gradient(135deg, #009494 0%, #007a7a 100%);
   color: white;
-  padding: var(--spacing-md);
-  padding-top: calc(var(--spacing-md) + env(safe-area-inset-top, 0));
+  padding: var(--spacing-sm) var(--spacing-md);
+  padding-top: calc(var(--spacing-sm) + env(safe-area-inset-top, 0));
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -99,8 +101,22 @@ body {
 
 .header-content {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  padding: var(--spacing-xs) 0;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.header-bottom {
+  width: 100%;
+  text-align: center;
 }
 
 .app-title {
@@ -108,35 +124,31 @@ body {
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.app-title i {
-  font-size: 1.6rem;
+  gap: 12px;
+  justify-content: center;
+  margin: 0;
+  color: white;
 }
 
 .app-logo {
   height: 1.8em;
   width: auto;
   vertical-align: middle;
-  margin-right: 12px;
-  /* Invertir a blanco */
-  filter: brightness(0) invert(1);
+  /* Borde blanco para contraste con fondo #009494 */
+  filter: drop-shadow(0 0 1px white) drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
 }
 
-.app-title {
-  display: flex;
-  align-items: center;
-  gap: 12px; /* Espacio moderno entre logo y texto */
-}
-
+/* Estilo para la fecha */
 .date-display {
   font-size: 0.9rem;
   opacity: 0.9;
   background: rgba(255, 255, 255, 0.15);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 4px 12px;
   border-radius: var(--border-radius-sm);
   font-weight: 500;
+  display: inline-block;
+  margin-top: 2px;
+  color: white;
 }
 
 /* CONTENIDO PRINCIPAL */
@@ -235,7 +247,7 @@ body {
 .form-select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 148, 148, 0.1);
 }
 
 .select-arrow {
@@ -345,7 +357,7 @@ body {
 .payment-method-card.active {
   border-color: var(--primary-color);
   background: var(--primary-light);
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 148, 148, 0.1);
 }
 
 .payment-icon {
@@ -370,7 +382,7 @@ body {
 }
 
 .cash .payment-icon i {
- color: #009494;
+  color: #009494;
 }
 
 .card .payment-icon {
@@ -511,13 +523,13 @@ body {
   gap: var(--spacing-sm);
   cursor: pointer;
   transition: all var(--transition-normal);
-  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 148, 148, 0.25);
   margin-top: var(--spacing-lg);
 }
 
 .primary-action-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(13, 110, 253, 0.35);
+  box-shadow: 0 6px 16px rgba(0, 148, 148, 0.35);
 }
 
 .primary-action-btn:active:not(:disabled) {
@@ -741,17 +753,17 @@ body {
 }
 
 .primary .stat-icon {
-  background: rgba(13, 110, 253, 0.1);
+  background: rgba(0, 148, 148, 0.1);
   color: var(--primary-color);
 }
 
 .success .stat-icon {
-  background: rgba(25, 135, 84, 0.1);
+  background: rgba(0, 148, 148, 0.1);
   color: var(--success-color);
 }
 
 .info .stat-icon {
-  background: rgba(13, 202, 240, 0.1);
+  background: rgba(0, 148, 148, 0.1);
   color: var(--info-color);
 }
 
@@ -782,7 +794,9 @@ body {
   color: var(--text-secondary);
 }
 
-/* DESGLOSE FINANCIERO */
+/* ============================================
+   NUEVO DESGLOSE FINANCIERO
+   ============================================ */
 .financial-breakdown {
   background: white;
   border-radius: var(--border-radius-lg);
@@ -799,6 +813,46 @@ body {
   align-items: center;
   gap: var(--spacing-sm);
   color: var(--text-primary);
+}
+
+/* Estadísticas rápidas */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.quick-stat {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  text-align: center;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.quick-stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.quick-stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary-color);
+}
+
+/* Secciones de desglose */
+.cash-breakdown {
+  border-left: 4px solid var(--success-color);
+  margin-bottom: var(--spacing-md);
+}
+
+.card-breakdown {
+  border-left: 4px solid var(--info-color);
+  margin-bottom: var(--spacing-lg);
 }
 
 .breakdown-section {
@@ -829,6 +883,19 @@ body {
   border-bottom: none;
 }
 
+.breakdown-item.total {
+  border-bottom: none;
+  padding-top: 12px;
+  margin-top: 8px;
+  border-top: 2px dashed var(--border-color);
+}
+
+.amount-highlight {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
 .breakdown-divider {
   height: 2px;
   background: var(--border-color);
@@ -848,7 +915,35 @@ body {
   color: var(--success-color) !important;
 }
 
-.breakdown-note {
+/* Resumen de entrega */
+.delivery-summary {
+  background: linear-gradient(135deg, rgba(0, 148, 148, 0.05) 0%, rgba(0, 122, 122, 0.05) 100%);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+  border: 1px solid rgba(0, 148, 148, 0.2);
+}
+
+.delivery-summary h4 {
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-md);
+}
+
+.final-amount {
+  background: white;
+  padding: var(--spacing-md) !important;
+  border-radius: var(--border-radius-md);
+  margin-top: var(--spacing-md);
+  border: 2px solid var(--primary-color) !important;
+}
+
+.final-amount-value {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--primary-color);
+}
+
+.delivery-explanation {
   background: rgba(255, 193, 7, 0.1);
   border-radius: var(--border-radius-sm);
   padding: var(--spacing-sm);
@@ -858,6 +953,12 @@ body {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+}
+
+/* Resaltar el periodo actual */
+#summary-period-title {
+  color: var(--primary-color);
+  font-weight: 700;
 }
 
 /* ============================================
@@ -1288,165 +1389,3 @@ body {
     min-height: 44px;
   }
 }
-
-
-/* ============================================
-   NUEVO DESGLOSE FINANCIERO
-   ============================================ */
-
-/* Estadísticas rápidas */
-.quick-stats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-}
-
-.quick-stat {
-  background: white;
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  text-align: center;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
-}
-
-.quick-stat-label {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.quick-stat-value {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--primary-color);
-}
-
-/* Secciones de desglose */
-.cash-breakdown {
-  border-left: 4px solid var(--success-color);
-  margin-bottom: var(--spacing-md);
-}
-
-.card-breakdown {
-  border-left: 4px solid var(--info-color);
-  margin-bottom: var(--spacing-lg);
-}
-
-.breakdown-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.breakdown-item.total {
-  border-bottom: none;
-  padding-top: 12px;
-  margin-top: 8px;
-  border-top: 2px dashed var(--border-color);
-}
-
-.amount-highlight {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--primary-color);
-}
-
-/* Resumen de entrega */
-.delivery-summary {
-  background: linear-gradient(135deg, rgba(0, 148, 148, 0.05) 0%, rgba(0, 122, 122, 0.05) 100%);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-lg);
-  margin-top: var(--spacing-lg);
-  border: 1px solid rgba(0, 148, 148, 0.2);
-}
-
-.delivery-summary h4 {
-  color: var(--primary-color);
-  margin-bottom: var(--spacing-md);
-}
-
-.final-amount {
-  background: white;
-  padding: var(--spacing-md) !important;
-  border-radius: var(--border-radius-md);
-  margin-top: var(--spacing-md);
-  border: 2px solid var(--primary-color) !important;
-}
-
-.final-amount-value {
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: var(--primary-color);
-}
-
-.delivery-explanation {
-  background: rgba(255, 193, 7, 0.1);
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-sm);
-  font-size: 0.85rem;
-  color: var(--warning-color);
-  margin-top: var(--spacing-md);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-/* Resaltar el periodo actual */
-#summary-period-title {
-  color: var(--primary-color);
-  font-weight: 700;
-}
-
-
-/* ============================================
-   HEADER REDISEÑADO CON FECHA ABAJO
-   ============================================ */
-
-.header-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--spacing-sm) 0;
-}
-
-.header-top {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 4px;
-}
-
-.header-bottom {
-  width: 100%;
-  text-align: center;
-}
-
-/* Ajustar el título para centrado perfecto */
-.app-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: center;
-  margin: 0;
-}
-
-/* Estilo para la fecha */
-.date-display {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 4px 12px;
-  border-radius: var(--border-radius-sm);
-  font-weight: 500;
-  display: inline-block;
-  margin-top: 2px;
-}
-
-
