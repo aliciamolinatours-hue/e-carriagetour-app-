@@ -250,17 +250,84 @@
 </div>
  
  
-  <!-- PANTALLA RESUMEN -->
-  <div id="summary" class="screen">
-    <header>Resumen del día</header>
-    <p>Totales del día (en construcción)</p>
+<!-- PANTALLA RESUMEN -->
+<div id="summary" class="screen">
+  <header>Resumen del día</header>
+  
+  <div class="summary-controls">
+    <button id="today-btn" class="period-btn active">Hoy</button>
+    <button id="yesterday-btn" class="period-btn">Ayer</button>
+    <button id="week-btn" class="period-btn">Esta semana</button>
   </div>
+  
+  <div class="summary-cards">
+    <div class="card">
+      <h3>Total ingresos</h3>
+      <div id="total-income" class="amount">0 €</div>
+    </div>
+    <div class="card">
+      <h3>Número de viajes</h3>
+      <div id="total-trips" class="amount">0</div>
+    </div>
+    <div class="card">
+      <h3>Pasajeros totales</h3>
+      <div id="total-passengers" class="amount">0</div>
+    </div>
+    <div class="card">
+      <h3>Propina media</h3>
+      <div id="average-tip" class="amount">0 €</div>
+    </div>
+  </div>
+  
+  <h3>Últimos viajes</h3>
+  <div id="recent-trips" class="trip-list">
+    <div class="empty-state">No hay viajes registrados hoy</div>
+  </div>
+</div>
 
-  <!-- PANTALLA ESTADÍSTICAS -->
-  <div id="stats" class="screen">
-    <header>Estadísticas</header>
-    <p>Datos mensuales (en construcción)</p>
+<!-- PANTALLA ESTADÍSTICAS -->
+<div id="stats" class="screen">
+  <header>Estadísticas</header>
+  
+  <div class="stats-controls">
+    <select id="stats-period">
+      <option value="today">Hoy</option>
+      <option value="yesterday">Ayer</option>
+      <option value="week">Esta semana</option>
+      <option value="month">Este mes</option>
+      <option value="all">Todos</option>
+    </select>
   </div>
+  
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Ingresos totales</h3>
+      <div id="stats-total-income" class="stat-amount">0 €</div>
+    </div>
+    <div class="stat-card">
+      <h3>Viajes totales</h3>
+      <div id="stats-total-trips" class="stat-amount">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>Efectivo vs Tarjeta</h3>
+      <div id="payment-methods" class="stat-chart">
+        <div class="chart-bar">
+          <div class="cash-bar" style="width: 0%"></div>
+          <div class="card-bar" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <h3>Propina total</h3>
+      <div id="stats-total-tip" class="stat-amount">0 €</div>
+    </div>
+  </div>
+  
+  <h3>Historial completo</h3>
+  <div id="all-trips" class="trip-list">
+    <div class="empty-state">No hay viajes registrados</div>
+  </div>
+</div>
 
   <!-- NAVEGACIÓN -->
   <nav>
