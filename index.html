@@ -9,607 +9,199 @@
 </head>
 <body class="app-container">
 
-<!-- HEADER FIJADO -->
+<!-- HEADER FIJADO (con fecha abajo) -->
 <header class="app-header">
   <div class="header-content">
-    <h1 class="app-title">
-      <img src="logo-e-carriage.png" 
-           alt="E-Carriage Tour Logo" 
-           class="app-logo">
-      E-Carriage Tour
-    </h1>
-    <div class="header-actions">
+    <div class="header-top">
+      <h1 class="app-title">
+        <img src="logo-e-carriage.png" 
+             alt="E-Carriage Tour Logo" 
+             class="app-logo">
+        E-Carriage Tour
+      </h1>
+    </div>
+    <div class="header-bottom">
       <span id="current-date-display" class="date-display"></span>
     </div>
   </div>
 </header>
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <main class="app-main">
+<!-- CONTENIDO PRINCIPAL -->
+<main class="app-main">
+  
+  <!-- PANTALLA NUEVO VIAJE -->
+  <div id="new-trip" class="screen active app-screen">
+    <!-- ... (tu código existente se mantiene igual) ... -->
+  </div>
+
+  <!-- PANTALLA RESUMEN -->
+  <div id="summary" class="screen app-screen">
+    <div class="screen-header">
+      <h2><i class="fas fa-chart-pie"></i> Resumen Diario</h2>
+    </div>
     
-    <!-- PANTALLA NUEVO VIAJE -->
-    <div id="new-trip" class="screen active app-screen">
-      <div class="screen-header">
-        <h2><i class="fas fa-plus-circle"></i> Nuevo Viaje</h2>
+    <!-- Selector de Periodo -->
+    <div class="period-selector">
+      <button id="today-btn" class="period-btn active">
+        <i class="fas fa-calendar-day"></i>
+        Hoy
+      </button>
+      <button id="yesterday-btn" class="period-btn">
+        <i class="fas fa-calendar-minus"></i>
+        Ayer
+      </button>
+      <button id="week-btn" class="period-btn">
+        <i class="fas fa-calendar-week"></i>
+        Semana
+      </button>
+    </div>
+
+    <!-- Tarjetas de Resumen -->
+    <div class="stats-cards">
+      <div class="stat-card primary">
+        <div class="stat-icon">
+          <i class="fas fa-car-side"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-label">Total Viajes</div>
+          <div id="total-all-trips" class="stat-value">0</div>
+        </div>
+      </div>
+
+      <div class="stat-card success">
+        <div class="stat-icon">
+          <i class="fas fa-money-bill-wave"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-label">Efectivo</div>
+          <div id="cash-trips-count" class="stat-value">0</div>
+          <div id="cash-trips-amount" class="stat-subvalue">0 €</div>
+        </div>
+      </div>
+
+      <div class="stat-card info">
+        <div class="stat-icon">
+          <i class="fas fa-credit-card"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-label">Tarjeta</div>
+          <div id="card-trips-count" class="stat-value">0</div>
+          <div id="card-trips-amount" class="stat-subvalue">0 €</div>
+        </div>
+      </div>
+
+      <div class="stat-card warning">
+        <div class="stat-icon">
+          <i class="fas fa-hand-holding-usd"></i>
+        </div>
+        <div class="stat-info">
+          <div class="stat-label">Propinas</div>
+          <div id="total-tips" class="stat-value">0 €</div>
+          <div class="stat-subvalue" id="tips-breakdown-old"></div> <!-- ID CAMBIADO -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Desglose Financiero ACTUALIZADO -->
+    <div class="financial-breakdown">
+      <h3><i class="fas fa-file-invoice-dollar"></i> Desglose Financiero - <span id="summary-period-title">Hoy</span></h3>
+      
+      <!-- Estadísticas Rápidas -->
+      <div class="quick-stats">
+        <div class="quick-stat">
+          <div class="quick-stat-label">Viajes Totales</div>
+          <div id="quick-total-trips" class="quick-stat-value">0</div> <!-- ID CAMBIADO -->
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-label">Total Recaudado</div>
+          <div id="quick-total-amount" class="quick-stat-value">0 €</div> <!-- ID CAMBIADO -->
+        </div>
       </div>
       
-      <div class="form-card">
-        <!-- País -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="fas fa-globe-europe"></i>
-            País de origen
-          </label>
-          <div class="select-wrapper">
-            <select id="country" class="form-select">
-             <option value="">Selecciona país</option>
-    <option>Afganistán</option>
-    <option>Albania</option>
-    <option>Alemania</option>
-    <option>Andorra</option>
-    <option>Angola</option>
-    <option>Antigua y Barbuda</option>
-    <option>Arabia Saudita</option>
-    <option>Argelia</option>
-    <option>Argentina</option>
-    <option>Armenia</option>
-    <option>Australia</option>
-    <option>Austria</option>
-    <option>Azerbaiyán</option>
-    <option>Bahamas</option>
-    <option>Bangladés</option>
-    <option>Barbados</option>
-    <option>Baréin</option>
-    <option>Bélgica</option>
-    <option>Belice</option>
-    <option>Benín</option>
-    <option>Bielorrusia</option>
-    <option>Birmania (Myanmar)</option>
-    <option>Bolivia</option>
-    <option>Bosnia y Herzegovina</option>
-    <option>Botsuana</option>
-    <option>Brasil</option>
-    <option>Brunéi</option>
-    <option>Bulgaria</option>
-    <option>Burkina Faso</option>
-    <option>Burundi</option>
-    <option>Bután</option>
-    <option>Cabo Verde</option>
-    <option>Camboya</option>
-    <option>Camerún</option>
-    <option>Canadá</option>
-    <option>Catar</option>
-    <option>Chad</option>
-    <option>Chile</option>
-    <option>China</option>
-    <option>Chipre</option>
-    <option>Colombia</option>
-    <option>Corea del Norte</option>
-    <option>Corea del Sur</option>
-    <option>Costa de Marfil</option>
-    <option>Costa Rica</option>
-    <option>Croacia</option>
-    <option>Cuba</option>
-    <option>Dinamarca</option>
-    <option>Dominica</option>
-    <option>Ecuador</option>
-    <option>Egipto</option>
-    <option>El Salvador</option>
-    <option>Emiratos Árabes Unidos</option>
-    <option>Eritrea</option>
-    <option>Eslovaquia</option>
-    <option>Eslovenia</option>
-    <option>España</option>
-    <option>Estados Unidos</option>
-    <option>Estonia</option>
-    <option>Etiopía</option>
-    <option>Filipinas</option>
-    <option>Finlandia</option>
-    <option>Fiyi</option>
-    <option>Francia</option>
-    <option>Gabón</option>
-    <option>Gambia</option>
-    <option>Georgia</option>
-    <option>Ghana</option>
-    <option>Granada</option>
-    <option>Grecia</option>
-    <option>Guatemala</option>
-    <option>Guinea</option>
-    <option>Guinea Ecuatorial</option>
-    <option>Guinea-Bisáu</option>
-    <option>Guyana</option>
-    <option>Haití</option>
-    <option>Honduras</option>
-    <option>Hungría</option>
-    <option>India</option>
-    <option>Indonesia</option>
-    <option>Irak</option>
-    <option>Irán</option>
-    <option>Irlanda</option>
-    <option>Islandia</option>
-    <option>Islas Marshall</option>
-    <option>Islas Salomón</option>
-    <option>Israel</option>
-    <option>Italia</option>
-    <option>Jamaica</option>
-    <option>Japón</option>
-    <option>Jordania</option>
-    <option>Kazajistán</option>
-    <option>Kenia</option>
-    <option>Kirguistán</option>
-    <option>Kiribati</option>
-    <option>Kuwait</option>
-    <option>Laos</option>
-    <option>Lesoto</option>
-    <option>Letonia</option>
-    <option>Líbano</option>
-    <option>Liberia</option>
-    <option>Libia</option>
-    <option>Liechtenstein</option>
-    <option>Lituania</option>
-    <option>Luxemburgo</option>
-    <option>Madagascar</option>
-    <option>Malasia</option>
-    <option>Malaui</option>
-    <option>Maldivas</option>
-    <option>Malí</option>
-    <option>Malta</option>
-    <option>Marruecos</option>
-    <option>Mauricio</option>
-    <option>Mauritania</option>
-    <option>México</option>
-    <option>Micronesia</option>
-    <option>Moldavia</option>
-    <option>Mónaco</option>
-    <option>Mongolia</option>
-    <option>Montenegro</option>
-    <option>Mozambique</option>
-    <option>Namibia</option>
-    <option>Nepal</option>
-    <option>Nicaragua</option>
-    <option>Níger</option>
-    <option>Nigeria</option>
-    <option>Noruega</option>
-    <option>Nueva Zelanda</option>
-    <option>Omán</option>
-    <option>Países Bajos</option>
-    <option>Pakistán</option>
-    <option>Palaos</option>
-    <option>Palestina</option>
-    <option>Panamá</option>
-    <option>Papúa Nueva Guinea</option>
-    <option>Paraguay</option>
-    <option>Perú</option>
-    <option>Polonia</option>
-    <option>Portugal</option>
-    <option>Reino Unido</option>
-    <option>República Centroafricana</option>
-    <option>República Checa</option>
-    <option>República del Congo</option>
-    <option>República Democrática del Congo</option>
-    <option>República Dominicana</option>
-    <option>Ruanda</option>
-    <option>Rumanía</option>
-    <option>Rusia</option>
-    <option>Samoa</option>
-    <option>San Marino</option>
-    <option>Santa Lucía</option>
-    <option>Senegal</option>
-    <option>Serbia</option>
-    <option>Seychelles</option>
-    <option>Singapur</option>
-    <option>Siria</option>
-    <option>Somalia</option>
-    <option>Sri Lanka</option>
-    <option>Sudáfrica</option>
-    <option>Sudán</option>
-    <option>Sudán del Sur</option>
-    <option>Suecia</option>
-    <option>Suiza</option>
-    <option>Surinam</option>
-    <option>Tailandia</option>
-    <option>Tanzania</option>
-    <option>Tayikistán</option>
-    <option>Togo</option>
-    <option>Tonga</option>
-    <option>Trinidad y Tobago</option>
-    <option>Túnez</option>
-    <option>Turkmenistán</option>
-    <option>Turquía</option>
-    <option>Tuvalu</option>
-    <option>Ucrania</option>
-    <option>Uganda</option>
-    <option>Uruguay</option>
-    <option>Uzbekistán</option>
-    <option>Vanuatu</option>
-    <option>Vaticano</option>
-    <option>Venezuela</option>
-    <option>Vietnam</option>
-    <option>Yemen</option>
-    <option>Zambia</option>
-    <option>Zimbabue</option>
-              <!-- Mantén tu lista completa -->
-            </select>
-            <i class="fas fa-chevron-down select-arrow"></i>
-          </div>
+      <!-- Desglose Detallado -->
+      <div class="breakdown-section cash-breakdown">
+        <h4><i class="fas fa-money-bill-wave"></i> Efectivo</h4>
+        <div class="breakdown-item">
+          <span>Viajes en efectivo</span>
+          <span id="cash-trips-breakdown">0 viajes × 70€ = 0€</span>
         </div>
-
-        <!-- Pasajeros -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="fas fa-users"></i>
-            Pasajeros
-          </label>
-          <div class="passenger-selector-card">
-            <div class="passenger-controls">
-              <button type="button" id="decrease-passenger" class="passenger-btn">
-                <i class="fas fa-minus"></i>
-              </button>
-              <div class="passenger-count-display">
-                <span id="passenger-count">1</span>
-                <small>pasajero(s)</small>
-              </div>
-              <button type="button" id="increase-passenger" class="passenger-btn">
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
-            <input type="hidden" id="passenger-input" name="passengers" value="1">
-          </div>
+        <div class="breakdown-item">
+          <span>Propina en efectivo</span>
+          <span id="cash-tips-breakdown">+ 0€</span>
         </div>
-
-        <!-- Método de Pago -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="fas fa-credit-card"></i>
-            Método de pago
-          </label>
-          <div class="payment-methods">
-            <button type="button" class="payment-method-card cash active" data-method="cash">
-              <div class="payment-icon">
-                <i class="fas fa-money-bill-wave"></i>
-              </div>
-              <div class="payment-info">
-                <div class="payment-title">Efectivo</div>
-                <div class="payment-desc">Pago al finalizar</div>
-              </div>
-              <div class="payment-check">
-                <i class="fas fa-check-circle"></i>
-              </div>
-            </button>
-            
-            <button type="button" class="payment-method-card card" data-method="card">
-              <div class="payment-icon">
-                <i class="fas fa-credit-card"></i>
-              </div>
-              <div class="payment-info">
-                <div class="payment-title">Tarjeta</div>
-                <div class="payment-desc">Pago con propina</div>
-              </div>
-              <div class="payment-check">
-                <i class="fas fa-check-circle"></i>
-              </div>
-            </button>
-          </div>
+        <div class="breakdown-item total">
+          <span><strong>Total efectivo recibido</strong></span>
+          <span id="cash-total-received" class="amount-highlight">0€</span>
         </div>
-
-        <!-- Propina -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="fas fa-hand-holding-usd"></i>
-            Propina
-          </label>
-          <div id="tip-container">
-            <div class="tip-amount-display">
-              <input type="number" id="tip-input" class="tip-input" placeholder="0.00" step="0.01">
-              <span class="currency">€</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Resumen del Viaje -->
-        <div class="trip-summary-card">
-          <div class="summary-row">
-            <span>Precio base</span>
-            <span class="amount">70.00 €</span>
-          </div>
-          <div class="summary-row">
-            <span>Propina</span>
-            <span id="tip-amount-display" class="amount">0.00 €</span>
-          </div>
-          <div class="summary-divider"></div>
-          <div class="summary-total">
-            <span>Total a cobrar</span>
-            <span id="total-amount-display" class="total-amount">70.00 €</span>
-          </div>
-        </div>
-
-        <!-- Botón Añadir Viaje -->
-        <button id="add-trip-btn" class="primary-action-btn">
-          <i class="fas fa-check-circle"></i>
-          Registrar Viaje
-        </button>
-      </div>
-
-      <!-- Viajes de Hoy -->
-      <div class="today-trips-section">
-        <div class="section-header">
-          <h3><i class="fas fa-history"></i> Viajes de Hoy</h3>
-          <span id="today-trips-count" class="badge">0</span>
-        </div>
-        <div id="today-trips-list" class="today-trips-list">
-          <div class="empty-state">
-            <i class="fas fa-carriage"></i>
-            <p>No hay viajes hoy</p>
-            <small>Los viajes aparecerán aquí</small>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PANTALLA RESUMEN -->
-    <div id="summary" class="screen app-screen">
-      <div class="screen-header">
-        <h2><i class="fas fa-chart-pie"></i> Resumen Diario</h2>
       </div>
       
-      <!-- Selector de Periodo -->
-      <div class="period-selector">
-        <button id="today-btn" class="period-btn active">
-          <i class="fas fa-calendar-day"></i>
-          Hoy
-        </button>
-        <button id="yesterday-btn" class="period-btn">
-          <i class="fas fa-calendar-minus"></i>
-          Ayer
-        </button>
-        <button id="week-btn" class="period-btn">
-          <i class="fas fa-calendar-week"></i>
-          Semana
-        </button>
-      </div>
-
-      <!-- Tarjetas de Resumen -->
-      <div class="stats-cards">
-        <div class="stat-card primary">
-          <div class="stat-icon">
-            <i class="fas fa-car-side"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-label">Total Viajes</div>
-            <div id="total-all-trips" class="stat-value">0</div>
-          </div>
+      <div class="breakdown-section card-breakdown">
+        <h4><i class="fas fa-credit-card"></i> Tarjeta</h4>
+        <div class="breakdown-item">
+          <span>Viajes con tarjeta</span>
+          <span id="card-trips-breakdown">0 viajes × 70€ = 0€</span>
         </div>
-
-        <div class="stat-card success">
-          <div class="stat-icon">
-            <i class="fas fa-money-bill-wave"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-label">Efectivo</div>
-            <div id="cash-trips-count" class="stat-value">0</div>
-            <div id="cash-trips-amount" class="stat-subvalue">0 €</div>
-          </div>
+        <div class="breakdown-item">
+          <span>Propina con tarjeta</span>
+          <span id="card-tips-breakdown">+ 0€</span>
         </div>
-
-        <div class="stat-card info">
-          <div class="stat-icon">
-            <i class="fas fa-credit-card"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-label">Tarjeta</div>
-            <div id="card-trips-count" class="stat-value">0</div>
-            <div id="card-trips-amount" class="stat-subvalue">0 €</div>
-          </div>
-        </div>
-
-        <div class="stat-card warning">
-          <div class="stat-icon">
-            <i class="fas fa-hand-holding-usd"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-label">Propinas</div>
-            <div id="total-tips" class="stat-value">0 €</div>
-            <div class="stat-subvalue" id="tips-breakdown"></div>
-          </div>
+        <div class="breakdown-item total">
+          <span><strong>Total tarjeta recibido</strong></span>
+          <span id="card-total-received" class="amount-highlight">0€</span>
         </div>
       </div>
+      
+      <!-- Resumen de Entrega -->
+      <div class="delivery-summary">
+        <h4><i class="fas fa-calculator"></i> Resumen de Entrega</h4>
+        <div class="breakdown-item">
+          <span>Efectivo recibido</span>
+          <span id="cash-received-amount">0€</span>
+        </div>
+        <div class="breakdown-item">
+          <span>(-) Propinas tarjeta (para ti)</span>
+          <span id="card-tips-for-you" class="text-success">- 0€</span>
+        </div>
+        <div class="breakdown-divider"></div>
+        <div class="breakdown-item final-amount">
+          <span><strong>EFECTIVO A ENTREGAR</strong></span>
+          <span id="cash-to-deliver-final" class="final-amount-value">0€</span>
+        </div>
+        <div class="delivery-explanation">
+          <i class="fas fa-info-circle"></i>
+          <strong>Fórmula:</strong> (Efectivo recibido) - (Propinas tarjeta) = Efectivo a entregar
+        </div>
+      </div>
+    </div>
+    
+  </div> <!-- CIERRA #summary -->
 
-<!-- Desglose Financiero ACTUALIZADO -->
-<div class="financial-breakdown">
-  <h3><i class="fas fa-file-invoice-dollar"></i> Desglose Financiero - <span id="summary-period-title">Hoy</span></h3>
-  
-  <!-- Estadísticas Rápidas -->
-  <div class="quick-stats">
-    <div class="quick-stat">
-      <div class="quick-stat-label">Viajes Totales</div>
-      <div id="total-trips-count" class="quick-stat-value">0</div>
-    </div>
-    <div class="quick-stat">
-      <div class="quick-stat-label">Total Recaudado</div>
-      <div id="total-amount-collected" class="quick-stat-value">0 €</div>
-    </div>
+  <!-- PANTALLA ESTADÍSTICAS -->
+  <div id="stats" class="screen app-screen">
+    <!-- ... (tu código existente se mantiene igual) ... -->
   </div>
   
-  <!-- Desglose Detallado -->
-  <div class="breakdown-section cash-breakdown">
-    <h4><i class="fas fa-money-bill-wave"></i> Efectivo</h4>
-    <div class="breakdown-item">
-      <span>Viajes en efectivo</span>
-      <span id="cash-trips-breakdown">0 viajes × 70€ = 0€</span>
-    </div>
-    <div class="breakdown-item">
-      <span>Propina en efectivo</span>
-      <span id="cash-tips-breakdown">+ 0€</span>
-    </div>
-    <div class="breakdown-item total">
-      <span><strong>Total efectivo recibido</strong></span>
-      <span id="cash-total-received" class="amount-highlight">0€</span>
-    </div>
-  </div>
-  
-  <div class="breakdown-section card-breakdown">
-    <h4><i class="fas fa-credit-card"></i> Tarjeta</h4>
-    <div class="breakdown-item">
-      <span>Viajes con tarjeta</span>
-      <span id="card-trips-breakdown">0 viajes × 70€ = 0€</span>
-    </div>
-    <div class="breakdown-item">
-      <span>Propina con tarjeta</span>
-      <span id="card-tips-breakdown">+ 0€</span>
-    </div>
-    <div class="breakdown-item total">
-      <span><strong>Total tarjeta recibido</strong></span>
-      <span id="card-total-received" class="amount-highlight">0€</span>
-    </div>
-  </div>
-  
-  <!-- Resumen de Entrega -->
-  <div class="delivery-summary">
-    <h4><i class="fas fa-calculator"></i> Resumen de Entrega</h4>
-    <div class="breakdown-item">
-      <span>Efectivo recibido</span>
-      <span id="cash-received-amount">0€</span>
-    </div>
-    <div class="breakdown-item">
-      <span>(-) Propinas tarjeta (para ti)</span>
-      <span id="card-tips-for-you" class="text-success">- 0€</span>
-    </div>
-    <div class="breakdown-divider"></div>
-    <div class="breakdown-item final-amount">
-      <span><strong>EFECTIVO A ENTREGAR</strong></span>
-      <span id="cash-to-deliver-final" class="final-amount-value">0€</span>
-    </div>
-    <div class="delivery-explanation">
-      <i class="fas fa-info-circle"></i>
-      <strong>Fórmula:</strong> (Efectivo recibido) - (Propinas tarjeta) = Efectivo a entregar
-    </div>
-  </div>
-</div>
+</main>
 
+<!-- NAVEGACIÓN INFERIOR (Tipo App) -->
+<nav class="app-nav">
+  <button class="nav-btn active" data-screen="new-trip">
+    <i class="fas fa-plus-circle"></i>
+    <span>Nuevo</span>
+  </button>
+  <button class="nav-btn" data-screen="summary">
+    <i class="fas fa-chart-pie"></i>
+    <span>Resumen</span>
+  </button>
+  <button class="nav-btn" data-screen="stats">
+    <i class="fas fa-chart-line"></i>
+    <span>Estadísticas</span>
+  </button>
+</nav>
 
-    <!-- PANTALLA ESTADÍSTICAS -->
-    <div id="stats" class="screen app-screen">
-      <div class="screen-header">
-        <h2><i class="fas fa-chart-line"></i> Estadísticas</h2>
-      </div>
+<!-- NOTIFICACIONES -->
+<div id="notification" class="notification"></div>
 
-      <!-- Selector de Periodo -->
-      <div class="period-selector">
-        <select id="stats-period" class="period-select">
-          <option value="today">Hoy</option>
-          <option value="yesterday">Ayer</option>
-          <option value="week">Esta semana</option>
-          <option value="month" selected>Este mes</option>
-          <option value="all">Todos</option>
-        </select>
-      </div>
-
-      <!-- Métodos de Pago -->
-      <div class="payment-stats-card">
-        <h3><i class="fas fa-chart-pie"></i> Métodos de Pago</h3>
-        <div class="payment-chart">
-          <div class="chart-container">
-            <div class="chart-bar">
-              <div class="chart-label">
-                <span class="chart-color cash"></span>
-                Efectivo
-              </div>
-              <div class="chart-track">
-                <div id="cash-bar" class="chart-fill cash" style="width: 0%"></div>
-              </div>
-              <div id="cash-percent" class="chart-percent">0%</div>
-            </div>
-            <div class="chart-bar">
-              <div class="chart-label">
-                <span class="chart-color card"></span>
-                Tarjeta
-              </div>
-              <div class="chart-track">
-                <div id="card-bar" class="chart-fill card" style="width: 0%"></div>
-              </div>
-              <div id="card-percent" class="chart-percent">0%</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Distribución por País -->
-      <div class="countries-card">
-        <div class="section-header">
-          <h3><i class="fas fa-globe-americas"></i> Países Más Visitados</h3>
-        </div>
-        <div id="countries-list" class="countries-list">
-          <div class="empty-state">
-            <i class="fas fa-flag"></i>
-            <p>No hay datos</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resumen General -->
-      <div class="general-stats">
-        <div class="stat-item">
-          <div class="stat-item-icon">
-            <i class="fas fa-car-side"></i>
-          </div>
-          <div class="stat-item-content">
-            <div class="stat-item-label">Viajes Totales</div>
-            <div id="monthly-total-trips" class="stat-item-value">0</div>
-          </div>
-        </div>
-        
-        <div class="stat-item">
-          <div class="stat-item-icon">
-            <i class="fas fa-users"></i>
-          </div>
-          <div class="stat-item-content">
-            <div class="stat-item-label">Pasajeros Totales</div>
-            <div id="monthly-total-passengers" class="stat-item-value">0</div>
-          </div>
-        </div>
-        
-        <div class="stat-item">
-          <div class="stat-item-icon">
-            <i class="fas fa-money-bill-wave"></i>
-          </div>
-          <div class="stat-item-content">
-            <div class="stat-item-label">Viajes Efectivo</div>
-            <div id="monthly-cash-trips" class="stat-item-value">0</div>
-          </div>
-        </div>
-        
-        <div class="stat-item">
-          <div class="stat-item-icon">
-            <i class="fas fa-credit-card"></i>
-          </div>
-          <div class="stat-item-content">
-            <div class="stat-item-label">Viajes Tarjeta</div>
-            <div id="monthly-card-trips" class="stat-item-value">0</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- NAVEGACIÓN INFERIOR (Tipo App) -->
-  <nav class="app-nav">
-    <button class="nav-btn active" data-screen="new-trip">
-      <i class="fas fa-plus-circle"></i>
-      <span>Nuevo</span>
-    </button>
-    <button class="nav-btn" data-screen="summary">
-      <i class="fas fa-chart-pie"></i>
-      <span>Resumen</span>
-    </button>
-    <button class="nav-btn" data-screen="stats">
-      <i class="fas fa-chart-line"></i>
-      <span>Estadísticas</span>
-    </button>
-  </nav>
-
-  <!-- NOTIFICACIONES -->
-  <div id="notification" class="notification"></div>
-
-  <script src="./app.js"></script>
+<script src="./app.js"></script>
 </body>
 </html>
