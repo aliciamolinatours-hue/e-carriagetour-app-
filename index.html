@@ -1,12 +1,40 @@
-index.html
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>E-Carriage Tour App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>E-Carriage Tour App</h1>
-  <p>La app está funcionando correctamente 🚗⚡</p>
+
+  <!-- PANTALLA NUEVO VIAJE -->
+  <div id="new-trip" class="screen active">
+    <header>Nuevo viaje</header>
+    <p>Pantalla de registro (en construcción)</p>
+    <button class="primary">Añadir viaje</button>
+  </div>
+
+  <!-- PANTALLA RESUMEN -->
+  <div id="summary" class="screen">
+    <header>Resumen del día</header>
+    <p>Totales del día (en construcción)</p>
+  </div>
+
+  <!-- PANTALLA ESTADÍSTICAS -->
+  <div id="stats" class="screen">
+    <header>Estadísticas</header>
+    <p>Datos mensuales (en construcción)</p>
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <nav>
+    <button onclick="showScreen('new-trip')">➕ Nuevo</button>
+    <button onclick="showScreen('summary')">📊 Resumen</button>
+    <button onclick="showScreen('stats')">📈 Stats</button>
+  </nav>
+
+  <script src="app.js"></script>
 </body>
 </html>
