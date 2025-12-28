@@ -25,7 +25,7 @@ function initApp() {
   initPassengerSelector();
   initPaymentButtons();
   initTipOptions();
-  initAddTripButton();
+  initAddTripButton(); // Esta función debe existir y llamarse
 }
 
 // 1. Funcionalidad para cambiar pasajeros
@@ -90,11 +90,15 @@ function initPaymentButtons() {
 }
 
 // 3. Funcionalidad para propina dinámica
+function initTipOptions() {
+  updateTipDisplay();
+}
+
 function updateTipDisplay() {
   const tipContainer = document.getElementById('tip-container');
   
   if (paymentMethod === 'card') {
-    // Opciones para tarjeta - AGREGAR BOTÓN 0€
+    // Opciones para tarjeta - CON BOTÓN 0€
     tipContainer.innerHTML = `
       <label>Propina</label>
       <div class="tip-options">
@@ -127,14 +131,16 @@ function updateTipDisplay() {
           const customContainer = document.getElementById('custom-tip-container');
           customContainer.style.display = 'block';
           const customInput = document.getElementById('custom-tip-input');
-          customInput.focus();
+          if (customInput) customInput.focus();
           selectedTip = null;
           
           // Event listener para input custom
-          customInput.addEventListener('input', (e) => {
-            customTipValue = e.target.value;
-            selectedTip = customTipValue;
-          });
+          if (customInput) {
+            customInput.addEventListener('input', (e) => {
+              customTipValue = e.target.value;
+              selectedTip = customTipValue;
+            });
+          }
         } else {
           // Ocultar input personalizado
           const customContainer = document.getElementById('custom-tip-container');
@@ -172,83 +178,151 @@ function updateTipDisplay() {
   }
 }
 
-// 4. Funcionalidad para añadir viaje - MODIFICAR PARA GUARDAR DATOS
+// 4. Funcionalidad para añadir viaje - VERSIÓN SIMPLIFICADA Y FUNCIONAL
 function initAddTripButton() {
-  // CAMBIO: Buscar por ID en lugar de clase
+  console.log('🔍 Buscando botón "Añadir viaje"...');
+  
+  // Buscar el botón por ID (asegúrate de que en HTML tenga id="add-trip-btn")
   const addTripBtn = document.getElementById('add-trip-btn');
   
-  // Verificar que el botón existe
   if (!addTripBtn) {
     console.error('❌ ERROR: No se encontró el botón con id="add-trip-btn"');
+    
+    // Intentar encontrarlo por clase como fallback
+    const fallbackBtn = document.querySelector('button.primary');
+    if (fallbackBtn) {
+      console.log('✅ Encontrado por clase .primary, configurando...');
+      setupTripButton(fallbackBtn);
+    } else {
+      console.error('❌ ERROR CRÍTICO: No hay botón para añadir viaje');
+      createEmergencyButton();
+    }
     return;
   }
   
-  console.log('✅ Botón "Añadir viaje" encontrado');
-  
-  addTripBtn.addEventListener('click', function() {
-    // Obtener datos del formulario
-    const country = document.getElementById('country').value;
-    const price = 70; // Precio fijo del viaje
-    
-    // Calcular propina
-    let tipAmount = 0;
-    if (paymentMethod === 'card' && selectedTip) {
-      if (selectedTip === 'custom' && customTipValue) {
-        tipAmount = parseFloat(customTipValue) || 0;
-      } else if (selectedTip !== 'custom') {
-        tipAmount = parseFloat(selectedTip) || 0;
-      }
-    } else if (paymentMethod === 'cash') {
-      // Para efectivo, obtener valor del input
-      const tipInput = document.getElementById('tip-input');
-      if (tipInput) {
-        tipAmount = parseFloat(tipInput.value) || 0;
-      }
-    }
-    
-    const total = price + tipAmount;
-    
-    // Validar datos básicos
-    if (!country) {
-      showMessage('Por favor, selecciona un país', 'error');
-      return;
-    }
-    
-    // Crear objeto del viaje
-    const trip = {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
-      date: new Date().toLocaleDateString('es-ES'),
-      time: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-      country: country,
-      passengers: passengerCount,
-      price: price,
-      paymentMethod: paymentMethod,
-      tip: tipAmount,
-      total: total.toFixed(2)
-    };
-    
-    // Guardar en localStorage
-    saveTripToStorage(trip);
-    
-    // Mostrar resumen en consola
-    console.log('📋 VIAJE GUARDADO:', trip);
-    console.log('💾 Todos los viajes:', JSON.parse(localStorage.getItem('trips') || '[]'));
-    
-    // Mostrar mensaje de éxito
-    showMessage(`✅ Viaje añadido: ${passengerCount} pasajero(s) - ${country} - Total: ${total}€`);
-    
-    // Resetear formulario
-    resetForm();
-  });
+  console.log('✅ Botón encontrado, configurando...');
+  setupTripButton(addTripBtn);
 }
 
-// (El resto de tus funciones se mantiene IGUAL)
-// NUEVA FUNCIÓN: Guardar viaje en localStorage
+// Función para configurar el botón
+function setupTripButton(button) {
+  // Remover cualquier event listener anterior
+  const newButton = button.cloneNode(true);
+  button.parentNode.replaceChild(newButton, button);
+  
+  // Agregar estilos de feedback
+  newButton.style.cursor = 'pointer';
+  newButton.style.transition = 'all 0.2s';
+  
+  // Event listener para el clic
+  newButton.addEventListener('click', function(event) {
+    console.log('🟢 Botón "Añadir viaje" clickeado!');
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Feedback visual
+    this.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      this.style.transform = 'scale(1)';
+    }, 200);
+    
+    // Llamar a la función que añade el viaje
+    addNewTrip();
+  });
+  
+  console.log('✅ Botón configurado correctamente');
+}
+
+// Función principal para añadir un nuevo viaje
+function addNewTrip() {
+  console.log('✈️ Iniciando proceso para añadir viaje...');
+  
+  // 1. Obtener datos del formulario
+  const countrySelect = document.getElementById('country');
+  const country = countrySelect ? countrySelect.value : '';
+  
+  // 2. Validar datos básicos
+  if (!country || country === '') {
+    console.log('❌ Validación fallida: No se seleccionó país');
+    showMessage('Por favor, selecciona un país de origen', 'error');
+    return;
+  }
+  
+  console.log('✅ País seleccionado:', country);
+  console.log('✅ Pasajeros:', passengerCount);
+  console.log('✅ Método de pago:', paymentMethod);
+  console.log('✅ Propina seleccionada:', selectedTip);
+  console.log('✅ Propina custom:', customTipValue);
+  
+  // 3. Calcular propina
+  let tipAmount = 0;
+  const price = 70; // Precio fijo del viaje
+  
+  if (paymentMethod === 'card') {
+    if (selectedTip === 'custom' && customTipValue) {
+      tipAmount = parseFloat(customTipValue) || 0;
+    } else if (selectedTip && selectedTip !== 'custom') {
+      tipAmount = parseFloat(selectedTip) || 0;
+    }
+  } else if (paymentMethod === 'cash') {
+    const tipInput = document.getElementById('tip-input');
+    if (tipInput && tipInput.value) {
+      tipAmount = parseFloat(tipInput.value) || 0;
+    }
+  }
+  
+  console.log('💰 Propina calculada:', tipAmount);
+  
+  // 4. Calcular total
+  const total = price + tipAmount;
+  console.log('💰 Total calculado:', total);
+  
+  // 5. Crear objeto del viaje
+  const trip = {
+    id: Date.now(),
+    timestamp: new Date().toISOString(),
+    date: new Date().toLocaleDateString('es-ES'),
+    time: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+    country: country,
+    passengers: passengerCount,
+    price: price,
+    paymentMethod: paymentMethod,
+    tip: tipAmount,
+    total: total.toFixed(2)
+  };
+  
+  console.log('📦 Objeto viaje creado:', trip);
+  
+  // 6. Guardar en localStorage
+  const saved = saveTripToStorage(trip);
+  
+  if (saved) {
+    console.log('✅ Viaje guardado exitosamente en localStorage');
+    
+    // 7. Mostrar mensaje de éxito
+    showMessage(`✅ Viaje añadido exitosamente:
+    • País: ${country}
+    • Pasajeros: ${passengerCount}
+    • Método: ${paymentMethod === 'cash' ? 'Efectivo' : 'Tarjeta'}
+    • Propina: ${tipAmount}€
+    • Total: ${total}€`);
+    
+    // 8. Resetear formulario
+    resetForm();
+  } else {
+    console.log('❌ Error al guardar el viaje');
+    showMessage('Error al guardar el viaje. Intenta nuevamente.', 'error');
+  }
+}
+
+// Función para guardar viaje en localStorage
 function saveTripToStorage(trip) {
   try {
+    console.log('💾 Guardando viaje en localStorage...');
+    
     // Obtener viajes existentes o crear array vacío
     const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+    console.log('📊 Viajes existentes:', trips.length);
     
     // Agregar nuevo viaje al inicio del array
     trips.unshift(trip);
@@ -264,16 +338,18 @@ function saveTripToStorage(trip) {
     const event = new CustomEvent('tripAdded', { detail: trip });
     document.dispatchEvent(event);
     
+    console.log('💾 Viaje guardado correctamente');
     return true;
   } catch (error) {
-    console.error('Error al guardar el viaje:', error);
-    showMessage('Error al guardar el viaje', 'error');
+    console.error('❌ Error al guardar el viaje:', error);
     return false;
   }
 }
 
-// NUEVA FUNCIÓN: Resetear formulario
+// Función para resetear formulario
 function resetForm() {
+  console.log('🔄 Reseteando formulario...');
+  
   setTimeout(() => {
     // Resetear pasajeros a 1
     passengerCount = 1;
@@ -308,18 +384,100 @@ function resetForm() {
     
     // Enfocar en país para siguiente viaje
     if (countrySelect) countrySelect.focus();
+    
+    console.log('✅ Formulario reseteado');
   }, 1500);
 }
 
-// NUEVA FUNCIÓN: Ver viajes guardados (para depuración)
+// Función para mostrar mensajes
+function showMessage(text, type = 'success') {
+  console.log(`📝 Mostrando mensaje (${type}):`, text);
+  
+  // Eliminar mensaje anterior si existe
+  const existingMessage = document.querySelector('.message-container');
+  if (existingMessage) existingMessage.remove();
+  
+  // Crear contenedor de mensaje
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message-container';
+  messageDiv.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease-out;
+    max-width: 90%;
+    text-align: center;
+  `;
+  
+  if (type === 'error') {
+    messageDiv.style.backgroundColor = '#f44336';
+  } else {
+    messageDiv.style.backgroundColor = '#4caf50';
+  }
+  
+  messageDiv.textContent = text;
+  
+  document.body.appendChild(messageDiv);
+  
+  // Eliminar mensaje después de 3 segundos
+  setTimeout(() => {
+    if (messageDiv.parentNode) {
+      messageDiv.parentNode.removeChild(messageDiv);
+    }
+  }, 3000);
+}
+
+// Función de emergencia para crear botón si no existe
+function createEmergencyButton() {
+  console.log('🚨 Creando botón de emergencia...');
+  
+  const newTripScreen = document.getElementById('new-trip');
+  if (!newTripScreen) return;
+  
+  const emergencyBtn = document.createElement('button');
+  emergencyBtn.id = 'emergency-add-btn';
+  emergencyBtn.textContent = '➕ AÑADIR VIAJE (EMERGENCIA)';
+  emergencyBtn.style.cssText = `
+    background: #ff5722;
+    color: white;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    margin-top: 30px;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  `;
+  
+  newTripScreen.appendChild(emergencyBtn);
+  
+  emergencyBtn.addEventListener('click', function() {
+    console.log('🚨 Botón de emergencia clickeado');
+    addNewTrip();
+  });
+  
+  console.log('✅ Botón de emergencia creado');
+}
+
+// Función para ver viajes guardados (para depuración)
 function viewSavedTrips() {
   const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-  console.log('=== VIAJES GUARDADOS ===');
-  console.log('Total:', trips.length);
+  console.log('=== VIAJES GUARDADOS EN LOCALSTORAGE ===');
+  console.log('Total de viajes:', trips.length);
   trips.forEach((trip, index) => {
     console.log(`${index + 1}. ${trip.date} ${trip.time} - ${trip.country} - ${trip.passengers} pasajeros - ${trip.total}€ (${trip.paymentMethod})`);
   });
-  console.log('=======================');
+  console.log('=======================================');
   return trips;
 }
 
+// Para probar en consola: viewSavedTrips();
