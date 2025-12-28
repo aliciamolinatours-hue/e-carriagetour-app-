@@ -398,3 +398,182 @@ button.primary {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================
+   ESTILOS PARA RESUMEN Y ESTADÍSTICAS
+   ============================================ */
+
+/* Controles de periodo */
+.summary-controls, .stats-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.period-btn, #stats-period {
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.period-btn.active {
+  background: #2196f3;
+  color: white;
+  border-color: #1976d2;
+}
+
+#stats-period {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+/* Tarjetas de resumen */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.card h3 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.amount {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2196f3;
+}
+
+/* Lista de viajes */
+.trip-list {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.trip-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trip-item:last-child {
+  border-bottom: none;
+}
+
+.trip-info {
+  flex: 1;
+}
+
+.trip-country {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.trip-details {
+  font-size: 13px;
+  color: #666;
+}
+
+.trip-amount {
+  font-weight: bold;
+  font-size: 18px;
+  color: #4caf50;
+}
+
+.empty-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+}
+
+/* Estadísticas */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stat-amount {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2196f3;
+  margin-top: 10px;
+}
+
+.stat-chart {
+  margin-top: 10px;
+}
+
+.chart-bar {
+  display: flex;
+  height: 30px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.cash-bar {
+  background: #4caf50;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  transition: width 0.5s;
+}
+
+.card-bar {
+  background: #2196f3;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  transition: width 0.5s;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .summary-cards,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
