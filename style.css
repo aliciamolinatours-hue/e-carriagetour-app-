@@ -1400,3 +1400,53 @@ body {
   color: var(--primary-color);
   font-weight: 700;
 }
+
+
+/* ============================================
+   HEADER REDISEÑADO CON FECHA ABAJO
+   ============================================ */
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.header-bottom {
+  width: 100%;
+  text-align: center;
+}
+
+/* Ajustar el título para centrado perfecto */
+.app-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin: 0;
+}
+
+/* Estilo para la fecha */
+.date-display {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+
