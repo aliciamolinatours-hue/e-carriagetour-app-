@@ -64,38 +64,54 @@
       </div>
 
       <!-- Método de Pago -->
-      <div class="form-group">
-        <label class="form-label"><i class="fas fa-credit-card"></i> Método de pago</label>
-        <div class="payment-methods">
-          <button type="button" class="payment-method-card cash active" data-method="cash">
-            <div class="payment-icon"><i class="fas fa-money-bill-wave"></i></div>
-            <div class="payment-info">
-              <div class="payment-title">Efectivo</div>
-              <div class="payment-desc">Pago al finalizar</div>
-            </div>
-            <div class="payment-check"><i class="fas fa-check-circle"></i></div>
-          </button>
-          <button type="button" class="payment-method-card card" data-method="card">
-            <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
-            <div class="payment-info">
-              <div class="payment-title">Tarjeta</div>
-              <div class="payment-desc">Pago con propina</div>
-            </div>
-            <div class="payment-check"><i class="fas fa-check-circle"></i></div>
-          </button>
-        </div>
+<div class="form-group">
+  <label class="form-label">
+    <i class="fas fa-credit-card"></i>
+    Método de pago
+  </label>
+  <div class="payment-methods">
+    <button type="button" class="payment-method-card cash active" data-method="cash" id="cash-payment-btn">
+      <div class="payment-icon">
+        <i class="fas fa-money-bill-wave"></i>
       </div>
+      <div class="payment-info">
+        <div class="payment-title">Efectivo</div>
+        <!-- Se ha eliminado "Pago al finalizar" -->
+      </div>
+      <div class="payment-check">
+        <i class="fas fa-check-circle"></i>
+      </div>
+    </button>
+    
+    <button type="button" class="payment-method-card card" data-method="card" id="card-payment-btn">
+      <div class="payment-icon">
+        <i class="fas fa-credit-card"></i>
+      </div>
+      <div class="payment-info">
+        <div class="payment-title">Tarjeta</div>
+        <!-- Se ha eliminado "Pago con propina" -->
+      </div>
+      <div class="payment-check">
+        <i class="fas fa-check-circle"></i>
+      </div>
+    </button>
+  </div>
+</div>
 
-      <!-- Propina -->
-      <div class="form-group">
-        <label class="form-label"><i class="fas fa-hand-holding-usd"></i> Propina</label>
-        <div id="tip-container">
-          <div class="tip-amount-display">
-            <input type="number" id="tip-input" class="tip-input" placeholder="0.00" step="0.01">
-            <span class="currency">€</span>
-          </div>
-        </div>
-      </div>
+<!-- Propina (Esta sección se actualizará dinámicamente con JavaScript) -->
+<div class="form-group">
+  <label class="form-label">
+    <i class="fas fa-hand-holding-usd"></i>
+    Propina
+  </label>
+  <div id="tip-container">
+    <!-- Por defecto: input manual para efectivo -->
+    <div class="tip-amount-display">
+      <input type="number" id="tip-input" class="tip-input" placeholder="0.00" step="0.01" min="0">
+      <span class="currency">€</span>
+    </div>
+  </div>
+</div>
 
       <!-- Resumen del Viaje -->
       <div class="trip-summary-card">
