@@ -481,6 +481,264 @@ function viewSavedTrips() {
 }
 
 // ============================================
+// FUNCIONALIDAD PARA RESUMEN Y ESTADÍSTICAS
+// ============================================
+
+// 1. Función para actualizar el resumen
+function updateSummary(period = 'today') {
+  console.log(`📊 Actualizando resumen para: ${period}`);
+  
+  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+  
+  // Filtrar viajes según el periodo
+  const filteredTrips = filterTripsByPeriod(trips, period);
+  
+  // Calcular estadísticas
+  const stats = calculateStats(filteredTrips);
+  
+  // Actualizar tarjetas
+  document.getElementById('total-income').textContent = `${stats.totalIncome} €`;
+  document.getElementById('total-trips').textContent = stats.totalTrips;
+  document.getElementById('total-passengers').textContent = stats.totalPassengers;
+  document.getElementById('average-tip').textContent = `${stats.averageTip} €`;
+  
+  // Actualizar lista de viajes recientes
+  updateRecentTrips(filteredTrips);
+  
+  console.log('✅ Resumen actualizado:', stats);
+}
+
+// 2. Función para actualizar estadísticas
+function updateStats(period = 'today') {
+  console.log(`📈 Actualizando estadísticas para: ${period}`);
+  
+  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+  const filteredTrips = filterTripsByPeriod(trips, period);
+  const stats = calculateStats(filteredTrips);
+  
+  // Actualizar estadísticas
+  document.getElementById('stats-total-income').textContent = `${stats.totalIncome} €`;
+  document.getElementById('stats-total-trips').textContent = stats.totalTrips;
+  document.getElementById('stats-total-tip').textContent = `${stats.totalTip} €`;
+  
+  // Actualizar gráfico de métodos de pago
+  updatePaymentMethodsChart(stats);
+  
+  // Actualizar historial completo
+  updateAllTrips(filteredTrips);
+  
+  console.log('✅ Estadísticas actualizadas');
+}
+
+// 3. Función para filtrar viajes por periodo
+function filterTripsByPeriod(trips, period) {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  
+  return trips.filter(trip => {
+    const tripDate = new Date(trip.timestamp);
+    
+    switch(period) {
+      case 'today':
+        return tripDate >= today;
+      case 'yesterday':
+        return tripDate >= yesterday && tripDate < today;
+      case 'week':
+        const weekAgo = new Date(today);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        return tripDate >= weekAgo;
+      case 'month':
+        const monthAgo = new Date(today);
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        return tripDate >= monthAgo;
+      case 'all':
+        return true;
+      default:
+        return tripDate >= today;
+    }
+  });
+}
+
+// 4. Función para calcular estadísticas
+function calculateStats(trips) {
+  if (trips.length === 0) {
+    return {
+      totalTrips: 0,
+      totalIncome: 0,
+      totalPassengers: 0,
+      totalTip: 0,
+      averageTip: 0,
+      cashCount: 0,
+      cardCount: 0
+    };
+  }
+  
+  const stats = {
+    totalTrips: trips.length,
+    totalIncome: trips.reduce((sum, trip) => sum + parseFloat(trip.total), 0),
+    totalPassengers: trips.reduce((sum, trip) => sum + trip.passengers, 0),
+    totalTip: trips.reduce((sum, trip) => sum + parseFloat(trip.tip), 0),
+    cashCount: trips.filter(trip => trip.paymentMethod === 'cash').length,
+    cardCount: trips.filter(trip => trip.paymentMethod === 'card').length
+  };
+  
+  stats.averageTip = (stats.totalTip / stats.totalTrips).toFixed(2);
+  stats.totalIncome = stats.totalIncome.toFixed(2);
+  stats.totalTip = stats.totalTip.toFixed(2);
+  
+  return stats;
+}
+
+// 5. Función para actualizar viajes recientes
+function updateRecentTrips(trips) {
+  const recentTripsContainer = document.getElementById('recent-trips');
+  const recentTrips = trips.slice(0, 5); // Últimos 5 viajes
+  
+  if (recentTrips.length === 0) {
+    recentTripsContainer.innerHTML = '<div class="empty-state">No hay viajes registrados hoy</div>';
+    return;
+  }
+  
+  let html = '';
+  recentTrips.forEach(trip => {
+    html += `
+      <div class="trip-item">
+        <div class="trip-info">
+          <div class="trip-country">${trip.country}</div>
+          <div class="trip-details">
+            ${trip.time} • ${trip.passengers} pasajero(s) • ${trip.paymentMethod === 'cash' ? '💵' : '💳'}
+          </div>
+        </div>
+        <div class="trip-amount">${trip.total} €</div>
+      </div>
+    `;
+  });
+  
+  recentTripsContainer.innerHTML = html;
+}
+
+// 6. Función para actualizar todos los viajes
+function updateAllTrips(trips) {
+  const allTripsContainer = document.getElementById('all-trips');
+  
+  if (trips.length === 0) {
+    allTripsContainer.innerHTML = '<div class="empty-state">No hay viajes registrados</div>';
+    return;
+  }
+  
+  let html = '';
+  trips.forEach(trip => {
+    html += `
+      <div class="trip-item">
+        <div class="trip-info">
+          <div class="trip-country">${trip.country}</div>
+          <div class="trip-details">
+            ${trip.date} ${trip.time} • ${trip.passengers} pasajero(s) • ${trip.paymentMethod === 'cash' ? 'Efectivo' : 'Tarjeta'}
+          </div>
+        </div>
+        <div class="trip-amount">${trip.total} €</div>
+      </div>
+    `;
+  });
+  
+  allTripsContainer.innerHTML = html;
+}
+
+// 7. Función para actualizar gráfico de métodos de pago
+function updatePaymentMethodsChart(stats) {
+  const total = stats.cashCount + stats.cardCount;
+  
+  if (total === 0) {
+    document.querySelector('.cash-bar').style.width = '0%';
+    document.querySelector('.card-bar').style.width = '0%';
+    document.querySelector('.cash-bar').textContent = '';
+    document.querySelector('.card-bar').textContent = '';
+    return;
+  }
+  
+  const cashPercent = Math.round((stats.cashCount / total) * 100);
+  const cardPercent = 100 - cashPercent;
+  
+  const cashBar = document.querySelector('.cash-bar');
+  const cardBar = document.querySelector('.card-bar');
+  
+  cashBar.style.width = `${cashPercent}%`;
+  cardBar.style.width = `${cardPercent}%`;
+  
+  cashBar.textContent = cashPercent > 10 ? `Efectivo: ${cashPercent}%` : '';
+  cardBar.textContent = cardPercent > 10 ? `Tarjeta: ${cardPercent}%` : '';
+}
+
+// 8. Inicializar controles de resumen y stats
+function initSummaryAndStats() {
+  console.log('📋 Inicializando resumen y estadísticas...');
+  
+  // Event listeners para botones de periodo (Resumen)
+  document.getElementById('today-btn')?.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('today-btn').classList.add('active');
+    updateSummary('today');
+  });
+  
+  document.getElementById('yesterday-btn')?.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('yesterday-btn').classList.add('active');
+    updateSummary('yesterday');
+  });
+  
+  document.getElementById('week-btn')?.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('week-btn').classList.add('active');
+    updateSummary('week');
+  });
+  
+  // Event listener para selector de periodo (Stats)
+  document.getElementById('stats-period')?.addEventListener('change', (e) => {
+    updateStats(e.target.value);
+  });
+  
+  // Actualizar al cambiar de pantalla
+  document.addEventListener('tripAdded', () => {
+    updateSummary('today');
+    updateStats('today');
+  });
+  
+  // Inicializar con datos actuales
+  updateSummary('today');
+  updateStats('today');
+  
+  console.log('✅ Resumen y estadísticas inicializados');
+}
+
+// 9. Modificar la función initApp para incluir la inicialización
+function initApp() {
+  initPassengerSelector();
+  initPaymentButtons();
+  initTipOptions();
+  initAddTripButton();
+  initSummaryAndStats(); // ← AÑADE ESTA LÍNEA
+  
+  console.log('✅ Aplicación completamente inicializada');
+}
+
+// 10. Modificar showScreen para actualizar al cambiar de pantalla
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+  
+  // Actualizar datos cuando se muestra una pantalla
+  if (id === 'summary') {
+    updateSummary('today');
+  } else if (id === 'stats') {
+    updateStats('today');
+  }
+}
+
+// ============================================
 // FUNCIONALIDAD PARA ESTADÍSTICAS MEJORADAS
 // ============================================
 
