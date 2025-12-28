@@ -29,12 +29,15 @@ const AppState = {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📱 Aplicación cargada - Versión', CONFIG.APP_VERSION);
     
-    initApp();
-    showScreen('new-trip');
-    updateCurrentDate();
+    // Ejecutar migración primero
+    migrateFromOldVersion();
     
     // Cargar viajes desde localStorage
     loadTripsFromStorage();
+    
+    initApp();
+    showScreen('new-trip');
+    updateCurrentDate();
     
     // Actualizar cada minuto la fecha
     setInterval(updateCurrentDate, 60000);
@@ -50,7 +53,6 @@ function initApp() {
     initTipSystem();
     initAddTripButton();
     initNavigation();
-    initPeriodSelectors();
     initSummaryScreen();
     initStatsScreen();
     
@@ -149,6 +151,22 @@ function initPassengerSelector() {
         // Actualizar estado de botones
         decreaseBtn.disabled = AppState.passengerCount <= CONFIG.MIN_PASSENGERS;
         increaseBtn.disabled = AppState.passengerCount >= CONFIG.MAX_PASSENGERS;
+        
+        // Efecto visual
+        passengerCountEl.classList.add('pulse');
+        setTimeout(() => passengerCountEl.classList.remove('pulse'), 500);
+        
+        // Actualizar resumen
+        updateTripSummary();
+    }
+    
+    function updatePassengerDisplay() {
+        if (passengerCountEl) passengerCountEl.textContent = AppState.passengerCount;
+        if (passengerInput) passengerInput.value = AppState.passengerCount;
+        
+        // Actualizar estado de botones
+        if (decreaseBtn) decreaseBtn.disabled = AppState.passengerCount <= CONFIG.MIN_PASSENGERS;
+        if (increaseBtn) increaseBtn.disabled = AppState.passengerCount >= CONFIG.MAX_PASSENGERS;
         
         // Efecto visual
         passengerCountEl.classList.add('pulse');
@@ -260,14 +278,16 @@ function updateTipSystem() {
                     // Mostrar input personalizado
                     document.getElementById('custom-tip-input-container').style.display = 'flex';
                     const input = document.getElementById('custom-tip-input');
-                    input.focus();
-                    
-                    // Configurar evento para el input
-                    input.addEventListener('input', (e) => {
-                        AppState.customTipValue = e.target.value;
-                        AppState.selectedTip = parseFloat(e.target.value) || 0;
-                        updateTripSummary();
-                    });
+                    if (input) {
+                        input.focus();
+                        
+                        // Configurar evento para el input
+                        input.addEventListener('input', (e) => {
+                            AppState.customTipValue = e.target.value;
+                            AppState.selectedTip = parseFloat(e.target.value) || 0;
+                            updateTripSummary();
+                        });
+                    }
                 } else {
                     // Ocultar input personalizado
                     document.getElementById('custom-tip-input-container').style.display = 'none';
@@ -313,62 +333,6 @@ function updateTipSystem() {
             tipInput.value = AppState.selectedTip || '';
         }
     }
-    
-    // Añadir estilos para los botones de propina
-    const style = document.createElement('style');
-    style.textContent = `
-        .tip-buttons-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 8px;
-        }
-        
-        .tip-btn {
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-md);
-            background: white;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-        
-        .tip-btn:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-        
-        .tip-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-        
-        .custom-tip-container {
-            display: flex;
-            align-items: center;
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-md);
-            padding: 8px 12px;
-        }
-        
-        .custom-tip-container input {
-            flex: 1;
-            border: none;
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-align: center;
-            padding: 8px;
-        }
-        
-        .custom-tip-container input:focus {
-            outline: none;
-        }
-    `;
-    document.head.appendChild(style);
 }
 
 // ========== COMPONENTE: RESUMEN DEL VIAJE ==========
@@ -499,7 +463,13 @@ function resetForm() {
     
     // Resetear pasajeros
     AppState.passengerCount = 1;
-    updatePassengerDisplay();
+    const passengerCountEl = document.getElementById('passenger-count');
+    const decreaseBtn = document.getElementById('decrease-passenger');
+    const increaseBtn = document.getElementById('increase-passenger');
+    
+    if (passengerCountEl) passengerCountEl.textContent = '1';
+    if (decreaseBtn) decreaseBtn.disabled = true;
+    if (increaseBtn) increaseBtn.disabled = false;
     
     // Resetear país
     const countrySelect = document.getElementById('country');
@@ -510,8 +480,6 @@ function resetForm() {
     AppState.customTipValue = '';
     updateTipSystem();
     updateTripSummary();
-    
-    // Mantener método de pago (no resetear)
     
     console.log('✅ Formulario reseteado');
 }
@@ -574,13 +542,6 @@ function updateTodayTrips() {
     });
     
     todayTripsList.innerHTML = html;
-    
-    // Añadir efecto de entrada
-    const items = todayTripsList.querySelectorAll('.today-trip-item');
-    items.forEach((item, index) => {
-        item.style.animationDelay = `${index * 0.05}s`;
-        item.classList.add('slide-in');
-    });
 }
 
 // ========== PANTALLA RESUMEN ==========
@@ -611,7 +572,10 @@ function updateSummary(period = 'today') {
     'yesterday': 'Ayer', 
     'week': 'Esta semana'
   };
-  document.getElementById('summary-period-title').textContent = periodTitles[period] || 'Hoy';
+  const periodTitleElement = document.getElementById('summary-period-title');
+  if (periodTitleElement) {
+    periodTitleElement.textContent = periodTitles[period] || 'Hoy';
+  }
   
   // Filtrar viajes por periodo
   const filteredTrips = filterTripsByPeriod(AppState.trips, period);
@@ -634,28 +598,7 @@ function updateSummary(period = 'today') {
   const totalAmountCollected = cashTotalReceived + cardTotalReceived;
   const cashToDeliver = cashTotalReceived - cardTipsAmount;
   
-  // Actualizar estadísticas rápidas
-  updateElement('total-trips-count', totalTrips);
-  updateElement('total-amount-collected', `${totalAmountCollected.toFixed(2)} €`);
-  
-  // Actualizar desglose de efectivo
-  updateElement('cash-trips-breakdown', 
-    `${cashTripsCount} viaje${cashTripsCount !== 1 ? 's' : ''} × 70€ = ${cashTripsAmount.toFixed(2)}€`);
-  updateElement('cash-tips-breakdown', `+ ${cashTipsAmount.toFixed(2)}€`);
-  updateElement('cash-total-received', `${cashTotalReceived.toFixed(2)}€`);
-  
-  // Actualizar desglose de tarjeta
-  updateElement('card-trips-breakdown', 
-    `${cardTripsCount} viaje${cardTripsCount !== 1 ? 's' : ''} × 70€ = ${cardTripsAmount.toFixed(2)}€`);
-  updateElement('card-tips-breakdown', `+ ${cardTipsAmount.toFixed(2)}€`);
-  updateElement('card-total-received', `${cardTotalReceived.toFixed(2)}€`);
-  
-  // Actualizar resumen de entrega
-  updateElement('cash-received-amount', `${cashTotalReceived.toFixed(2)}€`);
-  updateElement('card-tips-for-you', `- ${cardTipsAmount.toFixed(2)}€`);
-  updateElement('cash-to-deliver-final', `${Math.max(cashToDeliver, 0).toFixed(2)}€`);
-  
-  // También mantener los elementos originales actualizados (para compatibilidad)
+  // Actualizar TARJETAS DE RESUMEN (IDs viejos)
   updateElement('total-all-trips', totalTrips);
   updateElement('cash-trips-count', cashTripsCount);
   updateElement('cash-trips-amount', `${cashTripsAmount.toFixed(2)} €`);
@@ -663,10 +606,26 @@ function updateSummary(period = 'today') {
   updateElement('card-trips-amount', `${cardTripsAmount.toFixed(2)} €`);
   updateElement('total-tips', `${(cashTipsAmount + cardTipsAmount).toFixed(2)} €`);
   
-  console.log(`💰 Resumen actualizado: ${totalTrips} viajes, ${cashToDeliver.toFixed(2)}€ a entregar`);
+  // Actualizar DESGLOSE NUEVO (IDs nuevos - IMPORTANTE: usar los IDs correctos)
+  updateElement('quick-total-trips', totalTrips); // ID cambiado
+  updateElement('quick-total-amount', `${totalAmountCollected.toFixed(2)} €`); // ID cambiado
+  
+  updateElement('cash-trips-breakdown', 
+    `${cashTripsCount} viaje${cashTripsCount !== 1 ? 's' : ''} × 70€ = ${cashTripsAmount.toFixed(2)}€`);
+  updateElement('cash-tips-breakdown', `+ ${cashTipsAmount.toFixed(2)}€`);
+  updateElement('cash-total-received', `${cashTotalReceived.toFixed(2)}€`);
+  
+  updateElement('card-trips-breakdown', 
+    `${cardTripsCount} viaje${cardTripsCount !== 1 ? 's' : ''} × 70€ = ${cardTripsAmount.toFixed(2)}€`);
+  updateElement('card-tips-breakdown', `+ ${cardTipsAmount.toFixed(2)}€`);
+  updateElement('card-total-received', `${cardTotalReceived.toFixed(2)}€`);
+  
+  updateElement('cash-received-amount', `${cashTotalReceived.toFixed(2)}€`);
+  updateElement('card-tips-for-you', `- ${cardTipsAmount.toFixed(2)}€`);
+  updateElement('cash-to-deliver-final', `${Math.max(cashToDeliver, 0).toFixed(2)}€`);
+  
+  console.log(`💰 Resumen: ${totalTrips} viajes, ${cashToDeliver.toFixed(2)}€ a entregar`);
 }
-
-
 
 // ========== PANTALLA ESTADÍSTICAS ==========
 function initStatsScreen() {
@@ -774,7 +733,8 @@ function updateCountriesList(countries) {
     
     let html = '';
     countries.forEach(country => {
-        const percentage = (country.trips / AppState.trips.length * 100).toFixed(1);
+        const totalTrips = AppState.trips.length;
+        const percentage = totalTrips > 0 ? ((country.trips / totalTrips) * 100).toFixed(1) : '0.0';
         
         html += `
             <div class="country-item">
@@ -909,10 +869,6 @@ function initNavigation() {
     });
 }
 
-function initPeriodSelectors() {
-    // Ya se inicializa en initSummaryScreen y initStatsScreen
-}
-
 function handleNewTrip() {
     console.log('🔄 Actualizando todas las pantallas por nuevo viaje');
     
@@ -967,9 +923,6 @@ function migrateFromOldVersion() {
         }
     }
 }
-
-// Ejecutar migración al iniciar
-migrateFromOldVersion();
 
 // ========== FUNCIONES DE DEBUG ==========
 // Descomenta para debug
