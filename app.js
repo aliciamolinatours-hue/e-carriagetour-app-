@@ -1,4 +1,4 @@
-// app.js - VERSIÓN COMPLETA Y CORREGIDA
+// app.js - VERSIÓN COMPLETA CON RESUMEN DETALLADO
 console.log('🚀 app.js cargado correctamente');
 
 // ========== FUNCIONES BÁSICAS ==========
@@ -14,6 +14,8 @@ function showScreen(id) {
     updateSummary('today');
   } else if (id === 'stats') {
     updateStats('month');
+  } else if (id === 'new-trip') {
+    updateTodayTrips();
   }
 }
 
@@ -248,6 +250,9 @@ function saveTripToStorage(trip) {
     const event = new CustomEvent('tripAdded', { detail: trip });
     document.dispatchEvent(event);
     
+    // Actualizar inmediatamente la lista de viajes de hoy
+    updateTodayTrips();
+    
     return true;
   } catch (error) {
     console.error('Error al guardar:', error);
@@ -308,61 +313,7 @@ function resetForm() {
   }, 1000);
 }
 
-// ========== RESUMEN Y ESTADÍSTICAS ==========
-function initSummaryAndStats() {
-  console.log('📋 Inicializando resumen y estadísticas...');
-  
-  // Escuchar cuando se añade un viaje
-  document.addEventListener('tripAdded', function() {
-    console.log('🔄 Viaje añadido, actualizando pantallas...');
-    updateSummary('today');
-    updateStats('month');
-  });
-  
-  // Inicializar con datos existentes
-  updateSummary('today');
-  updateStats('month');
-  
-  console.log('✅ Resumen y Stats listos');
-}
-
-function updateSummary(period = 'today') {
-  console.log('📊 Actualizando Resumen para:', period);
-  
-  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-  
-  // Filtrar por periodo
-  const filteredTrips = filterTripsByPeriod(trips, period);
-  
-  // Calcular totales
-  const totalViajes = filteredTrips.length;
-  const totalPasajeros = filteredTrips.reduce((sum, t) => sum + t.passengers, 0);
-  const totalIngresos = filteredTrips.reduce((sum, t) => sum + parseFloat(t.total), 0);
-  
-  // Actualizar pantalla de Resumen
-  const incomeElement = document.getElementById('total-income');
-  const tripsElement = document.getElementById('total-trips');
-  const passengersElement = document.getElementById('total-passengers');
-  
-  if (incomeElement) incomeElement.textContent = `${totalIngresos.toFixed(2)} €`;
-  if (tripsElement) tripsElement.textContent = totalViajes;
-  if (passengersElement) passengersElement.textContent = totalPasajeros;
-  
-  console.log(`📈 Resumen: ${totalViajes} viajes, ${totalPasajeros} pasajeros, ${totalIngresos.toFixed(2)}€`);
-}
-
-function updateStats(period = 'month') {
-  console.log('📈 Actualizando Stats para:', period);
-  
-  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-  
-  if (trips.length === 0) {
-    console.log('📭 No hay viajes para mostrar en Stats');
-    showEmptyStats();
-    return;
-  }
-
-// ========== FUNCIÓN PARA MOSTRAR VIAJES DE HOY ==========
+// ========== VIAJES DE HOY EN PANTALLA NUEVO VIAJE ==========
 function updateTodayTrips() {
   console.log('📝 Actualizando lista de viajes de hoy...');
   
@@ -415,68 +366,79 @@ function updateTodayTrips() {
   console.log(`✅ Mostrando ${todayTrips.length} viajes de hoy`);
 }
 
-// ========== MODIFICA saveTripToStorage() ==========
-// Para que actualice la lista cuando se añade un viaje
-function saveTripToStorage(trip) {
-  try {
-    const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-    trips.unshift(trip);
-    localStorage.setItem('trips', JSON.stringify(trips));
-    
-    console.log('💾 Viaje guardado. Total:', trips.length);
-    
-    // Disparar evento para actualizar todas las pantallas
-    const event = new CustomEvent('tripAdded', { detail: trip });
-    document.dispatchEvent(event);
-    
-    // Actualizar inmediatamente la lista de viajes de hoy
-    updateTodayTrips();
-    
-    return true;
-  } catch (error) {
-    console.error('Error al guardar:', error);
-    return false;
+// ========== RESUMEN DETALLADO (NUEVA VERSIÓN) ==========
+function updateSummary(period = 'today') {
+  console.log('📊 Actualizando Resumen detallado para:', period);
+  
+  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+  
+  // Filtrar viajes según el periodo
+  const filteredTrips = filterTripsByPeriod(trips, period);
+  
+  // Separar viajes por método de pago
+  const cashTrips = filteredTrips.filter(t => t.paymentMethod === 'cash');
+  const cardTrips = filteredTrips.filter(t => t.paymentMethod === 'card');
+  
+  // Calcular estadísticas de EFECTIVO
+  const cashTripsCount = cashTrips.length;
+  const cashTripsAmount = cashTrips.reduce((sum, trip) => sum + 70, 0); // 70€ por viaje
+  const cashTipsAmount = cashTrips.reduce((sum, trip) => sum + parseFloat(trip.tip || 0), 0);
+  
+  // Calcular estadísticas de TARJETA
+  const cardTripsCount = cardTrips.length;
+  const cardTripsAmount = cardTrips.reduce((sum, trip) => sum + 70, 0); // 70€ por viaje
+  const cardTipsAmount = cardTrips.reduce((sum, trip) => sum + parseFloat(trip.tip || 0), 0);
+  
+  // Calcular totales
+  const totalAllTrips = cashTripsCount + cardTripsCount;
+  
+  // Calcular efectivo a entregar (FÓRMULA: efectivo - propinas tarjeta)
+  const cashToDeliver = cashTripsAmount - cardTipsAmount;
+  
+  // Actualizar la fecha
+  const currentDateElement = document.getElementById('current-date');
+  if (currentDateElement) {
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    currentDateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+  }
+  
+  // Actualizar todos los elementos en pantalla
+  document.getElementById('total-all-trips').textContent = totalAllTrips;
+  
+  document.getElementById('cash-trips-count').textContent = cashTripsCount;
+  document.getElementById('cash-trips-amount').textContent = `${cashTripsAmount.toFixed(2)} €`;
+  document.getElementById('cash-tips-amount').textContent = `${cashTipsAmount.toFixed(2)} €`;
+  
+  document.getElementById('card-trips-count').textContent = cardTripsCount;
+  document.getElementById('card-trips-amount').textContent = `${cardTripsAmount.toFixed(2)} €`;
+  document.getElementById('card-tips-amount').textContent = `${cardTipsAmount.toFixed(2)} €`;
+  
+  document.getElementById('cash-to-deliver').textContent = `${Math.max(cashToDeliver, 0).toFixed(2)} €`;
+  
+  // Mostrar fórmula si hay datos
+  if (totalAllTrips > 0) {
+    console.log(`💰 Resumen: ${cashTripsCount} efectivo + ${cardTripsCount} tarjeta = ${totalAllTrips} viajes`);
+    console.log(`💵 Efectivo a entregar: ${cashTripsAmount}€ - ${cardTipsAmount}€ = ${cashToDeliver}€`);
   }
 }
 
-// ========== MODIFICA initSummaryAndStats() ==========
-// Para que también actualice la lista de hoy
-function initSummaryAndStats() {
-  console.log('📋 Inicializando resumen, stats y viajes de hoy...');
+// ========== ESTADÍSTICAS ==========
+function updateStats(period = 'month') {
+  console.log('📈 Actualizando Stats para:', period);
   
-  document.addEventListener('tripAdded', function() {
-    console.log('🔄 Viaje añadido, actualizando todas las pantallas...');
-    updateSummary('today');
-    updateStats('month');
-    updateTodayTrips(); // ← AÑADE ESTA LÍNEA
-  });
+  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
   
-  // Inicializar con datos existentes
-  updateSummary('today');
-  updateStats('month');
-  updateTodayTrips(); // ← AÑADE ESTA LÍNEA
-  
-  console.log('✅ Todas las pantallas listas');
-}
-
-// ========== MODIFICA la función showScreen() ==========
-// Para actualizar la lista cuando se muestra la pantalla
-function showScreen(id) {
-  console.log('Cambiando a pantalla:', id);
-  document.querySelectorAll('.screen').forEach(screen => {
-    screen.classList.remove('active');
-  });
-  document.getElementById(id).classList.add('active');
-  
-  // Actualizar datos cuando se cambia de pantalla
-  if (id === 'summary') {
-    updateSummary('today');
-  } else if (id === 'stats') {
-    updateStats('month');
-  } else if (id === 'new-trip') {
-    updateTodayTrips(); // ← AÑADE ESTA LÍNEA
+  if (trips.length === 0) {
+    console.log('📭 No hay viajes para mostrar en Stats');
+    showEmptyStats();
+    return;
   }
-}
   
   const stats = calculateMonthlyStats(trips);
   
@@ -606,6 +568,24 @@ function showEmptyStats() {
 }
 
 // ========== INICIALIZACIÓN ==========
+function initSummaryAndStats() {
+  console.log('📋 Inicializando resumen, stats y viajes de hoy...');
+  
+  document.addEventListener('tripAdded', function() {
+    console.log('🔄 Viaje añadido, actualizando todas las pantallas...');
+    updateSummary('today');
+    updateStats('month');
+    updateTodayTrips();
+  });
+  
+  // Inicializar con datos existentes
+  updateSummary('today');
+  updateStats('month');
+  updateTodayTrips();
+  
+  console.log('✅ Todas las pantallas listas');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   console.log('📱 DOM completamente cargado');
   
