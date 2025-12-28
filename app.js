@@ -144,29 +144,14 @@ function initPassengerSelector() {
     
     if (!passengerCountEl || !decreaseBtn || !increaseBtn) return;
     
+    // FUNCIÓN CORREGIDA - Sin duplicación
     function updatePassengerDisplay() {
         passengerCountEl.textContent = AppState.passengerCount;
-        passengerInput.value = AppState.passengerCount;
+        if (passengerInput) passengerInput.value = AppState.passengerCount;
         
         // Actualizar estado de botones
         decreaseBtn.disabled = AppState.passengerCount <= CONFIG.MIN_PASSENGERS;
         increaseBtn.disabled = AppState.passengerCount >= CONFIG.MAX_PASSENGERS;
-        
-        // Efecto visual
-        passengerCountEl.classList.add('pulse');
-        setTimeout(() => passengerCountEl.classList.remove('pulse'), 500);
-        
-        // Actualizar resumen
-        updateTripSummary();
-    }
-    
-    function updatePassengerDisplay() {
-        if (passengerCountEl) passengerCountEl.textContent = AppState.passengerCount;
-        if (passengerInput) passengerInput.value = AppState.passengerCount;
-        
-        // Actualizar estado de botones
-        if (decreaseBtn) decreaseBtn.disabled = AppState.passengerCount <= CONFIG.MIN_PASSENGERS;
-        if (increaseBtn) increaseBtn.disabled = AppState.passengerCount >= CONFIG.MAX_PASSENGERS;
         
         // Efecto visual
         passengerCountEl.classList.add('pulse');
@@ -395,6 +380,7 @@ function updateTipSystem() {
     }
   }
 }
+
 // ========== COMPONENTE: RESUMEN DEL VIAJE ==========
 function updateTripSummary() {
     const basePrice = CONFIG.BASE_PRICE;
@@ -468,7 +454,7 @@ function addNewTrip() {
     console.log('📝 Viaje creado:', trip);
     
     // Guardar viaje
-       if (saveTrip(trip)) {
+    if (saveTrip(trip)) {
         showNotification(`✅ Viaje añadido: ${total.toFixed(2)} €`, 'success');
         resetForm();
         
@@ -478,6 +464,11 @@ function addNewTrip() {
         // Disparar evento para otras pantallas
         const event = new CustomEvent('tripAdded', { detail: trip });
         document.dispatchEvent(event);
+        
+        // ✅ PASO 2 COMPLETO: Actualizar pantalla actual
+        updateScreenData(AppState.currentScreen);
+    } else {
+        showNotification('❌ Error al guardar el viaje', 'error');
     }
 }
 
@@ -644,6 +635,53 @@ function updateTodayTrips() {
             item.style.transform = 'translateX(0)';
         }, index * 50);
     });
+}
+
+// ========== NAVEGACIÓN ==========
+function initNavigation() {
+    const navButtons = document.querySelectorAll('.nav-btn');
+    
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const screenId = btn.dataset.screen;
+            if (screenId) {
+                showScreen(screenId);
+            }
+        });
+        
+        // Efecto táctil
+        btn.addEventListener('touchstart', () => {
+            btn.style.transform = 'scale(0.95)';
+        });
+        
+        btn.addEventListener('touchend', () => {
+            btn.style.transform = 'scale(1)';
+        });
+    });
+    
+    console.log('✅ Navegación inicializada');
+}
+
+// ========== ✅ PASO 3: FUNCIÓN handleNewTrip() COMPLETA ==========
+function handleNewTrip() {
+    console.log('🔄 Evento: Viaje añadido, actualizando todas las pantallas...');
+    
+    // ✅ Actualizar pantalla actual (ya debería estar actualizada por addNewTrip)
+    updateScreenData(AppState.currentScreen);
+    
+    // ✅ Actualizar otras pantallas si NO estamos en ellas
+    if (AppState.currentScreen !== 'new-trip') {
+        console.log('📝 Actualizando Viajes de Hoy desde otra pantalla');
+        updateTodayTrips();
+    }
+    if (AppState.currentScreen !== 'summary') {
+        console.log('📊 Actualizando Resumen desde otra pantalla');
+        updateSummary(AppState.currentPeriod);
+    }
+    if (AppState.currentScreen !== 'stats') {
+        console.log('📈 Actualizando Estadísticas desde otra pantalla');
+        updateStats(AppState.statsPeriod);
+    }
 }
 
 // ========== PANTALLA RESUMEN ==========
@@ -947,46 +985,6 @@ function updateCurrentDate() {
     // Primera letra en mayúscula
     dateDisplay.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }
-}
-
-function initNavigation() {
-    const navButtons = document.querySelectorAll('.nav-btn');
-    
-    navButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const screenId = btn.dataset.screen;
-            if (screenId) {
-                showScreen(screenId);
-            }
-        });
-        
-        // Efecto táctil
-        btn.addEventListener('touchstart', () => {
-            btn.style.transform = 'scale(0.95)';
-        });
-        
-        btn.addEventListener('touchend', () => {
-            btn.style.transform = 'scale(1)';
-        });
-    });
-}
-
-function handleNewTrip() {
-    console.log('🔄 Actualizando todas las pantallas por nuevo viaje');
-    
-    // Actualizar pantalla actual
-    updateScreenData(AppState.currentScreen);
-    
-    // Actualizar otras pantallas si es necesario
-    if (AppState.currentScreen !== 'new-trip') {
-        updateTodayTrips();
-    }
-    if (AppState.currentScreen !== 'summary') {
-        updateSummary(AppState.currentPeriod);
-    }
-    if (AppState.currentScreen !== 'stats') {
-        updateStats(AppState.statsPeriod);
-    }
 }
 
 function showNotification(message, type = 'info') {
