@@ -163,3 +163,117 @@ select, input {
   margin-top: 6px;
   font-size: 18px;
 }
+
+/* Estilos para botones de pago tipo toggle */
+.payment {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.payment-btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.payment-btn:hover {
+  border-color: #4a90e2;
+}
+
+.payment-btn.active {
+  font-weight: bold;
+}
+
+.cash-btn.active {
+  background: #4caf50;
+  color: white;
+  border-color: #388e3c;
+}
+
+.card-btn.active {
+  background: #2196f3;
+  color: white;
+  border-color: #1976d2;
+}
+
+/* Estilos para opciones de propina */
+.tip-options {
+  margin-top: 10px;
+}
+
+.tip-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tip-btn {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 16px;
+}
+
+.tip-btn:hover {
+  border-color: #4a90e2;
+}
+
+.tip-btn.active {
+  background: #2196f3;
+  color: white;
+  border-color: #1976d2;
+}
+
+.tip-custom-input {
+  margin-top: 10px;
+}
+
+.tip-custom-input input {
+  font-size: 16px;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  width: 100%;
+}
+
+.tip-custom-input input:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+/* Mensaje de éxito */
+.success-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4caf50;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1001;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
