@@ -11,10 +11,46 @@
 
   <!-- PANTALLA NUEVO VIAJE -->
   <div id="new-trip" class="screen active">
-    <header>Nuevo viaje</header>
-    <p>Pantalla de registro (en construcción)</p>
-    <button class="primary">Añadir viaje</button>
+  <header>Nuevo viaje</header>
+
+  <!-- País -->
+  <label>País de origen</label>
+  <select id="country">
+    <option value="">Selecciona país</option>
+    <option>España</option>
+    <option>Francia</option>
+    <option>Bélgica</option>
+    <option>Alemania</option>
+    <option>Italia</option>
+    <option>Otros</option>
+  </select>
+
+  <!-- Pasajeros -->
+  <label>Número de pasajeros</label>
+  <div class="passengers">
+    <button type="button" onclick="changePassengers(-1)">−</button>
+    <span id="passenger-count">1</span>
+    <button type="button" onclick="changePassengers(1)">+</button>
   </div>
+
+  <!-- Precio -->
+  <label>Precio del viaje</label>
+  <div class="price">70 €</div>
+
+  <!-- Método de pago -->
+  <label>Método de pago</label>
+  <div class="payment">
+    <button type="button" onclick="setPayment('cash')">Efectivo</button>
+    <button type="button" onclick="setPayment('card')">Tarjeta</button>
+  </div>
+
+  <!-- Propina -->
+  <label>Propina</label>
+  <input type="number" id="tip" placeholder="0 €">
+
+  <button class="primary">Añadir viaje</button>
+</div>
+
 
   <!-- PANTALLA RESUMEN -->
   <div id="summary" class="screen">
