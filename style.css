@@ -68,24 +68,93 @@ select, input {
   font-size: 16px;
 }
 
-.passengers, .payment {
-  display: flex;
-  gap: 10px;
-  margin-top: 6px;
+.passenger-selector {
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
 }
 
-.passengers button,
-.payment button {
-  flex: 1;
-  padding: 10px;
-  font-size: 18px;
+.passenger-selector label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.passengers {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.passengers button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #4a90e2;
+    background-color: white;
+    color: #4a90e2;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.passengers button:hover:not(:disabled) {
+    background-color: #4a90e2;
+    color: white;
+    transform: scale(1.05);
+}
+
+.passengers button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.passengers button:disabled {
+    border-color: #ccc;
+    color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 #passenger-count {
-  flex: 1;
-  text-align: center;
-  font-size: 18px;
-  padding-top: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    min-width: 25px;
+    text-align: center;
+    color: #333;
+    padding: 0 5px;
+}
+
+/* Indicador visual del límite alcanzado */
+.limit-reached {
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .passengers {
+        gap: 10px;
+        padding: 6px 12px;
+    }
+    
+    .passengers button {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+    }
+    
+    #passenger-count {
+        font-size: 20px;
+    }
 }
 
 .price {
