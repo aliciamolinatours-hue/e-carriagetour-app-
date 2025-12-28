@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="./style.css">
-<script src="./app.js"></script>
 </head>
 <body>
 
@@ -226,8 +225,6 @@
         </div>
     </div>
     
-    <script src="script.js"></script>
-
   <!-- Precio -->
   <label>Precio del viaje</label>
   <div class="price">70 €</div>
@@ -286,49 +283,6 @@
   </div>
 </div>
 
-<!-- PANTALLA ESTADÍSTICAS -->
-<div id="stats" class="screen">
-  <header>Estadísticas</header>
-  
-  <div class="stats-controls">
-    <select id="stats-period">
-      <option value="today">Hoy</option>
-      <option value="yesterday">Ayer</option>
-      <option value="week">Esta semana</option>
-      <option value="month">Este mes</option>
-      <option value="all">Todos</option>
-    </select>
-  </div>
-  
-  <div class="stats-grid">
-    <div class="stat-card">
-      <h3>Ingresos totales</h3>
-      <div id="stats-total-income" class="stat-amount">0 €</div>
-    </div>
-    <div class="stat-card">
-      <h3>Viajes totales</h3>
-      <div id="stats-total-trips" class="stat-amount">0</div>
-    </div>
-    <div class="stat-card">
-      <h3>Efectivo vs Tarjeta</h3>
-      <div id="payment-methods" class="stat-chart">
-        <div class="chart-bar">
-          <div class="cash-bar" style="width: 0%"></div>
-          <div class="card-bar" style="width: 0%"></div>
-        </div>
-      </div>
-    </div>
-    <div class="stat-card">
-      <h3>Propina total</h3>
-      <div id="stats-total-tip" class="stat-amount">0 €</div>
-    </div>
-  </div>
-  
-  <h3>Historial completo</h3>
-  <div id="all-trips" class="trip-list">
-    <div class="empty-state">No hay viajes registrados</div>
-  </div>
-</div>
 
 <!-- PANTALLA ESTADÍSTICAS -->
 <div id="stats" class="screen">
@@ -432,6 +386,6 @@
     <button onclick="showScreen('stats')">📈 Stats</button>
   </nav>
 
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
