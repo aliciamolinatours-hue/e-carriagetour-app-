@@ -361,6 +361,122 @@ function updateStats(period = 'month') {
     showEmptyStats();
     return;
   }
+
+// ========== FUNCIÓN PARA MOSTRAR VIAJES DE HOY ==========
+function updateTodayTrips() {
+  console.log('📝 Actualizando lista de viajes de hoy...');
+  
+  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+  const todayTripsList = document.getElementById('today-trips-list');
+  
+  if (!todayTripsList) {
+    console.error('No se encontró today-trips-list');
+    return;
+  }
+  
+  // Filtrar viajes de hoy
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const todayTrips = trips.filter(trip => {
+    const tripDate = new Date(trip.timestamp);
+    return tripDate >= today;
+  }).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Más reciente primero
+  
+  if (todayTrips.length === 0) {
+    todayTripsList.innerHTML = '<div class="empty-state">No hay viajes registrados hoy</div>';
+    return;
+  }
+  
+  let html = '';
+  todayTrips.forEach(trip => {
+    const paymentIcon = trip.paymentMethod === 'cash' ? '💵' : '💳';
+    const paymentText = trip.paymentMethod === 'cash' ? 'Efectivo' : 'Tarjeta';
+    
+    html += `
+      <div class="today-trip-item">
+        <div class="today-trip-info">
+          <div class="today-trip-time">${trip.time}</div>
+          <div class="today-trip-details">
+            <span class="today-trip-country">${trip.country}</span>
+            <span>•</span>
+            <span>${trip.passengers} pasajero${trip.passengers !== 1 ? 's' : ''}</span>
+            <span>•</span>
+            <span class="today-trip-payment">${paymentIcon} ${paymentText}</span>
+            ${trip.tip > 0 ? `<span>•</span><span>+${trip.tip}€ propina</span>` : ''}
+          </div>
+        </div>
+        <div class="today-trip-amount">${trip.total} €</div>
+      </div>
+    `;
+  });
+  
+  todayTripsList.innerHTML = html;
+  console.log(`✅ Mostrando ${todayTrips.length} viajes de hoy`);
+}
+
+// ========== MODIFICA saveTripToStorage() ==========
+// Para que actualice la lista cuando se añade un viaje
+function saveTripToStorage(trip) {
+  try {
+    const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+    trips.unshift(trip);
+    localStorage.setItem('trips', JSON.stringify(trips));
+    
+    console.log('💾 Viaje guardado. Total:', trips.length);
+    
+    // Disparar evento para actualizar todas las pantallas
+    const event = new CustomEvent('tripAdded', { detail: trip });
+    document.dispatchEvent(event);
+    
+    // Actualizar inmediatamente la lista de viajes de hoy
+    updateTodayTrips();
+    
+    return true;
+  } catch (error) {
+    console.error('Error al guardar:', error);
+    return false;
+  }
+}
+
+// ========== MODIFICA initSummaryAndStats() ==========
+// Para que también actualice la lista de hoy
+function initSummaryAndStats() {
+  console.log('📋 Inicializando resumen, stats y viajes de hoy...');
+  
+  document.addEventListener('tripAdded', function() {
+    console.log('🔄 Viaje añadido, actualizando todas las pantallas...');
+    updateSummary('today');
+    updateStats('month');
+    updateTodayTrips(); // ← AÑADE ESTA LÍNEA
+  });
+  
+  // Inicializar con datos existentes
+  updateSummary('today');
+  updateStats('month');
+  updateTodayTrips(); // ← AÑADE ESTA LÍNEA
+  
+  console.log('✅ Todas las pantallas listas');
+}
+
+// ========== MODIFICA la función showScreen() ==========
+// Para actualizar la lista cuando se muestra la pantalla
+function showScreen(id) {
+  console.log('Cambiando a pantalla:', id);
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+  
+  // Actualizar datos cuando se cambia de pantalla
+  if (id === 'summary') {
+    updateSummary('today');
+  } else if (id === 'stats') {
+    updateStats('month');
+  } else if (id === 'new-trip') {
+    updateTodayTrips(); // ← AÑADE ESTA LÍNEA
+  }
+}
   
   const stats = calculateMonthlyStats(trips);
   
