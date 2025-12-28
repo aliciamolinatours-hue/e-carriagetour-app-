@@ -797,4 +797,3 @@ function showScreen(id) {
     updateStats('month');
   }
 }
-
