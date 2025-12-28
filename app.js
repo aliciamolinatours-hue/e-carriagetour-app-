@@ -739,104 +739,150 @@ function showScreen(id) {
 }
 
 // ============================================
-// FUNCIONALIDAD PARA ESTADÍSTICAS MEJORADAS
+// FUNCIONALIDAD MEJORADA PARA ESTADÍSTICAS
 // ============================================
 
-// 1. Función para obtener estadísticas mensuales
-function getMonthlyStats(trips, monthFilter = 'current') {
-  console.log(`📅 Calculando estadísticas para: ${monthFilter}`);
+// 1. Función PRINCIPAL para actualizar estadísticas (REEMPLAZA la anterior)
+function updateStats(period = 'month') {
+  console.log(`📈 Actualizando estadísticas MEJORADAS para: ${period}`);
   
-  let filteredTrips = [...trips];
+  // Obtener todos los viajes
+  const allTrips = JSON.parse(localStorage.getItem('trips') || '[]');
+  console.log('Total viajes en sistema:', allTrips.length);
   
-  // Filtrar por mes si es necesario
-  if (monthFilter !== 'all') {
-    const now = new Date();
-    let targetMonth, targetYear;
+  // 1.1 Filtrar viajes según el periodo seleccionado
+  let tripsToAnalyze;
+  
+  if (period === 'today' || period === 'yesterday' || period === 'week') {
+    tripsToAnalyze = filterTripsByPeriod(allTrips, period);
+  } else if (period === 'month') {
+    // Para "mes", usar el mes seleccionado en el selector
+    const monthSelect = document.getElementById('stats-month');
+    const selectedMonth = monthSelect ? monthSelect.value : 'all';
     
-    if (monthFilter === 'current') {
-      targetMonth = now.getMonth();
-      targetYear = now.getFullYear();
+    if (selectedMonth === 'all') {
+      tripsToAnalyze = allTrips;
     } else {
-      // monthFilter sería algo como "2024-01"
-      const [year, month] = monthFilter.split('-').map(Number);
-      targetMonth = month - 1; // JavaScript meses van de 0-11
-      targetYear = year;
+      const [year, month] = selectedMonth.split('-').map(Number);
+      tripsToAnalyze = allTrips.filter(trip => {
+        const tripDate = new Date(trip.timestamp);
+        return tripDate.getFullYear() === year && 
+               tripDate.getMonth() === month - 1;
+      });
     }
-    
-    filteredTrips = trips.filter(trip => {
-      const tripDate = new Date(trip.timestamp);
-      return tripDate.getMonth() === targetMonth && 
-             tripDate.getFullYear() === targetYear;
-    });
+  } else if (period === 'all') {
+    tripsToAnalyze = allTrips;
+  }
+  
+  console.log(`📊 Viajes a analizar: ${tripsToAnalyze.length}`);
+  
+  // 1.2 Calcular TODAS las estadísticas
+  const stats = calculateMonthlyStats(tripsToAnalyze);
+  
+  // 1.3 MOSTRAR todas las estadísticas en la pantalla
+  displayMonthlyStats(stats);
+  
+  // 1.4 Actualizar también el historial completo
+  updateAllTrips(tripsToAnalyze);
+  
+  console.log('✅ Estadísticas mejoradas actualizadas:', stats);
+}
+
+// 2. Función para CALCULAR estadísticas mensuales
+function calculateMonthlyStats(trips) {
+  if (trips.length === 0) {
+    return {
+      totalTrips: 0,
+      totalPassengers: 0,
+      cashTrips: 0,
+      cardTrips: 0,
+      cashPercentage: 0,
+      cardPercentage: 0,
+      countries: []
+    };
   }
   
   // Calcular estadísticas básicas
   const stats = {
-    totalTrips: filteredTrips.length,
-    totalPassengers: filteredTrips.reduce((sum, trip) => sum + trip.passengers, 0),
-    cashTrips: filteredTrips.filter(t => t.paymentMethod === 'cash').length,
-    cardTrips: filteredTrips.filter(t => t.paymentMethod === 'card').length,
-    totalIncome: filteredTrips.reduce((sum, trip) => sum + parseFloat(trip.total), 0),
-    totalTip: filteredTrips.reduce((sum, trip) => sum + parseFloat(trip.tip), 0)
+    totalTrips: trips.length,
+    totalPassengers: trips.reduce((sum, trip) => sum + (parseInt(trip.passengers) || 1), 0),
+    cashTrips: trips.filter(trip => trip.paymentMethod === 'cash').length,
+    cardTrips: trips.filter(trip => trip.paymentMethod === 'card').length
   };
+  
+  // Calcular porcentajes
+  stats.cashPercentage = stats.totalTrips > 0 ? 
+    Math.round((stats.cashTrips / stats.totalTrips) * 100) : 0;
+  stats.cardPercentage = stats.totalTrips > 0 ? 
+    Math.round((stats.cardTrips / stats.totalTrips) * 100) : 0;
   
   // Calcular distribución por países
   const countryStats = {};
-  filteredTrips.forEach(trip => {
-    if (!countryStats[trip.country]) {
-      countryStats[trip.country] = {
+  trips.forEach(trip => {
+    const country = trip.country || 'Sin especificar';
+    
+    if (!countryStats[country]) {
+      countryStats[country] = {
         trips: 0,
-        passengers: 0,
-        income: 0
+        passengers: 0
       };
     }
-    countryStats[trip.country].trips++;
-    countryStats[trip.country].passengers += trip.passengers;
-    countryStats[trip.country].income += parseFloat(trip.total);
+    
+    countryStats[country].trips++;
+    countryStats[country].passengers += (parseInt(trip.passengers) || 1);
   });
   
-  // Convertir a array y ordenar por número de viajes
-  const countryArray = Object.entries(countryStats).map(([country, data]) => ({
-    country,
-    ...data
-  })).sort((a, b) => b.trips - a.trips);
+  // Convertir a array y ordenar
+  stats.countries = Object.entries(countryStats)
+    .map(([country, data]) => ({
+      country,
+      trips: data.trips,
+      passengers: data.passengers
+    }))
+    .sort((a, b) => b.trips - a.trips);
   
-  return {
-    ...stats,
-    countries: countryArray,
-    cashPercentage: stats.totalTrips > 0 ? Math.round((stats.cashTrips / stats.totalTrips) * 100) : 0,
-    cardPercentage: stats.totalTrips > 0 ? Math.round((stats.cardTrips / stats.totalTrips) * 100) : 0
-  };
+  return stats;
 }
 
-// 2. Función para actualizar la interfaz de estadísticas mensuales
-function updateMonthlyStats(stats) {
-  console.log('📊 Actualizando estadísticas mensuales en la interfaz');
+// 3. Función para MOSTRAR estadísticas mensuales en la pantalla
+function displayMonthlyStats(stats) {
+  console.log('🖥️ Mostrando estadísticas mensuales:', stats);
   
-  // Actualizar valores principales
+  // 3.1 Actualizar las 4 tarjetas principales
   document.getElementById('monthly-total-trips').textContent = stats.totalTrips;
   document.getElementById('monthly-total-passengers').textContent = stats.totalPassengers;
   document.getElementById('monthly-cash-trips').textContent = stats.cashTrips;
   document.getElementById('monthly-card-trips').textContent = stats.cardTrips;
   
-  // Actualizar gráfico de métodos de pago
-  updatePaymentMethodsChartImproved(stats);
-  
-  // Actualizar distribución por países
+  // 3.2 Actualizar distribución por países
   updateCountriesDistribution(stats.countries);
+  
+  // 3.3 Actualizar gráfico de métodos de pago
+  updatePaymentChart(stats.cashPercentage, stats.cardPercentage);
+  
+  console.log('✅ Estadísticas mensuales mostradas correctamente');
 }
 
-// 3. Función para actualizar distribución por países
+// 4. Función para actualizar distribución por países
 function updateCountriesDistribution(countries) {
   const countriesList = document.getElementById('countries-list');
   
+  if (!countriesList) {
+    console.error('❌ No se encontró el contenedor de países');
+    return;
+  }
+  
   if (countries.length === 0) {
-    countriesList.innerHTML = '<div class="empty-state">No hay datos de países</div>';
+    countriesList.innerHTML = `
+      <div class="empty-state">
+        No hay datos de países para el periodo seleccionado
+      </div>
+    `;
     return;
   }
   
   let html = '';
-  countries.forEach(country => {
+  countries.forEach((country, index) => {
     html += `
       <div class="country-item">
         <div class="country-name">${country.country}</div>
@@ -849,130 +895,130 @@ function updateCountriesDistribution(countries) {
   });
   
   countriesList.innerHTML = html;
+  console.log(`🌍 Mostrados ${countries.length} países`);
 }
 
-// 4. Función mejorada para gráfico de métodos de pago
-function updatePaymentMethodsChartImproved(stats) {
+// 5. Función para actualizar gráfico de métodos de pago
+function updatePaymentChart(cashPercent, cardPercent) {
   const cashBar = document.getElementById('cash-bar');
   const cardBar = document.getElementById('card-bar');
-  const cashPercent = document.getElementById('cash-percent');
-  const cardPercent = document.getElementById('card-percent');
+  const cashText = document.getElementById('cash-percent');
+  const cardText = document.getElementById('card-percent');
   
-  if (stats.totalTrips === 0) {
-    cashBar.style.width = '0%';
-    cardBar.style.width = '0%';
-    cashPercent.textContent = '0%';
-    cardPercent.textContent = '0%';
+  if (!cashBar || !cardBar) {
+    console.error('❌ Elementos del gráfico no encontrados');
     return;
   }
   
-  const cashWidth = Math.max(stats.cashPercentage, 5); // Mínimo 5% para que se vea
-  const cardWidth = Math.max(stats.cardPercentage, 5);
+  // Asegurar que haya al menos un pequeño porcentaje visible
+  const displayCash = Math.max(cashPercent, 5);
+  const displayCard = Math.max(cardPercent, 5);
   
-  cashBar.style.width = `${cashWidth}%`;
-  cardBar.style.width = `${cardWidth}%`;
+  cashBar.style.width = `${displayCash}%`;
+  cardBar.style.width = `${displayCard}%`;
   
-  cashPercent.textContent = `${stats.cashPercentage}%`;
-  cardPercent.textContent = `${stats.cardPercentage}%`;
+  if (cashText) cashText.textContent = `${cashPercent}%`;
+  if (cardText) cardText.textContent = `${cardPercent}%`;
+  
+  console.log(`📊 Gráfico actualizado: Efectivo ${cashPercent}%, Tarjeta ${cardPercent}%`);
 }
 
-// 5. Función para obtener meses disponibles
-function getAvailableMonths(trips) {
-  const months = new Set();
+// 6. Función para configurar selector de meses
+function setupMonthSelector() {
+  console.log('🗓️ Configurando selector de meses...');
   
-  trips.forEach(trip => {
-    const date = new Date(trip.timestamp);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // 1-12
-    const monthKey = `${year}-${month.toString().padStart(2, '0')}`;
-    const monthName = date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-    
-    months.add(JSON.stringify({ key: monthKey, name: monthName }));
-  });
-  
-  // Convertir a array y ordenar (más reciente primero)
-  return Array.from(months)
-    .map(m => JSON.parse(m))
-    .sort((a, b) => b.key.localeCompare(a.key));
-}
-
-// 6. Función para actualizar selector de meses
-function updateMonthSelector(months) {
+  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
   const monthSelect = document.getElementById('stats-month');
   
-  if (!monthSelect) return;
+  if (!monthSelect) {
+    console.log('⚠️ Selector de meses no encontrado');
+    return;
+  }
   
-  // Limpiar opciones existentes
+  // Limpiar opciones actuales
   monthSelect.innerHTML = '';
   
-  // Agregar opción para "Todos los meses"
+  // Agregar opción "Todos los meses"
   const allOption = document.createElement('option');
   allOption.value = 'all';
   allOption.textContent = 'Todos los meses';
   monthSelect.appendChild(allOption);
   
-  // Agregar meses disponibles
-  months.forEach(month => {
-    const option = document.createElement('option');
-    option.value = month.key;
-    option.textContent = month.name.charAt(0).toUpperCase() + month.name.slice(1);
-    
-    // Seleccionar mes actual por defecto
-    const now = new Date();
-    const currentMonth = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
-    if (month.key === currentMonth) {
-      option.selected = true;
-    }
-    
-    monthSelect.appendChild(option);
-  });
-}
-
-// 7. Función principal para actualizar estadísticas
-function updateStats(period = 'month') {
-  console.log(`📈 Actualizando estadísticas para periodo: ${period}`);
-  
-  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-  
-  // Obtener meses disponibles
-  const availableMonths = getAvailableMonths(trips);
-  updateMonthSelector(availableMonths);
-  
-  // Obtener mes seleccionado
-  const monthSelect = document.getElementById('stats-month');
-  const selectedMonth = monthSelect ? monthSelect.value : 'current';
-  
-  // Calcular estadísticas según el periodo
-  let stats;
-  if (period === 'month') {
-    stats = getMonthlyStats(trips, selectedMonth);
-  } else {
-    // Para otros periodos (hoy, ayer, semana, todos)
-    const filteredTrips = filterTripsByPeriod(trips, period);
-    stats = getMonthlyStats(filteredTrips, 'all');
+  if (trips.length === 0) {
+    console.log('📭 No hay viajes para mostrar meses');
+    return;
   }
   
-  // Actualizar interfaz
-  updateMonthlyStats(stats);
-  
-  // También actualizar el historial completo
-  updateAllTrips(trips.filter(trip => {
-    if (period === 'month' && selectedMonth !== 'all') {
-      const tripDate = new Date(trip.timestamp);
-      const [year, month] = selectedMonth.split('-').map(Number);
-      return tripDate.getMonth() === month - 1 && tripDate.getFullYear() === year;
+  // Obtener meses únicos
+  const monthsMap = new Map();
+  trips.forEach(trip => {
+    try {
+      const date = new Date(trip.timestamp);
+      const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+      const monthName = date.toLocaleDateString('es-ES', { 
+        month: 'long', 
+        year: 'numeric' 
+      }).replace(/^\w/, c => c.toUpperCase());
+      
+      monthsMap.set(monthKey, monthName);
+    } catch (error) {
+      console.log('Error procesando fecha:', trip);
     }
-    return filterTripsByPeriod([trip], period).length > 0;
-  }));
+  });
   
-  console.log('✅ Estadísticas actualizadas:', stats);
+  // Ordenar por fecha (más reciente primero)
+  const monthsArray = Array.from(monthsMap.entries())
+    .sort((a, b) => b[0].localeCompare(a[0]));
+  
+  // Agregar meses al selector
+  monthsArray.forEach(([key, name]) => {
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = name;
+    monthSelect.appendChild(option);
+  });
+  
+  // Seleccionar mes actual por defecto
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+  const currentOption = monthSelect.querySelector(`option[value="${currentMonth}"]`);
+  
+  if (currentOption) {
+    currentOption.selected = true;
+  } else if (monthsArray.length > 0) {
+    monthSelect.value = monthsArray[0][0];
+  } else {
+    monthSelect.value = 'all';
+  }
+  
+  console.log(`✅ Selector configurado con ${monthsArray.length + 1} opciones`);
 }
 
-// 8. Modificar la inicialización para incluir eventos del selector de mes
+// 7. MODIFICAR la función initSummaryAndStats() (REEMPLAZA la anterior)
 function initSummaryAndStats() {
-  console.log('📋 Inicializando resumen y estadísticas mejoradas...');
+  console.log('📋 Inicializando resumen y estadísticas MEJORADAS...');
   
-  // ... (mantener los event listeners existentes para resumen)
+  // Configurar selector de meses
+  setupMonthSelector();
+  
+  // Event listeners para botones de periodo (Resumen - se mantienen igual)
+  document.getElementById('today-btn')?.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('today-btn').classList.add('active');
+    updateSummary('today');
+  });
+  
+  document.getElementById('yesterday-btn')?.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('yesterday-btn').classList.add('active');
+    updateSummary('yesterday');
+  });
+  
+  document.getElementById('week-btn')?.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('week-btn').classList.add('active');
+    updateSummary('week');
+  });
   
   // Event listener para selector de periodo (Stats)
   document.getElementById('stats-period')?.addEventListener('change', (e) => {
@@ -986,20 +1032,20 @@ function initSummaryAndStats() {
     updateStats(selectedPeriod);
   });
   
-  // Actualizar al cambiar de pantalla
+  // Actualizar al añadir viaje
   document.addEventListener('tripAdded', () => {
     updateSummary('today');
-    updateStats('month'); // Cambiado de 'today' a 'month'
+    updateStats('month'); // Usar 'month' en lugar de 'today'
   });
   
   // Inicializar con datos actuales
   updateSummary('today');
-  updateStats('month'); // Cambiado de 'today' a 'month'
+  updateStats('month'); // Usar 'month' en lugar de 'today'
   
-  console.log('✅ Resumen y estadísticas mejoradas inicializados');
+  console.log('✅ Resumen y estadísticas MEJORADAS inicializados');
 }
 
-// 9. Modificar showScreen para cargar estadísticas mensuales por defecto
+// 8. MODIFICAR la función showScreen() (AJUSTAR para usar las nuevas estadísticas)
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(screen => {
     screen.classList.remove('active');
@@ -1010,6 +1056,8 @@ function showScreen(id) {
   if (id === 'summary') {
     updateSummary('today');
   } else if (id === 'stats') {
-    updateStats('month'); // Cambiado de 'today' a 'month'
+    // Cuando se muestra stats, cargar selector de meses y estadísticas
+    setupMonthSelector();
+    updateStats('month');
   }
 }
