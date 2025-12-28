@@ -10,6 +10,38 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
+// ========== VARIABLES GLOBALES ==========
+let passengerCount = 1;
+const minPassengers = 1;
+const maxPassengers = 5;
+let paymentMethod = 'cash';
+let selectedTip = null;
+let customTipValue = '';
+
+// ========== FUNCIÓN AUXILIAR PARA RESET PASSAJEROS ==========
+function resetPassengerCounter() {
+  console.log('🔄 Reseteando contador de pasajeros...');
+  
+  // 1. Resetear la variable GLOBAL
+  passengerCount = 1;
+  
+  // 2. Actualizar el elemento en pantalla
+  const passengerCountElement = document.getElementById('passenger-count');
+  const decreaseButton = document.getElementById('decrease-passenger');
+  const increaseButton = document.getElementById('increase-passenger');
+  
+  if (passengerCountElement) {
+    passengerCountElement.textContent = '1';
+    passengerCountElement.classList.remove('limit-reached');
+  }
+  
+  // 3. Actualizar estado de botones
+  if (decreaseButton) decreaseButton.disabled = true;
+  if (increaseButton) increaseButton.disabled = false;
+  
+  console.log('✅ Contador reseteado a 1 pasajero');
+}
+
 // ========== PASSAJEROS ==========
 let passengerCount = 1;
 const minPassengers = 1;
@@ -276,24 +308,11 @@ function showMessage(text) {
 }
 
 function resetForm() {
-  console.log('🔄 Reseteando formulario...');
+  console.log('🔄 Reseteando formulario completo...');
   
   setTimeout(() => {
-    // 1. RESETEAR PASSAJEROS (ESTE ES EL CAMBIO CLAVE)
-    passengerCount = 1; // ← Actualizar la variable GLOBAL
-    
-    const passengerCountElement = document.getElementById('passenger-count');
-    const decreaseButton = document.getElementById('decrease-passenger');
-    const increaseButton = document.getElementById('increase-passenger');
-    
-    if (passengerCountElement) {
-      passengerCountElement.textContent = '1';
-      passengerCountElement.classList.remove('limit-reached');
-    }
-    
-    // Actualizar estado de botones
-    if (decreaseButton) decreaseButton.disabled = true;
-    if (increaseButton) increaseButton.disabled = false;
+    // 1. Resetear pasajeros (USANDO LA NUEVA FUNCIÓN)
+    resetPassengerCounter();
     
     // 2. Resetear método de pago
     paymentMethod = 'cash';
@@ -306,34 +325,18 @@ function resetForm() {
     selectedTip = null;
     customTipValue = '';
     
-    // 4. Actualizar display de propina (pero mantener efectivo como predeterminado)
-    const tipContainer = document.getElementById('tip-container');
-    if (tipContainer) {
-      tipContainer.innerHTML = `
-        <label>Propina</label>
-        <input type="number" id="tip-input" placeholder="0 €" step="0.01" value="">
-      `;
-      
-      // Restablecer event listener para propina en efectivo
-      setTimeout(() => {
-        const tipInput = document.getElementById('tip-input');
-        if (tipInput) {
-          tipInput.addEventListener('input', (e) => {
-            selectedTip = e.target.value;
-          });
-        }
-      }, 50);
-    }
+    // 4. Actualizar display de propina
+    updateTipDisplay(); // Esta función ya existe en tu código
     
     // 5. Resetear país
     const countrySelect = document.getElementById('country');
     if (countrySelect) {
       countrySelect.value = '';
-      countrySelect.focus(); // Enfocar para siguiente viaje
+      countrySelect.focus();
     }
     
-    console.log('✅ Formulario completamente reseteado. Pasajeros:', passengerCount);
-  }, 1000); // Reducido a 1 segundo para mejor experiencia
+    console.log('✅ Formulario completamente reseteado');
+  }, 1000);
 }
 
 // ========== INICIALIZACIÓN ==========
