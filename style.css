@@ -446,6 +446,19 @@ body {
   color: var(--text-primary);
 }
 
+/* Ocultar flechas en input de propina */
+.tip-input[type="number"] {
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+  appearance: textfield;
+}
+
+.tip-input[type="number"]::-webkit-inner-spin-button,
+.tip-input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .tip-input:focus {
   outline: none;
 }
