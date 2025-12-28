@@ -89,7 +89,7 @@ function initPaymentButtons() {
   });
 }
 
-// 3. Funcionalidad para propina dinámica - MODIFICAR
+// 3. Funcionalidad para propina dinámica
 function updateTipDisplay() {
   const tipContainer = document.getElementById('tip-container');
   
@@ -174,7 +174,16 @@ function updateTipDisplay() {
 
 // 4. Funcionalidad para añadir viaje - MODIFICAR PARA GUARDAR DATOS
 function initAddTripButton() {
-  const addTripBtn = document.querySelector('.primary');
+  // CAMBIO: Buscar por ID en lugar de clase
+  const addTripBtn = document.getElementById('add-trip-btn');
+  
+  // Verificar que el botón existe
+  if (!addTripBtn) {
+    console.error('❌ ERROR: No se encontró el botón con id="add-trip-btn"');
+    return;
+  }
+  
+  console.log('✅ Botón "Añadir viaje" encontrado');
   
   addTripBtn.addEventListener('click', function() {
     // Obtener datos del formulario
@@ -234,6 +243,7 @@ function initAddTripButton() {
   });
 }
 
+// (El resto de tus funciones se mantiene IGUAL)
 // NUEVA FUNCIÓN: Guardar viaje en localStorage
 function saveTripToStorage(trip) {
   try {
@@ -312,7 +322,4 @@ function viewSavedTrips() {
   console.log('=======================');
   return trips;
 }
-
-// Llamar a esta función para ver viajes guardados
-// viewSavedTrips();
 
