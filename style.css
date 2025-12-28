@@ -844,3 +844,98 @@ button.primary {
 #add-trip-btn:active {
   transform: translateY(0) !important;
 }
+
+/* ============================================
+   VIAJES DE HOY EN PANTALLA NUEVO VIAJE
+   ============================================ */
+
+.today-trips-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.today-trips-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.today-trips-list {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.today-trip-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: transform 0.2s;
+}
+
+.today-trip-item:hover {
+  transform: translateX(5px);
+  background: #e9ecef;
+}
+
+.today-trip-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.today-trip-info {
+  flex: 1;
+}
+
+.today-trip-time {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+.today-trip-details {
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.today-trip-country {
+  font-weight: 500;
+}
+
+.today-trip-payment {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.today-trip-amount {
+  font-weight: bold;
+  font-size: 16px;
+  color: #4caf50;
+  min-width: 70px;
+  text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .today-trip-details {
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+
