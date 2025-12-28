@@ -89,20 +89,17 @@ function initPaymentButtons() {
   });
 }
 
-// 3. Funcionalidad para propina dinámica
-function initTipOptions() {
-  updateTipDisplay();
-}
-
+// 3. Funcionalidad para propina dinámica - MODIFICAR
 function updateTipDisplay() {
   const tipContainer = document.getElementById('tip-container');
   
   if (paymentMethod === 'card') {
-    // Opciones para tarjeta
+    // Opciones para tarjeta - AGREGAR BOTÓN 0€
     tipContainer.innerHTML = `
       <label>Propina</label>
       <div class="tip-options">
         <div class="tip-buttons">
+          <button type="button" class="tip-btn" data-tip="0">0 €</button>
           <button type="button" class="tip-btn" data-tip="7">7 €</button>
           <button type="button" class="tip-btn" data-tip="10.5">10,5 €</button>
           <button type="button" class="tip-btn" data-tip="14">14 €</button>
@@ -148,6 +145,15 @@ function updateTipDisplay() {
       });
     });
     
+    // Seleccionar 0€ por defecto para tarjeta
+    setTimeout(() => {
+      const zeroBtn = tipContainer.querySelector('.tip-btn[data-tip="0"]');
+      if (zeroBtn) {
+        zeroBtn.classList.add('active');
+        selectedTip = '0';
+      }
+    }, 100);
+    
   } else {
     // Opción para efectivo (input libre)
     tipContainer.innerHTML = `
@@ -158,6 +164,7 @@ function updateTipDisplay() {
     // Event listener para input de efectivo
     const tipInput = document.getElementById('tip-input');
     if (tipInput) {
+      tipInput.value = ''; // Resetear a vacío
       tipInput.addEventListener('input', (e) => {
         selectedTip = e.target.value;
       });
@@ -165,7 +172,7 @@ function updateTipDisplay() {
   }
 }
 
-// 4. Funcionalidad para añadir viaje
+// 4. Funcionalidad para añadir viaje - MODIFICAR PARA GUARDAR DATOS
 function initAddTripButton() {
   const addTripBtn = document.querySelector('.primary');
   
@@ -182,8 +189,12 @@ function initAddTripButton() {
       } else if (selectedTip !== 'custom') {
         tipAmount = parseFloat(selectedTip) || 0;
       }
-    } else if (paymentMethod === 'cash' && selectedTip) {
-      tipAmount = parseFloat(selectedTip) || 0;
+    } else if (paymentMethod === 'cash') {
+      // Para efectivo, obtener valor del input
+      const tipInput = document.getElementById('tip-input');
+      if (tipInput) {
+        tipAmount = parseFloat(tipInput.value) || 0;
+      }
     }
     
     const total = price + tipAmount;
@@ -197,68 +208,111 @@ function initAddTripButton() {
     // Crear objeto del viaje
     const trip = {
       id: Date.now(),
-      date: new Date().toLocaleString(),
+      timestamp: new Date().toISOString(),
+      date: new Date().toLocaleDateString('es-ES'),
+      time: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
       country: country,
       passengers: passengerCount,
       price: price,
       paymentMethod: paymentMethod,
       tip: tipAmount,
-      total: total
+      total: total.toFixed(2)
     };
     
-    // Mostrar resumen en consola (por ahora)
-    console.log('Viaje añadido:', trip);
+    // Guardar en localStorage
+    saveTripToStorage(trip);
+    
+    // Mostrar resumen en consola
+    console.log('📋 VIAJE GUARDADO:', trip);
+    console.log('💾 Todos los viajes:', JSON.parse(localStorage.getItem('trips') || '[]'));
     
     // Mostrar mensaje de éxito
-    showMessage(`✅ Viaje añadido: ${passengerCount} pasajero(s) - Total: ${total}€`);
+    showMessage(`✅ Viaje añadido: ${passengerCount} pasajero(s) - ${country} - Total: ${total}€`);
     
-    // Resetear formulario (opcional)
-    setTimeout(() => {
-      // Resetear pasajeros a 1
-      passengerCount = 1;
-      const passengerCountElement = document.getElementById('passenger-count');
-      const passengerInput = document.getElementById('passenger-input');
-      passengerCountElement.textContent = '1';
-      passengerInput.value = '1';
-      
-      // Resetear método de pago a efectivo
-      paymentMethod = 'cash';
-      const paymentButtons = document.querySelectorAll('.payment-btn');
-      paymentButtons.forEach(b => b.classList.remove('active'));
-      document.querySelector('.cash-btn').classList.add('active');
-      
-      // Resetear propina
-      selectedTip = null;
-      customTipValue = '';
-      updateTipDisplay();
-      
-      // Resetear país
-      document.getElementById('country').value = '';
-    }, 2000);
+    // Resetear formulario
+    resetForm();
   });
 }
 
-// Función para mostrar mensajes
-function showMessage(text, type = 'success') {
-  // Eliminar mensaje anterior si existe
-  const existingMessage = document.querySelector('.success-message');
-  if (existingMessage) existingMessage.remove();
-  
-  // Crear nuevo mensaje
-  const messageDiv = document.createElement('div');
-  messageDiv.className = 'success-message';
-  messageDiv.textContent = text;
-  
-  if (type === 'error') {
-    messageDiv.style.backgroundColor = '#f44336';
-  }
-  
-  document.body.appendChild(messageDiv);
-  
-  // Eliminar mensaje después de 3 segundos
-  setTimeout(() => {
-    if (messageDiv.parentNode) {
-      messageDiv.parentNode.removeChild(messageDiv);
+// NUEVA FUNCIÓN: Guardar viaje en localStorage
+function saveTripToStorage(trip) {
+  try {
+    // Obtener viajes existentes o crear array vacío
+    const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+    
+    // Agregar nuevo viaje al inicio del array
+    trips.unshift(trip);
+    
+    // Guardar en localStorage (máximo 1000 viajes)
+    if (trips.length > 1000) {
+      trips.pop(); // Eliminar el más antiguo si hay más de 1000
     }
-  }, 3000);
+    
+    localStorage.setItem('trips', JSON.stringify(trips));
+    
+    // Disparar evento personalizado para notificar a otras partes de la app
+    const event = new CustomEvent('tripAdded', { detail: trip });
+    document.dispatchEvent(event);
+    
+    return true;
+  } catch (error) {
+    console.error('Error al guardar el viaje:', error);
+    showMessage('Error al guardar el viaje', 'error');
+    return false;
+  }
 }
+
+// NUEVA FUNCIÓN: Resetear formulario
+function resetForm() {
+  setTimeout(() => {
+    // Resetear pasajeros a 1
+    passengerCount = 1;
+    const passengerCountElement = document.getElementById('passenger-count');
+    const passengerInput = document.getElementById('passenger-input');
+    if (passengerCountElement) passengerCountElement.textContent = '1';
+    if (passengerInput) passengerInput.value = '1';
+    
+    // Resetear botones de pasajeros
+    const decreaseButton = document.getElementById('decrease-passenger');
+    const increaseButton = document.getElementById('increase-passenger');
+    if (decreaseButton) decreaseButton.disabled = false;
+    if (increaseButton) increaseButton.disabled = false;
+    
+    // Resetear método de pago a efectivo
+    paymentMethod = 'cash';
+    const paymentButtons = document.querySelectorAll('.payment-btn');
+    paymentButtons.forEach(b => b.classList.remove('active'));
+    const cashBtn = document.querySelector('.cash-btn');
+    if (cashBtn) cashBtn.classList.add('active');
+    
+    // Resetear propina
+    selectedTip = null;
+    customTipValue = '';
+    
+    // Actualizar display de propina
+    updateTipDisplay();
+    
+    // Resetear país
+    const countrySelect = document.getElementById('country');
+    if (countrySelect) countrySelect.value = '';
+    
+    // Enfocar en país para siguiente viaje
+    if (countrySelect) countrySelect.focus();
+  }, 1500);
+}
+
+// NUEVA FUNCIÓN: Ver viajes guardados (para depuración)
+function viewSavedTrips() {
+  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+  console.log('=== VIAJES GUARDADOS ===');
+  console.log('Total:', trips.length);
+  trips.forEach((trip, index) => {
+    console.log(`${index + 1}. ${trip.date} ${trip.time} - ${trip.country} - ${trip.passengers} pasajeros - ${trip.total}€ (${trip.paymentMethod})`);
+  });
+  console.log('=======================');
+  return trips;
+}
+
+// Llamar a esta función para ver viajes guardados
+// viewSavedTrips();
+
