@@ -115,6 +115,20 @@ body {
   font-size: 1.6rem;
 }
 
+.app-logo {
+  height: 1.8em; /* Ajusta según necesites */
+  width: auto;
+  vertical-align: middle;
+  margin-right: 12px;
+  filter: brightness(0) invert(1); /* Hace el logo blanco para el header oscuro */
+}
+
+.app-title {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Espacio moderno entre logo y texto */
+}
+
 .date-display {
   font-size: 0.9rem;
   opacity: 0.9;
