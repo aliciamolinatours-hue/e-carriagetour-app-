@@ -603,56 +603,70 @@ function initSummaryScreen() {
 }
 
 function updateSummary(period = 'today') {
-    console.log('📊 Actualizando resumen para:', period);
-    
-    // Filtrar viajes por periodo
-    const filteredTrips = filterTripsByPeriod(AppState.trips, period);
-    
-    // Calcular estadísticas
-    const cashTrips = filteredTrips.filter(t => t.paymentMethod === 'cash');
-    const cardTrips = filteredTrips.filter(t => t.paymentMethod === 'card');
-    
-    const cashTripsCount = cashTrips.length;
-    const cashAmount = cashTrips.reduce((sum, t) => sum + t.price, 0);
-    const cashTips = cashTrips.reduce((sum, t) => sum + (t.tip || 0), 0);
-    
-    const cardTripsCount = cardTrips.length;
-    const cardAmount = cardTrips.reduce((sum, t) => sum + t.price, 0);
-    const cardTips = cardTrips.reduce((sum, t) => sum + (t.tip || 0), 0);
-    
-    const totalTrips = cashTripsCount + cardTripsCount;
-    const totalTips = cashTips + cardTips;
-    
-    const cashReceived = cashAmount + cashTips;
-    const cashToDeliver = cashReceived - cardTips;
-    
-    // Actualizar UI
-    updateElement('total-all-trips', totalTrips);
-    updateElement('cash-trips-count', cashTripsCount);
-    updateElement('cash-trips-amount', `${cashAmount.toFixed(2)} €`);
-    updateElement('card-trips-count', cardTripsCount);
-    updateElement('card-trips-amount', `${cardAmount.toFixed(2)} €`);
-    updateElement('total-tips', `${totalTips.toFixed(2)} €`);
-    
-    // Desglose financiero
-    updateElement('cash-received', `${cashReceived.toFixed(2)} €`);
-    updateElement('card-tips-amount', `${cardTips.toFixed(2)} €`);
-    updateElement('cash-to-deliver', `${Math.max(cashToDeliver, 0).toFixed(2)} €`);
-    
-    // Desglose de propinas
-    const tipsBreakdown = document.getElementById('tips-breakdown');
-    if (tipsBreakdown) {
-        if (totalTips > 0) {
-            tipsBreakdown.innerHTML = `
-                <div style="font-size: 0.8rem; margin-top: 4px;">
-                    Efectivo: ${cashTips.toFixed(2)}€ • Tarjeta: ${cardTips.toFixed(2)}€
-                </div>
-            `;
-        } else {
-            tipsBreakdown.innerHTML = '';
-        }
-    }
+  console.log('📊 Actualizando resumen para:', period);
+  
+  // Actualizar título del periodo
+  const periodTitles = {
+    'today': 'Hoy',
+    'yesterday': 'Ayer', 
+    'week': 'Esta semana'
+  };
+  document.getElementById('summary-period-title').textContent = periodTitles[period] || 'Hoy';
+  
+  // Filtrar viajes por periodo
+  const filteredTrips = filterTripsByPeriod(AppState.trips, period);
+  
+  // Calcular estadísticas detalladas
+  const cashTrips = filteredTrips.filter(t => t.paymentMethod === 'cash');
+  const cardTrips = filteredTrips.filter(t => t.paymentMethod === 'card');
+  
+  const cashTripsCount = cashTrips.length;
+  const cashTripsAmount = cashTrips.reduce((sum, t) => sum + t.price, 0);
+  const cashTipsAmount = cashTrips.reduce((sum, t) => sum + (t.tip || 0), 0);
+  const cashTotalReceived = cashTripsAmount + cashTipsAmount;
+  
+  const cardTripsCount = cardTrips.length;
+  const cardTripsAmount = cardTrips.reduce((sum, t) => sum + t.price, 0);
+  const cardTipsAmount = cardTrips.reduce((sum, t) => sum + (t.tip || 0), 0);
+  const cardTotalReceived = cardTripsAmount + cardTipsAmount;
+  
+  const totalTrips = cashTripsCount + cardTripsCount;
+  const totalAmountCollected = cashTotalReceived + cardTotalReceived;
+  const cashToDeliver = cashTotalReceived - cardTipsAmount;
+  
+  // Actualizar estadísticas rápidas
+  updateElement('total-trips-count', totalTrips);
+  updateElement('total-amount-collected', `${totalAmountCollected.toFixed(2)} €`);
+  
+  // Actualizar desglose de efectivo
+  updateElement('cash-trips-breakdown', 
+    `${cashTripsCount} viaje${cashTripsCount !== 1 ? 's' : ''} × 70€ = ${cashTripsAmount.toFixed(2)}€`);
+  updateElement('cash-tips-breakdown', `+ ${cashTipsAmount.toFixed(2)}€`);
+  updateElement('cash-total-received', `${cashTotalReceived.toFixed(2)}€`);
+  
+  // Actualizar desglose de tarjeta
+  updateElement('card-trips-breakdown', 
+    `${cardTripsCount} viaje${cardTripsCount !== 1 ? 's' : ''} × 70€ = ${cardTripsAmount.toFixed(2)}€`);
+  updateElement('card-tips-breakdown', `+ ${cardTipsAmount.toFixed(2)}€`);
+  updateElement('card-total-received', `${cardTotalReceived.toFixed(2)}€`);
+  
+  // Actualizar resumen de entrega
+  updateElement('cash-received-amount', `${cashTotalReceived.toFixed(2)}€`);
+  updateElement('card-tips-for-you', `- ${cardTipsAmount.toFixed(2)}€`);
+  updateElement('cash-to-deliver-final', `${Math.max(cashToDeliver, 0).toFixed(2)}€`);
+  
+  // También mantener los elementos originales actualizados (para compatibilidad)
+  updateElement('total-all-trips', totalTrips);
+  updateElement('cash-trips-count', cashTripsCount);
+  updateElement('cash-trips-amount', `${cashTripsAmount.toFixed(2)} €`);
+  updateElement('card-trips-count', cardTripsCount);
+  updateElement('card-trips-amount', `${cardTripsAmount.toFixed(2)} €`);
+  updateElement('total-tips', `${(cashTipsAmount + cardTipsAmount).toFixed(2)} €`);
+  
+  console.log(`💰 Resumen actualizado: ${totalTrips} viajes, ${cashToDeliver.toFixed(2)}€ a entregar`);
 }
+
+
 
 // ========== PANTALLA ESTADÍSTICAS ==========
 function initStatsScreen() {
