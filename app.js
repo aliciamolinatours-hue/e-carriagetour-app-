@@ -266,9 +266,16 @@ function initAddTripButton() {
 function saveTripToStorage(trip) {
   try {
     const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-    trips.unshift(trip);
+    trips.unshift(trip); // Añadir al inicio
     localStorage.setItem('trips', JSON.stringify(trips));
-    console.log('Viaje guardado en localStorage');
+    
+    console.log('💾 Viaje guardado. Total:', trips.length);
+    
+    // ↓↓↓ ESTA LÍNEA ES CRUCIAL ↓↓↓
+    const event = new CustomEvent('tripAdded', { detail: trip });
+    document.dispatchEvent(event);
+    // ↑↑↑ DISPARA EL EVENTO PARA ACTUALIZAR OTRAS PANTALLAS ↑↑↑
+    
     return true;
   } catch (error) {
     console.error('Error al guardar:', error);
