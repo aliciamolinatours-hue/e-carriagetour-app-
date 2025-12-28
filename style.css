@@ -1,0 +1,56 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f4f4;
+}
+
+/* Pantallas */
+.screen {
+  display: none;
+  padding: 16px;
+}
+
+.screen.active {
+  display: block;
+}
+
+/* Encabezado */
+header {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Botón principal */
+button.primary {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}
+
+/* Barra inferior */
+nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  background: #ffffff;
+  border-top: 1px solid #ccc;
+}
+
+nav button {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+  background: none;
+  border: none;
+}
