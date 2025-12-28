@@ -2,13 +2,13 @@
    RESET Y VARIABLES CSS
    ============================================ */
 :root {
-  /* Colores principales (tema profesional) */
-  --primary-color: #0d6efd;
-  --primary-light: #e7f1ff;
-  --primary-dark: #0a58ca;
+  /* Colores principales (cambiados a #009494) */
+  --primary-color: #009494;
+  --primary-light: rgba(0, 148, 148, 0.1);
+  --primary-dark: #007a7a;
   --secondary-color: #6c757d;
-  --success-color: #198754;
-  --info-color: #0dcaf0;
+  --success-color: #009494; /* También actualizado */
+  --info-color: #009494; /* También actualizado */
   --warning-color: #ffc107;
   --danger-color: #dc3545;
   --light-color: #f8f9fa;
@@ -87,7 +87,7 @@ body {
 
 /* HEADER FIJADO (similar a apps móviles) */
 .app-header {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(135deg, #009494 0%, #007a7a 100%);
   color: white;
   padding: var(--spacing-md);
   padding-top: calc(var(--spacing-md) + env(safe-area-inset-top, 0));
@@ -116,11 +116,10 @@ body {
 }
 
 .app-logo {
-  height: 1.8em; /* Ajusta según necesites */
+  height: 1.8em;
   width: auto;
   vertical-align: middle;
   margin-right: 12px;
-  filter: brightness(0) invert(1); /* Hace el logo blanco para el header oscuro */
 }
 
 .app-title {
@@ -365,19 +364,19 @@ body {
 }
 
 .cash .payment-icon {
-  background: rgba(25, 135, 84, 0.1);
+  background: rgba(0, 148, 148, 0.1);
 }
 
 .cash .payment-icon i {
-  color: var(--success-color);
+ color: #009494;
 }
 
 .card .payment-icon {
-  background: rgba(13, 202, 240, 0.1);
+  background: rgba(0, 148, 148, 0.1);
 }
 
 .card .payment-icon i {
-  color: var(--info-color);
+  color: #009494;
 }
 
 .payment-info {
@@ -498,7 +497,7 @@ body {
 .primary-action-btn {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(135deg, #009494 0%, #007a7a 100%);
   color: white;
   border: none;
   border-radius: var(--border-radius-md);
