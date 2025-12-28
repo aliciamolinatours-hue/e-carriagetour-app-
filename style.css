@@ -1,3 +1,4 @@
+/* style.css - VERSIÓN COMPLETA */
 /* Reset básico */
 * {
   box-sizing: border-box;
@@ -7,6 +8,7 @@
 body {
   margin: 0;
   background: #f4f4f4;
+  padding-bottom: 60px;
 }
 
 /* Pantallas */
@@ -30,11 +32,18 @@ header {
 button.primary {
   width: 100%;
   padding: 14px;
+  margin-top: 20px;
   font-size: 18px;
   background: #2e7d32;
   color: white;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button.primary:hover {
+  background: #1b5e20;
 }
 
 /* Barra inferior */
@@ -45,6 +54,7 @@ nav {
   display: flex;
   background: #ffffff;
   border-top: 1px solid #ccc;
+  z-index: 1000;
 }
 
 nav button {
@@ -53,8 +63,15 @@ nav button {
   font-size: 14px;
   background: none;
   border: none;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
+nav button:hover {
+  background: #f0f0f0;
+}
+
+/* Formularios */
 label {
   display: block;
   margin-top: 14px;
@@ -66,105 +83,72 @@ select, input {
   padding: 10px;
   margin-top: 6px;
   font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
+/* Pasajeros */
 .passenger-selector {
-    margin: 20px 0;
-    font-family: Arial, sans-serif;
-}
-
-.passenger-selector label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #333;
+  margin: 20px 0;
 }
 
 .passengers {
-    display: inline-flex;
-    align-items: center;
-    gap: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 8px 15px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 15px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .passengers button {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    border: 2px solid #4a90e2;
-    background-color: white;
-    color: #4a90e2;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #4a90e2;
+  background-color: white;
+  color: #4a90e2;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .passengers button:hover:not(:disabled) {
-    background-color: #4a90e2;
-    color: white;
-    transform: scale(1.05);
-}
-
-.passengers button:active:not(:disabled) {
-    transform: scale(0.95);
+  background-color: #4a90e2;
+  color: white;
+  transform: scale(1.05);
 }
 
 .passengers button:disabled {
-    border-color: #ccc;
-    color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.6;
+  border-color: #ccc;
+  color: #ccc;
+  cursor: not-allowed;
 }
 
 #passenger-count {
-    font-size: 22px;
-    font-weight: bold;
-    min-width: 25px;
-    text-align: center;
-    color: #333;
-    padding: 0 5px;
+  font-size: 22px;
+  font-weight: bold;
+  min-width: 25px;
+  text-align: center;
+  color: #333;
 }
 
-/* Indicador visual del límite alcanzado */
-.limit-reached {
-    color: #ff6b6b;
-    font-weight: bold;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-    .passengers {
-        gap: 10px;
-        padding: 6px 12px;
-    }
-    
-    .passengers button {
-        width: 30px;
-        height: 30px;
-        font-size: 18px;
-    }
-    
-    #passenger-count {
-        font-size: 20px;
-    }
-}
-
+/* Precio */
 .price {
   background: #e0e0e0;
   padding: 10px;
   margin-top: 6px;
   font-size: 18px;
+  border-radius: 4px;
 }
 
-/* Estilos para botones de pago tipo toggle */
+/* Método de pago */
 .payment {
   display: flex;
   gap: 10px;
@@ -202,7 +186,7 @@ select, input {
   border-color: #1976d2;
 }
 
-/* Estilos para opciones de propina */
+/* Opciones de propina */
 .tip-options {
   margin-top: 10px;
 }
@@ -244,611 +228,11 @@ select, input {
   border: 2px solid #ddd;
   border-radius: 8px;
   text-align: center;
-  width: 100%;
-}
-
-.tip-custom-input input:focus {
-  outline: none;
-  border-color: #4a90e2;
-}
-
-/* ESTILOS PARA EL BOTÓN "AÑADIR VIAJE" */
-#add-trip-btn {
-  display: block !important;
-  width: 100% !important;
-  padding: 16px !important;
-  margin-top: 25px !important;
-  margin-bottom: 20px !important;
-  background-color: #2e7d32 !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 8px !important;
-  font-size: 18px !important;
-  font-weight: bold !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-  position: relative !important;
-  z-index: 100 !important;
-  text-align: center !important;
-  min-height: 54px !important;
-}
-
-/* Estados del botón */
-#add-trip-btn:hover {
-  background-color: #1b5e20 !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
-}
-
-#add-trip-btn:active {
-  background-color: #0d470f !important;
-  transform: translateY(0) !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-}
-
-#add-trip-btn:focus {
-  outline: 3px solid #4caf50 !important;
-  outline-offset: 2px !important;
-}
-
-/* Para asegurar que esté visible sobre otros elementos */
-#new-trip {
-  padding-bottom: 80px !important; /* Espacio extra para el botón */
-  position: relative !important;
-  min-height: calc(100vh - 120px) !important; /* Altura mínima */
-}
-
-/* Asegurar que no haya elementos encima del botón */
-#new-trip * {
-  position: static !important;
-}
-
-/* Si hay problemas con la navegación fija */
-nav {
-  position: fixed !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  z-index: 1000 !important;
-}
-
-/* Asegurar que el botón no esté cubierto por la navegación */
-@media (max-width: 768px) {
-  #add-trip-btn {
-    margin-bottom: 70px !important; /* Extra espacio para la navegación móvil */
-  }
-}
-
-/* Clase alternativa por si acaso */
-button.primary {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Indicador visual de que el botón está listo */
-#add-trip-btn::after {
-  content: "✓";
-  margin-left: 10px;
-  font-size: 16px;
-  opacity: 0.8;
-}
-
-/* Animación de pulso para llamar la atención */
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(46, 125, 50, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
-}
-
-#add-trip-btn {
-  animation: pulse 2s infinite;
-}
-
-/* Quitar animación después del primer clic */
-#add-trip-btn.clicked {
-  animation: none;
-}
-
-/* Mensaje de éxito */
-.success-message {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #4caf50;
-  color: white;
-  padding: 15px 25px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  z-index: 1001;
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-/* Ajustar grid para 5 botones */
-.tip-buttons {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-/* Para pantallas más grandes */
-@media (min-width: 480px) {
-  .tip-buttons {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Para pantallas pequeñas */
-@media (max-width: 350px) {
-  .tip-buttons {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ============================================
-   ESTILOS PARA RESUMEN Y ESTADÍSTICAS
-   ============================================ */
-
-/* RESET de estilos conflictivos */
-.monthly-summary .summary-grid {
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
-  gap: 15px !important;
-  margin-bottom: 0 !important;
-}
-
-/* Controles de periodo */
-.summary-controls, .stats-controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  overflow-x: auto;
-  padding-bottom: 5px;
-}
-
-.period-btn, #stats-period, #stats-month {
-  padding: 10px 15px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  background: white;
-  cursor: pointer;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.period-btn.active {
-  background: #2196f3;
-  color: white;
-  border-color: #1976d2;
-}
-
-#stats-period, #stats-month {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-}
-
-/* Para pantallas de resumen (NO estadísticas) */
-#summary .summary-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-#summary .card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  text-align: center;
-}
-
-#summary .card h3 {
-  margin: 0 0 10px 0;
-  font-size: 14px;
-  color: #666;
-}
-
-#summary .amount {
-  font-size: 24px;
-  font-weight: bold;
-  color: #2196f3;
-}
-
-/* Lista de viajes */
-.trip-list {
-  background: white;
-  border-radius: 12px;
-  padding: 0;
-  max-height: 400px;
-  overflow-y: auto;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.trip-item {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.trip-item:last-child {
-  border-bottom: none;
-}
-
-.trip-info {
-  flex: 1;
-}
-
-.trip-country {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.trip-details {
-  font-size: 13px;
-  color: #666;
-}
-
-.trip-amount {
-  font-weight: bold;
-  font-size: 18px;
-  color: #4caf50;
-}
-
-.empty-state {
-  padding: 40px 20px;
-  text-align: center;
-  color: #999;
-  font-style: italic;
-}
-
-/* ============================================
-   ESTILOS EXCLUSIVOS para ESTADÍSTICAS MEJORADAS
-   ============================================ */
-
-/* Controles de estadísticas */
-#stats .stats-controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-#stats .stats-controls select {
-  flex: 1;
-  min-width: 150px;
-  padding: 12px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  background: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-/* Resumen mensual en stats */
-#stats .monthly-summary {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-#stats .monthly-summary h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 18px;
-}
-
-/* Grid de resumen en stats */
-#stats .summary-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  margin-bottom: 0 !important;
-}
-
-/* Cajas de resumen en stats */
-#stats .summary-box {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 10px;
-  border-left: 4px solid #2196f3;
-  min-height: 80px;
-}
-
-#stats .summary-box:nth-child(1) { border-left-color: #2196f3; } /* Azul - Viajes */
-#stats .summary-box:nth-child(2) { border-left-color: #4caf50; } /* Verde - Pasajeros */
-#stats .summary-box:nth-child(3) { border-left-color: #ff9800; } /* Naranja - Efectivo */
-#stats .summary-box:nth-child(4) { border-left-color: #9c27b0; } /* Morado - Tarjeta */
-
-#stats .summary-icon {
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  flex-shrink: 0;
-}
-
-#stats .summary-content {
-  flex: 1;
-  min-width: 0; /* Para evitar desbordamiento */
-}
-
-#stats .summary-label {
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-#stats .summary-value {
-  font-size: 22px;
-  font-weight: bold;
-  color: #333;
-  line-height: 1.2;
-}
-
-/* Distribución por países en stats */
-#stats .countries-distribution {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-#stats .countries-distribution h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: #333;
-  font-size: 18px;
-}
-
-#stats .countries-list {
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 0;
-}
-
-#stats .country-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  transition: background-color 0.2s;
-}
-
-#stats .country-item:hover {
-  background-color: #f8f9fa;
-}
-
-#stats .country-item:last-child {
-  border-bottom: none;
-}
-
-#stats .country-name {
-  font-weight: 500;
-  color: #333;
-  font-size: 15px;
-}
-
-#stats .country-stats {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-#stats .country-trips {
-  font-size: 16px;
-  font-weight: bold;
-  color: #2196f3;
-}
-
-#stats .country-passengers {
-  font-size: 13px;
-  color: #666;
-}
-
-/* Gráficos de barras en stats */
-#stats .charts-section {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-#stats .charts-section h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 18px;
-}
-
-#stats .chart-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-#stats .chart-bar-horizontal {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-#stats .chart-label {
-  width: 80px;
-  font-weight: 500;
-  color: #333;
-  font-size: 15px;
-}
-
-#stats .chart-bar-track {
-  flex: 1;
-  height: 25px;
-  background: #f0f0f0;
-  border-radius: 12px;
-  overflow: hidden;
-  position: relative;
-}
-
-#stats .chart-bar-fill {
-  height: 100%;
-  border-radius: 12px;
-  transition: width 1s ease;
-  min-width: 20px; /* Para que se vea siempre algo */
-}
-
-#stats #cash-bar.chart-bar-fill {
-  background: linear-gradient(90deg, #4caf50, #8bc34a);
-}
-
-#stats #card-bar.chart-bar-fill {
-  background: linear-gradient(90deg, #2196f3, #03a9f4);
-}
-
-#stats .chart-value {
-  width: 60px;
-  text-align: right;
-  font-weight: bold;
-  color: #333;
-  font-size: 15px;
-}
-
-/* Responsive para stats */
-@media (max-width: 768px) {
-  #stats .summary-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  #stats .stats-controls {
-    flex-direction: column;
-  }
-  
-  #stats .stats-controls select {
-    width: 100%;
-    min-width: auto;
-  }
-  
-  #stats .chart-bar-horizontal {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  
-  #stats .chart-label {
-    width: 100%;
-  }
-  
-  #stats .chart-bar-track {
-    width: 100%;
-  }
-  
-  #stats .chart-value {
-    width: 100%;
-    text-align: left;
-  }
-}
-
-/* Animaciones */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-#stats .summary-box,
-#stats .country-item {
-  animation: fadeInUp 0.4s ease-out forwards;
-  opacity: 0;
-}
-
-#stats .summary-box:nth-child(1) { animation-delay: 0.1s; }
-#stats .summary-box:nth-child(2) { animation-delay: 0.2s; }
-#stats .summary-box:nth-child(3) { animation-delay: 0.3s; }
-#stats .summary-box:nth-child(4) { animation-delay: 0.4s; }
-
-/* Asegurar visibilidad */
-#monthly-total-trips,
-#monthly-total-passengers,
-#monthly-cash-trips,
-#monthly-card-trips {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  font-size: 22px !important;
-  font-weight: bold !important;
-  color: #333 !important;
-}
-
-/* Estilos específicos para el botón de añadir viaje */
-#add-trip-btn {
-  background: linear-gradient(135deg, #2e7d32, #4caf50) !important;
-  color: white !important;
-  padding: 16px !important;
-  font-size: 18px !important;
-  font-weight: bold !important;
-  border: none !important;
-  border-radius: 10px !important;
-  margin-top: 25px !important;
-  margin-bottom: 20px !important;
-  width: 100% !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-  transition: all 0.3s !important;
-  display: block !important;
-}
-
-#add-trip-btn:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2) !important;
-}
-
-#add-trip-btn:active {
-  transform: translateY(0) !important;
 }
 
 /* ============================================
    VIAJES DE HOY EN PANTALLA NUEVO VIAJE
    ============================================ */
-
 .today-trips-section {
   background: white;
   border-radius: 12px;
@@ -930,17 +314,32 @@ button.primary {
   text-align: right;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-  .today-trip-details {
-    flex-direction: column;
-    gap: 2px;
-  }
+/* ============================================
+   RESUMEN DETALLADO
+   ============================================ */
+.summary-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 5px;
 }
 
-/* ============================================
-   ESTILOS PARA RESUMEN DETALLADO
-   ============================================ */
+.period-btn {
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.period-btn.active {
+  background: #2196f3;
+  color: white;
+  border-color: #1976d2;
+}
 
 .detailed-summary {
   background: white;
@@ -1085,12 +484,288 @@ button.primary {
   line-height: 1.4;
 }
 
+/* ============================================
+   ESTADÍSTICAS
+   ============================================ */
+.stats-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.stats-controls select {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.monthly-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.monthly-summary h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.summary-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #2196f3;
+}
+
+.summary-box:nth-child(1) { border-left-color: #2196f3; }
+.summary-box:nth-child(2) { border-left-color: #4caf50; }
+.summary-box:nth-child(3) { border-left-color: #ff9800; }
+.summary-box:nth-child(4) { border-left-color: #9c27b0; }
+
+.summary-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.summary-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summary-value {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  line-height: 1.2;
+}
+
+.countries-distribution {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.countries-distribution h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.countries-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.country-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.country-item:hover {
+  background-color: #f8f9fa;
+}
+
+.country-item:last-child {
+  border-bottom: none;
+}
+
+.country-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 15px;
+}
+
+.country-stats {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.country-trips {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2196f3;
+}
+
+.country-passengers {
+  font-size: 13px;
+  color: #666;
+}
+
+.charts-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.charts-section h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chart-bar-horizontal {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.chart-label {
+  width: 80px;
+  font-weight: 500;
+  color: #333;
+  font-size: 15px;
+}
+
+.chart-bar-track {
+  flex: 1;
+  height: 25px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-bar-fill {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 1s ease;
+  min-width: 20px;
+}
+
+#cash-bar.chart-bar-fill {
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+}
+
+#card-bar.chart-bar-fill {
+  background: linear-gradient(90deg, #2196f3, #03a9f4);
+}
+
+.chart-value {
+  width: 60px;
+  text-align: right;
+  font-weight: bold;
+  color: #333;
+  font-size: 15px;
+}
+
+.trip-list {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.empty-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .summary-grid, .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-controls {
+    flex-direction: column;
+  }
+  
+  .stats-controls select {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .chart-bar-horizontal {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .chart-label {
+    width: 100%;
+  }
+  
+  .chart-bar-track {
+    width: 100%;
+  }
+  
+  .chart-value {
+    width: 100%;
+    text-align: left;
+  }
+}
+
 /* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.payment-section, .final-summary {
-  animation: fadeIn 0.3s ease-out;
+.summary-box, .country-item {
+  animation: fadeIn 0.4s ease-out forwards;
+  opacity: 0;
 }
+
+.summary-box:nth-child(1) { animation-delay: 0.1s; }
+.summary-box:nth-child(2) { animation-delay: 0.2s; }
+.summary-box:nth-child(3) { animation-delay: 0.3s; }
+.summary-box:nth-child(4) { animation-delay: 0.4s; }
