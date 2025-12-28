@@ -237,104 +237,164 @@ function initPaymentMethods() {
 
 // ========== COMPONENTE: SISTEMA DE PROPINAS ==========
 function initTipSystem() {
-    updateTipSystem();
+  updateTipSystem();
 }
 
 function updateTipSystem() {
-    const tipContainer = document.getElementById('tip-container');
-    if (!tipContainer) return;
+  const tipContainer = document.getElementById('tip-container');
+  if (!tipContainer) return;
+  
+  if (AppState.paymentMethod === 'card') {
+    // Sistema de propinas para tarjeta con botones específicos
+    tipContainer.innerHTML = `
+      <div class="tip-buttons-grid">
+        <button type="button" class="tip-btn" data-tip="0">0 €</button>
+        <button type="button" class="tip-btn" data-tip="7">7 €</button>
+        <button type="button" class="tip-btn" data-tip="10.5">10,5 €</button>
+        <button type="button" class="tip-btn" data-tip="14">14 €</button>
+        <button type="button" class="tip-btn" data-tip="custom">Custom</button>
+      </div>
+      <div class="custom-tip-container" id="custom-tip-input-container" style="display: none; margin-top: 12px;">
+        <input type="number" id="custom-tip-input" placeholder="0.00" step="0.01" min="0" max="100">
+        <span class="currency">€</span>
+      </div>
+    `;
     
-    if (AppState.paymentMethod === 'card') {
-        // Sistema de propinas para tarjeta con botones
-        tipContainer.innerHTML = `
-            <div class="tip-buttons-grid">
-                <button type="button" class="tip-btn" data-tip="0">0 €</button>
-                <button type="button" class="tip-btn" data-tip="5">5 €</button>
-                <button type="button" class="tip-btn" data-tip="7">7 €</button>
-                <button type="button" class="tip-btn" data-tip="10">10 €</button>
-                <button type="button" class="tip-btn" data-tip="12.5">12,5 €</button>
-                <button type="button" class="tip-btn" data-tip="15">15 €</button>
-                <button type="button" class="tip-btn" data-tip="custom">Otro</button>
-            </div>
-            <div class="custom-tip-container" id="custom-tip-input-container" style="display: none; margin-top: 12px;">
-                <input type="number" id="custom-tip-input" placeholder="0.00" step="0.01" min="0" max="50">
-                <span class="currency">€</span>
-            </div>
-        `;
+    // Configurar botones de propina para tarjeta
+    const tipButtons = tipContainer.querySelectorAll('.tip-btn');
+    tipButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Quitar activo de todos los botones
+        tipButtons.forEach(b => b.classList.remove('active'));
         
-        // Configurar botones de propina
-        const tipButtons = tipContainer.querySelectorAll('.tip-btn');
-        tipButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Quitar activo de todos los botones
-                tipButtons.forEach(b => b.classList.remove('active'));
-                
-                // Activar el botón clickeado
-                btn.classList.add('active');
-                
-                const tipValue = btn.dataset.tip;
-                
-                if (tipValue === 'custom') {
-                    // Mostrar input personalizado
-                    document.getElementById('custom-tip-input-container').style.display = 'flex';
-                    const input = document.getElementById('custom-tip-input');
-                    if (input) {
-                        input.focus();
-                        
-                        // Configurar evento para el input
-                        input.addEventListener('input', (e) => {
-                            AppState.customTipValue = e.target.value;
-                            AppState.selectedTip = parseFloat(e.target.value) || 0;
-                            updateTripSummary();
-                        });
-                    }
-                } else {
-                    // Ocultar input personalizado
-                    document.getElementById('custom-tip-input-container').style.display = 'none';
-                    AppState.selectedTip = parseFloat(tipValue);
-                    AppState.customTipValue = '';
-                    updateTripSummary();
-                }
-                
-                console.log('💰 Propina seleccionada:', AppState.selectedTip);
-            });
-            
-            // Efecto táctil
-            btn.addEventListener('touchstart', () => {
-                btn.style.transform = 'scale(0.95)';
-            });
-            
-            btn.addEventListener('touchend', () => {
-                btn.style.transform = 'scale(1)';
-            });
-        });
+        // Activar el botón clickeado
+        btn.classList.add('active');
         
-        // Activar propina 0 por defecto
-        if (tipButtons.length > 0) {
-            tipButtons[0].click();
-        }
+        const tipValue = btn.dataset.tip;
         
-    } else {
-        // Input simple para efectivo
-        tipContainer.innerHTML = `
-            <div class="tip-amount-display">
-                <input type="number" id="tip-input" class="tip-input" placeholder="0.00" step="0.01" min="0">
-                <span class="currency">€</span>
-            </div>
-        `;
-        
-        const tipInput = document.getElementById('tip-input');
-        if (tipInput) {
-            tipInput.addEventListener('input', (e) => {
+        if (tipValue === 'custom') {
+          // Mostrar input personalizado
+          const customContainer = document.getElementById('custom-tip-input-container');
+          if (customContainer) {
+            customContainer.style.display = 'flex';
+            const input = document.getElementById('custom-tip-input');
+            if (input) {
+              input.focus();
+              
+              // Configurar evento para el input
+              input.addEventListener('input', (e) => {
+                AppState.customTipValue = e.target.value;
                 AppState.selectedTip = parseFloat(e.target.value) || 0;
                 updateTripSummary();
-            });
-            
-            tipInput.value = AppState.selectedTip || '';
+              });
+            }
+          }
+        } else {
+          // Ocultar input personalizado
+          const customContainer = document.getElementById('custom-tip-input-container');
+          if (customContainer) customContainer.style.display = 'none';
+          
+          AppState.selectedTip = parseFloat(tipValue) || 0;
+          AppState.customTipValue = '';
+          updateTripSummary();
         }
+        
+        console.log('💰 Propina seleccionada (tarjeta):', AppState.selectedTip);
+      });
+    });
+    
+    // Activar propina 0 por defecto para tarjeta
+    if (tipButtons.length > 0) {
+      const zeroBtn = Array.from(tipButtons).find(btn => btn.dataset.tip === '0');
+      if (zeroBtn) zeroBtn.click();
     }
+    
+    // Añadir estilos para los botones de propina de tarjeta
+    const style = document.createElement('style');
+    style.textContent = `
+      .tip-buttons-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 8px;
+      }
+      
+      .tip-btn {
+        padding: 12px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        background: white;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+      
+      .tip-btn:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+      }
+      
+      .tip-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
+      
+      .custom-tip-container {
+        display: flex;
+        align-items: center;
+        background: white;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        padding: 8px 12px;
+      }
+      
+      .custom-tip-container input {
+        flex: 1;
+        border: none;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-align: center;
+        padding: 8px;
+      }
+      
+      .custom-tip-container input:focus {
+        outline: none;
+      }
+    `;
+    
+    // Evitar duplicar estilos
+    if (!document.getElementById('tip-styles')) {
+      style.id = 'tip-styles';
+      document.head.appendChild(style);
+    }
+    
+  } else {
+    // Input simple para efectivo (sin flechas)
+    tipContainer.innerHTML = `
+      <div class="tip-amount-display">
+        <input type="number" id="tip-input" class="tip-input" placeholder="0.00" step="0.01" min="0">
+        <span class="currency">€</span>
+      </div>
+    `;
+    
+    const tipInput = document.getElementById('tip-input');
+    if (tipInput) {
+      // Remover cualquier atributo que muestre flechas
+      tipInput.style.appearance = 'textfield';
+      tipInput.style.MozAppearance = 'textfield';
+      tipInput.style.WebkitAppearance = 'none';
+      
+      tipInput.addEventListener('input', (e) => {
+        AppState.selectedTip = parseFloat(e.target.value) || 0;
+        updateTripSummary();
+      });
+      
+      tipInput.value = AppState.selectedTip || '';
+    }
+  }
 }
-
 // ========== COMPONENTE: RESUMEN DEL VIAJE ==========
 function updateTripSummary() {
     const basePrice = CONFIG.BASE_PRICE;
