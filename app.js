@@ -1,4 +1,4 @@
-// app.js - VERSIÓN SIMPLIFICADA Y FUNCIONAL
+// app.js - VERSIÓN COMPLETA Y CORREGIDA
 console.log('🚀 app.js cargado correctamente');
 
 // ========== FUNCIONES BÁSICAS ==========
@@ -8,6 +8,13 @@ function showScreen(id) {
     screen.classList.remove('active');
   });
   document.getElementById(id).classList.add('active');
+  
+  // Actualizar datos cuando se cambia de pantalla
+  if (id === 'summary') {
+    updateSummary('today');
+  } else if (id === 'stats') {
+    updateStats('month');
+  }
 }
 
 // ========== VARIABLES GLOBALES ==========
@@ -21,11 +28,8 @@ let customTipValue = '';
 // ========== FUNCIÓN AUXILIAR PARA RESET PASSAJEROS ==========
 function resetPassengerCounter() {
   console.log('🔄 Reseteando contador de pasajeros...');
-  
-  // 1. Resetear la variable GLOBAL
   passengerCount = 1;
   
-  // 2. Actualizar el elemento en pantalla
   const passengerCountElement = document.getElementById('passenger-count');
   const decreaseButton = document.getElementById('decrease-passenger');
   const increaseButton = document.getElementById('increase-passenger');
@@ -35,7 +39,6 @@ function resetPassengerCounter() {
     passengerCountElement.classList.remove('limit-reached');
   }
   
-  // 3. Actualizar estado de botones
   if (decreaseButton) decreaseButton.disabled = true;
   if (increaseButton) increaseButton.disabled = false;
   
@@ -43,10 +46,6 @@ function resetPassengerCounter() {
 }
 
 // ========== PASSAJEROS ==========
-let passengerCount = 1;
-const minPassengers = 1;
-const maxPassengers = 5;
-
 function initPassengerSelector() {
   console.log('Inicializando selector de pasajeros...');
   
@@ -57,11 +56,9 @@ function initPassengerSelector() {
   function updatePassengerCount() {
     passengerCountElement.textContent = passengerCount;
     
-    // Actualizar estado de botones
     decreaseButton.disabled = passengerCount <= minPassengers;
     increaseButton.disabled = passengerCount >= maxPassengers;
     
-    // Feedback visual
     if (passengerCount === maxPassengers) {
       passengerCountElement.classList.add('limit-reached');
     } else {
@@ -80,7 +77,6 @@ function initPassengerSelector() {
     }
   }
   
-  // Event listeners
   decreaseButton.addEventListener('click', () => changePassengers(-1));
   increaseButton.addEventListener('click', () => changePassengers(1));
   
@@ -88,8 +84,6 @@ function initPassengerSelector() {
 }
 
 // ========== MÉTODO DE PAGO ==========
-let paymentMethod = 'cash';
-
 function initPaymentButtons() {
   console.log('Inicializando botones de pago...');
   
@@ -97,26 +91,18 @@ function initPaymentButtons() {
   
   paymentButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Remover clase active de todos
       paymentButtons.forEach(b => b.classList.remove('active'));
-      
-      // Agregar clase active al clickeado
       btn.classList.add('active');
       
-      // Actualizar método de pago
       paymentMethod = btn.dataset.method;
       console.log('Método de pago seleccionado:', paymentMethod);
       
-      // Actualizar opciones de propina
       updateTipDisplay();
     });
   });
 }
 
 // ========== PROPINA ==========
-let selectedTip = null;
-let customTipValue = '';
-
 function updateTipDisplay() {
   const tipContainer = document.getElementById('tip-container');
   
@@ -142,7 +128,6 @@ function updateTipDisplay() {
       </div>
     `;
     
-    // Event listeners para botones de propina
     setTimeout(() => {
       const tipButtons = tipContainer.querySelectorAll('.tip-btn');
       tipButtons.forEach(btn => {
@@ -170,11 +155,8 @@ function updateTipDisplay() {
         });
       });
       
-      // Seleccionar 0€ por defecto
       const zeroBtn = tipContainer.querySelector('.tip-btn[data-tip="0"]');
-      if (zeroBtn) {
-        zeroBtn.click();
-      }
+      if (zeroBtn) zeroBtn.click();
     }, 100);
     
   } else {
@@ -209,17 +191,14 @@ function initAddTripButton() {
   addTripBtn.addEventListener('click', function() {
     console.log('🟢 Botón "Añadir viaje" clickeado');
     
-    // Obtener datos del formulario
     const country = document.getElementById('country').value;
     const price = 70;
     
-    // Validar
     if (!country) {
       alert('Por favor, selecciona un país');
       return;
     }
     
-    // Calcular propina
     let tipAmount = 0;
     if (paymentMethod === 'card' && selectedTip) {
       if (selectedTip === 'custom' && customTipValue) {
@@ -236,7 +215,6 @@ function initAddTripButton() {
     
     const total = price + tipAmount;
     
-    // Crear objeto del viaje
     const trip = {
       id: Date.now(),
       timestamp: new Date().toISOString(),
@@ -251,14 +229,9 @@ function initAddTripButton() {
     };
     
     console.log('Viaje creado:', trip);
-    
-    // Guardar en localStorage
     saveTripToStorage(trip);
     
-    // Mostrar mensaje
     showMessage(`✅ Viaje añadido: ${passengerCount} pasajero(s) - ${country} - Total: ${total}€`);
-    
-    // Resetear formulario
     resetForm();
   });
 }
@@ -266,15 +239,14 @@ function initAddTripButton() {
 function saveTripToStorage(trip) {
   try {
     const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-    trips.unshift(trip); // Añadir al inicio
+    trips.unshift(trip);
     localStorage.setItem('trips', JSON.stringify(trips));
     
     console.log('💾 Viaje guardado. Total:', trips.length);
     
-    // ↓↓↓ ESTA LÍNEA ES CRUCIAL ↓↓↓
+    // Disparar evento para actualizar otras pantallas
     const event = new CustomEvent('tripAdded', { detail: trip });
     document.dispatchEvent(event);
-    // ↑↑↑ DISPARA EL EVENTO PARA ACTUALIZAR OTRAS PANTALLAS ↑↑↑
     
     return true;
   } catch (error) {
@@ -284,11 +256,9 @@ function saveTripToStorage(trip) {
 }
 
 function showMessage(text) {
-  // Eliminar mensaje anterior
   const existing = document.querySelector('.success-message');
   if (existing) existing.remove();
   
-  // Crear nuevo mensaje
   const messageDiv = document.createElement('div');
   messageDiv.className = 'success-message';
   messageDiv.textContent = text;
@@ -308,9 +278,7 @@ function showMessage(text) {
   document.body.appendChild(messageDiv);
   
   setTimeout(() => {
-    if (messageDiv.parentNode) {
-      messageDiv.parentNode.removeChild(messageDiv);
-    }
+    if (messageDiv.parentNode) messageDiv.parentNode.removeChild(messageDiv);
   }, 3000);
 }
 
@@ -318,24 +286,18 @@ function resetForm() {
   console.log('🔄 Reseteando formulario completo...');
   
   setTimeout(() => {
-    // 1. Resetear pasajeros (USANDO LA NUEVA FUNCIÓN)
     resetPassengerCounter();
     
-    // 2. Resetear método de pago
     paymentMethod = 'cash';
     const paymentButtons = document.querySelectorAll('.payment-btn');
     paymentButtons.forEach(b => b.classList.remove('active'));
     const cashBtn = document.querySelector('.cash-btn');
     if (cashBtn) cashBtn.classList.add('active');
     
-    // 3. Resetear propina
     selectedTip = null;
     customTipValue = '';
+    updateTipDisplay();
     
-    // 4. Actualizar display de propina
-    updateTipDisplay(); // Esta función ya existe en tu código
-    
-    // 5. Resetear país
     const countrySelect = document.getElementById('country');
     if (countrySelect) {
       countrySelect.value = '';
@@ -346,20 +308,202 @@ function resetForm() {
   }, 1000);
 }
 
+// ========== RESUMEN Y ESTADÍSTICAS ==========
+function initSummaryAndStats() {
+  console.log('📋 Inicializando resumen y estadísticas...');
+  
+  // Escuchar cuando se añade un viaje
+  document.addEventListener('tripAdded', function() {
+    console.log('🔄 Viaje añadido, actualizando pantallas...');
+    updateSummary('today');
+    updateStats('month');
+  });
+  
+  // Inicializar con datos existentes
+  updateSummary('today');
+  updateStats('month');
+  
+  console.log('✅ Resumen y Stats listos');
+}
+
+function updateSummary(period = 'today') {
+  console.log('📊 Actualizando Resumen para:', period);
+  
+  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+  
+  // Filtrar por periodo
+  const filteredTrips = filterTripsByPeriod(trips, period);
+  
+  // Calcular totales
+  const totalViajes = filteredTrips.length;
+  const totalPasajeros = filteredTrips.reduce((sum, t) => sum + t.passengers, 0);
+  const totalIngresos = filteredTrips.reduce((sum, t) => sum + parseFloat(t.total), 0);
+  
+  // Actualizar pantalla de Resumen
+  const incomeElement = document.getElementById('total-income');
+  const tripsElement = document.getElementById('total-trips');
+  const passengersElement = document.getElementById('total-passengers');
+  
+  if (incomeElement) incomeElement.textContent = `${totalIngresos.toFixed(2)} €`;
+  if (tripsElement) tripsElement.textContent = totalViajes;
+  if (passengersElement) passengersElement.textContent = totalPasajeros;
+  
+  console.log(`📈 Resumen: ${totalViajes} viajes, ${totalPasajeros} pasajeros, ${totalIngresos.toFixed(2)}€`);
+}
+
+function updateStats(period = 'month') {
+  console.log('📈 Actualizando Stats para:', period);
+  
+  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+  
+  if (trips.length === 0) {
+    console.log('📭 No hay viajes para mostrar en Stats');
+    showEmptyStats();
+    return;
+  }
+  
+  const stats = calculateMonthlyStats(trips);
+  
+  // Actualizar la pantalla de Stats
+  document.getElementById('monthly-total-trips').textContent = stats.totalTrips;
+  document.getElementById('monthly-total-passengers').textContent = stats.totalPassengers;
+  document.getElementById('monthly-cash-trips').textContent = stats.cashTrips;
+  document.getElementById('monthly-card-trips').textContent = stats.cardTrips;
+  
+  // Actualizar distribución por países
+  updateCountriesDistribution(stats.countries);
+  
+  // Actualizar gráfico
+  updatePaymentChart(stats.cashPercentage, stats.cardPercentage);
+  
+  console.log('✅ Stats actualizados:', stats);
+}
+
+function filterTripsByPeriod(trips, period) {
+  const ahora = new Date();
+  const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+  
+  return trips.filter(trip => {
+    const fechaViaje = new Date(trip.timestamp);
+    
+    if (period === 'today') return fechaViaje >= hoy;
+    if (period === 'yesterday') {
+      const ayer = new Date(hoy);
+      ayer.setDate(ayer.getDate() - 1);
+      return fechaViaje >= ayer && fechaViaje < hoy;
+    }
+    if (period === 'week') {
+      const semanaPasada = new Date(hoy);
+      semanaPasada.setDate(semanaPasada.getDate() - 7);
+      return fechaViaje >= semanaPasada;
+    }
+    return true; // 'all' o cualquier otro
+  });
+}
+
+function calculateMonthlyStats(trips) {
+  const stats = {
+    totalTrips: trips.length,
+    totalPassengers: trips.reduce((sum, t) => sum + t.passengers, 0),
+    cashTrips: trips.filter(t => t.paymentMethod === 'cash').length,
+    cardTrips: trips.filter(t => t.paymentMethod === 'card').length
+  };
+  
+  // Porcentajes para el gráfico
+  stats.cashPercentage = stats.totalTrips > 0 ? 
+    Math.round((stats.cashTrips / stats.totalTrips) * 100) : 0;
+  stats.cardPercentage = stats.totalTrips > 0 ? 
+    Math.round((stats.cardTrips / stats.totalTrips) * 100) : 0;
+  
+  // Distribución por países
+  const paises = {};
+  trips.forEach(trip => {
+    const pais = trip.country || 'Sin especificar';
+    if (!paises[pais]) paises[pais] = { viajes: 0, pasajeros: 0 };
+    paises[pais].viajes++;
+    paises[pais].pasajeros += trip.passengers;
+  });
+  
+  stats.countries = Object.entries(paises)
+    .map(([pais, datos]) => ({
+      pais,
+      viajes: datos.viajes,
+      pasajeros: datos.pasajeros
+    }))
+    .sort((a, b) => b.viajes - a.viajes);
+  
+  return stats;
+}
+
+function updateCountriesDistribution(countries) {
+  const container = document.getElementById('countries-list');
+  if (!container) return;
+  
+  if (countries.length === 0) {
+    container.innerHTML = '<div class="empty-state">No hay datos de países</div>';
+    return;
+  }
+  
+  let html = '';
+  countries.forEach(pais => {
+    html += `
+      <div class="country-item">
+        <div class="country-name">${pais.pais}</div>
+        <div class="country-stats">
+          <div class="country-trips">${pais.viajes} viaje${pais.viajes !== 1 ? 's' : ''}</div>
+          <div class="country-passengers">(${pais.pasajeros} pasajero${pais.pasajeros !== 1 ? 's' : ''})</div>
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+function updatePaymentChart(cashPercent, cardPercent) {
+  const cashBar = document.getElementById('cash-bar');
+  const cardBar = document.getElementById('card-bar');
+  const cashText = document.getElementById('cash-percent');
+  const cardText = document.getElementById('card-percent');
+  
+  if (!cashBar || !cardBar) return;
+  
+  cashBar.style.width = `${Math.max(cashPercent, 5)}%`;
+  cardBar.style.width = `${Math.max(cardPercent, 5)}%`;
+  
+  if (cashText) cashText.textContent = `${cashPercent}%`;
+  if (cardText) cardText.textContent = `${cardPercent}%`;
+}
+
+function showEmptyStats() {
+  document.getElementById('monthly-total-trips').textContent = '0';
+  document.getElementById('monthly-total-passengers').textContent = '0';
+  document.getElementById('monthly-cash-trips').textContent = '0';
+  document.getElementById('monthly-card-trips').textContent = '0';
+  
+  const container = document.getElementById('countries-list');
+  if (container) {
+    container.innerHTML = '<div class="empty-state">No hay viajes registrados</div>';
+  }
+  
+  updatePaymentChart(0, 0);
+}
+
 // ========== INICIALIZACIÓN ==========
 document.addEventListener('DOMContentLoaded', function() {
   console.log('📱 DOM completamente cargado');
   
-  // Mostrar pantalla inicial
   showScreen('new-trip');
   
-  // Inicializar componentes
   initPassengerSelector();
   initPaymentButtons();
   initAddTripButton();
   updateTipDisplay();
   
-  // Inicializar navegación
+  // ¡IMPORTANTE! Inicializar Resumen y Stats
+  initSummaryAndStats();
+  
+  // Navegación
   document.querySelectorAll('nav button').forEach(btn => {
     btn.addEventListener('click', function() {
       const target = this.getAttribute('onclick');
@@ -370,5 +514,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  console.log('✅ Aplicación inicializada correctamente');
+  console.log('✅ Aplicación completamente inicializada');
 });
