@@ -276,30 +276,64 @@ function showMessage(text) {
 }
 
 function resetForm() {
+  console.log('🔄 Reseteando formulario...');
+  
   setTimeout(() => {
-    // Resetear pasajeros
-    passengerCount = 1;
-    const passengerCountElement = document.getElementById('passenger-count');
-    if (passengerCountElement) passengerCountElement.textContent = '1';
+    // 1. RESETEAR PASSAJEROS (ESTE ES EL CAMBIO CLAVE)
+    passengerCount = 1; // ← Actualizar la variable GLOBAL
     
-    // Resetear método de pago
+    const passengerCountElement = document.getElementById('passenger-count');
+    const decreaseButton = document.getElementById('decrease-passenger');
+    const increaseButton = document.getElementById('increase-passenger');
+    
+    if (passengerCountElement) {
+      passengerCountElement.textContent = '1';
+      passengerCountElement.classList.remove('limit-reached');
+    }
+    
+    // Actualizar estado de botones
+    if (decreaseButton) decreaseButton.disabled = true;
+    if (increaseButton) increaseButton.disabled = false;
+    
+    // 2. Resetear método de pago
     paymentMethod = 'cash';
     const paymentButtons = document.querySelectorAll('.payment-btn');
     paymentButtons.forEach(b => b.classList.remove('active'));
     const cashBtn = document.querySelector('.cash-btn');
     if (cashBtn) cashBtn.classList.add('active');
     
-    // Resetear país
-    const countrySelect = document.getElementById('country');
-    if (countrySelect) countrySelect.value = '';
-    
-    // Resetear propina
+    // 3. Resetear propina
     selectedTip = null;
     customTipValue = '';
-    updateTipDisplay();
     
-    console.log('Formulario reseteado');
-  }, 1500);
+    // 4. Actualizar display de propina (pero mantener efectivo como predeterminado)
+    const tipContainer = document.getElementById('tip-container');
+    if (tipContainer) {
+      tipContainer.innerHTML = `
+        <label>Propina</label>
+        <input type="number" id="tip-input" placeholder="0 €" step="0.01" value="">
+      `;
+      
+      // Restablecer event listener para propina en efectivo
+      setTimeout(() => {
+        const tipInput = document.getElementById('tip-input');
+        if (tipInput) {
+          tipInput.addEventListener('input', (e) => {
+            selectedTip = e.target.value;
+          });
+        }
+      }, 50);
+    }
+    
+    // 5. Resetear país
+    const countrySelect = document.getElementById('country');
+    if (countrySelect) {
+      countrySelect.value = '';
+      countrySelect.focus(); // Enfocar para siguiente viaje
+    }
+    
+    console.log('✅ Formulario completamente reseteado. Pasajeros:', passengerCount);
+  }, 1000); // Reducido a 1 segundo para mejor experiencia
 }
 
 // ========== INICIALIZACIÓN ==========
