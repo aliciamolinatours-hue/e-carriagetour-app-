@@ -252,6 +252,105 @@ select, input {
   border-color: #4a90e2;
 }
 
+/* ESTILOS PARA EL BOTÓN "AÑADIR VIAJE" */
+#add-trip-btn {
+  display: block !important;
+  width: 100% !important;
+  padding: 16px !important;
+  margin-top: 25px !important;
+  margin-bottom: 20px !important;
+  background-color: #2e7d32 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  position: relative !important;
+  z-index: 100 !important;
+  text-align: center !important;
+  min-height: 54px !important;
+}
+
+/* Estados del botón */
+#add-trip-btn:hover {
+  background-color: #1b5e20 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+#add-trip-btn:active {
+  background-color: #0d470f !important;
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+#add-trip-btn:focus {
+  outline: 3px solid #4caf50 !important;
+  outline-offset: 2px !important;
+}
+
+/* Para asegurar que esté visible sobre otros elementos */
+#new-trip {
+  padding-bottom: 80px !important; /* Espacio extra para el botón */
+  position: relative !important;
+  min-height: calc(100vh - 120px) !important; /* Altura mínima */
+}
+
+/* Asegurar que no haya elementos encima del botón */
+#new-trip * {
+  position: static !important;
+}
+
+/* Si hay problemas con la navegación fija */
+nav {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+}
+
+/* Asegurar que el botón no esté cubierto por la navegación */
+@media (max-width: 768px) {
+  #add-trip-btn {
+    margin-bottom: 70px !important; /* Extra espacio para la navegación móvil */
+  }
+}
+
+/* Clase alternativa por si acaso */
+button.primary {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Indicador visual de que el botón está listo */
+#add-trip-btn::after {
+  content: "✓";
+  margin-left: 10px;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+/* Animación de pulso para llamar la atención */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(46, 125, 50, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+}
+
+#add-trip-btn {
+  animation: pulse 2s infinite;
+}
+
+/* Quitar animación después del primer clic */
+#add-trip-btn.clicked {
+  animation: none;
+}
+
 /* Mensaje de éxito */
 .success-message {
   position: fixed;
