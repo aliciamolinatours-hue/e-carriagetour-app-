@@ -1,16 +1,10 @@
-// Función para mostrar pantallas
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(screen => {
-    screen.classList.remove('active');
-  });
-  document.getElementById(id).classList.add('active');
-}
-
 // Pantalla inicial
 document.addEventListener('DOMContentLoaded', () => {
   showScreen('new-trip');
   initApp();
+  initSummaryAndStats();
 });
+
 
 // Variables globales
 let passengerCount = 1;
@@ -480,7 +474,6 @@ function viewSavedTrips() {
   return trips;
 }
 
-
 // ============================================
 // FUNCIONALIDAD MEJORADA PARA ESTADÍSTICAS
 // ============================================
@@ -526,8 +519,7 @@ function updateStats(period = 'month') {
   displayMonthlyStats(stats);
   
   // 1.4 Actualizar también el historial completo
-  updateAllTrips(tripsToAnalyze);
-  
+
   console.log('✅ Estadísticas mejoradas actualizadas:', stats);
 }
 
@@ -592,10 +584,11 @@ function displayMonthlyStats(stats) {
   console.log('🖥️ Mostrando estadísticas mensuales:', stats);
   
   // 3.1 Actualizar las 4 tarjetas principales
-  document.getElementById('monthly-total-trips').textContent = stats.totalTrips;
-  document.getElementById('monthly-total-passengers').textContent = stats.totalPassengers;
-  document.getElementById('monthly-cash-trips').textContent = stats.cashTrips;
-  document.getElementById('monthly-card-trips').textContent = stats.cardTrips;
+  document.getElementById('monthly-total-trips')?.textContent = stats.totalTrips;
+document.getElementById('monthly-total-passengers')?.textContent = stats.totalPassengers;
+document.getElementById('monthly-cash-trips')?.textContent = stats.cashTrips;
+document.getElementById('monthly-card-trips')?.textContent = stats.cardTrips;
+
   
   // 3.2 Actualizar distribución por países
   updateCountriesDistribution(stats.countries);
@@ -804,3 +797,4 @@ function showScreen(id) {
     updateStats('month');
   }
 }
+
