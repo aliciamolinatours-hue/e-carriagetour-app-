@@ -265,31 +265,80 @@
     <button id="week-btn" class="period-btn">Esta semana</button>
   </div>
   
-  <div class="summary-cards">
-    <div class="card">
-      <h3>Total ingresos</h3>
-      <div id="total-income" class="amount">0 €</div>
+  <!-- DESGLOSE DETALLADO -->
+  <div class="detailed-summary">
+    <h3>💰 Desglose Financiero</h3>
+    
+    <!-- FECHA -->
+    <div class="summary-date" id="summary-date">
+      <span class="date-label">Fecha:</span>
+      <span class="date-value" id="current-date"></span>
     </div>
-    <div class="card">
-      <h3>Número de viajes</h3>
-      <div id="total-trips" class="amount">0</div>
+    
+    <!-- TOTALES GENERALES -->
+    <div class="summary-row total-row">
+      <div class="summary-label">Total viajes (tarjeta + efectivo)</div>
+      <div class="summary-value" id="total-all-trips">0</div>
     </div>
-    <div class="card">
-      <h3>Pasajeros totales</h3>
-      <div id="total-passengers" class="amount">0</div>
+    
+    <!-- EFECTIVO -->
+    <div class="payment-section cash-section">
+      <h4 class="section-title">💵 Efectivo</h4>
+      
+      <div class="summary-row">
+        <div class="summary-label">Viajes en efectivo</div>
+        <div class="summary-value" id="cash-trips-count">0</div>
+      </div>
+      
+      <div class="summary-row">
+        <div class="summary-label">Importe viajes efectivo</div>
+        <div class="summary-value" id="cash-trips-amount">0 €</div>
+      </div>
+      
+      <div class="summary-row">
+        <div class="summary-label">Propina en efectivo</div>
+        <div class="summary-value" id="cash-tips-amount">0 €</div>
+      </div>
     </div>
-    <div class="card">
-      <h3>Propina media</h3>
-      <div id="average-tip" class="amount">0 €</div>
+    
+    <!-- TARJETA -->
+    <div class="payment-section card-section">
+      <h4 class="section-title">💳 Tarjeta</h4>
+      
+      <div class="summary-row">
+        <div class="summary-label">Viajes con tarjeta</div>
+        <div class="summary-value" id="card-trips-count">0</div>
+      </div>
+      
+      <div class="summary-row">
+        <div class="summary-label">Importe viajes tarjeta</div>
+        <div class="summary-value" id="card-trips-amount">0 €</div>
+      </div>
+      
+      <div class="summary-row">
+        <div class="summary-label">Propina en tarjeta</div>
+        <div class="summary-value" id="card-tips-amount">0 €</div>
+      </div>
     </div>
-  </div>
-  
-  <h3>Últimos viajes</h3>
-  <div id="recent-trips" class="trip-list">
-    <div class="empty-state">No hay viajes registrados hoy</div>
+    
+    <!-- RESUMEN FINAL -->
+    <div class="final-summary">
+      <h4 class="section-title">📋 Resumen a entregar</h4>
+      
+      <div class="summary-row highlight">
+        <div class="summary-label">Efectivo a entregar</div>
+        <div class="summary-value" id="cash-to-deliver">0 €</div>
+      </div>
+      
+      <div class="explanation">
+        <small>
+          <strong>Fórmula:</strong> (Importe efectivo) - (Propina tarjeta)<br>
+          <em>Las propinas en tarjeta son para ti</em>
+        </small>
+      </div>
+    </div>
   </div>
 </div>
-
 
 <!-- PANTALLA ESTADÍSTICAS -->
 <div id="stats" class="screen">
