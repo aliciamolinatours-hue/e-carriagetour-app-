@@ -468,18 +468,16 @@ function addNewTrip() {
     console.log('📝 Viaje creado:', trip);
     
     // Guardar viaje
-    if (saveTrip(trip)) {
+       if (saveTrip(trip)) {
         showNotification(`✅ Viaje añadido: ${total.toFixed(2)} €`, 'success');
         resetForm();
         
-        // Disparar evento
+        // Actualizar Viajes de Hoy inmediatamente
+        updateTodayTrips();
+        
+        // Disparar evento para otras pantallas
         const event = new CustomEvent('tripAdded', { detail: trip });
         document.dispatchEvent(event);
-        
-        // Actualizar pantalla actual
-        updateScreenData(AppState.currentScreen);
-    } else {
-        showNotification('❌ Error al guardar el viaje', 'error');
     }
 }
 
@@ -549,20 +547,34 @@ function updateTodayTrips() {
     const todayTripsList = document.getElementById('today-trips-list');
     const todayTripsCount = document.getElementById('today-trips-count');
     
-    if (!todayTripsList || !todayTripsCount) return;
+    if (!todayTripsList || !todayTripsCount) {
+        console.error('❌ No se encontraron elementos para Viajes de Hoy');
+        return;
+    }
     
     // Filtrar viajes de hoy
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0); // Principio del día
     
     const todayTrips = AppState.trips.filter(trip => {
-        const tripDate = new Date(trip.timestamp);
-        return tripDate >= today;
+        try {
+            const tripDate = new Date(trip.timestamp);
+            return tripDate >= today;
+        } catch (error) {
+            console.error('Error procesando fecha del viaje:', error);
+            return false;
+        }
+    }).sort((a, b) => {
+        // Ordenar por fecha más reciente primero
+        return new Date(b.timestamp) - new Date(a.timestamp);
     });
+    
+    console.log('📅 Viajes de hoy encontrados:', todayTrips.length);
     
     // Actualizar contador
     todayTripsCount.textContent = todayTrips.length;
     
+    // Si no hay viajes, mostrar estado vacío
     if (todayTrips.length === 0) {
         todayTripsList.innerHTML = `
             <div class="empty-state">
@@ -576,32 +588,62 @@ function updateTodayTrips() {
     
     // Crear lista de viajes
     let html = '';
-    todayTrips.forEach(trip => {
-        const paymentIcon = trip.paymentMethod === 'cash' ? 
-            '<i class="fas fa-money-bill-wave"></i>' : 
-            '<i class="fas fa-credit-card"></i>';
+    todayTrips.forEach((trip, index) => {
+        // Icono según método de pago
+        const paymentIcon = trip.paymentMethod === 'cash' 
+            ? '<i class="fas fa-money-bill-wave" style="color: #009494;"></i>' 
+            : '<i class="fas fa-credit-card" style="color: #009494;"></i>';
         
+        const paymentText = trip.paymentMethod === 'cash' ? 'Efectivo' : 'Tarjeta';
         const paymentClass = trip.paymentMethod === 'cash' ? 'cash' : 'card';
         
+        // Formatear hora
+        let displayTime = trip.time || '--:--';
+        if (trip.timestamp) {
+            try {
+                const tripTime = new Date(trip.timestamp);
+                displayTime = tripTime.toLocaleTimeString('es-ES', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: false 
+                });
+            } catch (e) {
+                console.error('Error formateando hora:', e);
+            }
+        }
+        
         html += `
-            <div class="today-trip-item">
+            <div class="today-trip-item" style="animation-delay: ${index * 0.05}s">
                 <div class="today-trip-info">
-                    <div class="today-trip-time">${trip.time}</div>
+                    <div class="today-trip-time">${displayTime}</div>
                     <div class="today-trip-details">
-                        <span class="today-trip-country ${paymentClass}">${trip.country}</span>
+                        <span class="today-trip-country ${paymentClass}">${trip.country || 'Sin país'}</span>
                         <span>•</span>
-                        <span>${trip.passengers} pasajero${trip.passengers !== 1 ? 's' : ''}</span>
+                        <span>${trip.passengers || 1} pasajero${trip.passengers !== 1 ? 's' : ''}</span>
                         <span>•</span>
-                        <span class="today-trip-payment">${paymentIcon} ${trip.paymentMethod === 'cash' ? 'Efectivo' : 'Tarjeta'}</span>
-                        ${trip.tip > 0 ? `<span>•</span><span class="tip-indicator">+${trip.tip}€</span>` : ''}
+                        <span class="today-trip-payment">${paymentIcon} ${paymentText}</span>
+                        ${trip.tip > 0 ? `<span>•</span><span class="tip-indicator" style="color: #009494;">+${trip.tip.toFixed(2)}€</span>` : ''}
                     </div>
                 </div>
-                <div class="today-trip-amount">${trip.total.toFixed(2)} €</div>
+                <div class="today-trip-amount">${typeof trip.total === 'number' ? trip.total.toFixed(2) : '0.00'} €</div>
             </div>
         `;
     });
     
     todayTripsList.innerHTML = html;
+    
+    // Añadir efecto de entrada si hay viajes
+    const items = todayTripsList.querySelectorAll('.today-trip-item');
+    items.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(-20px)';
+        
+        setTimeout(() => {
+            item.style.transition = 'all 0.3s ease-out';
+            item.style.opacity = '1';
+            item.style.transform = 'translateX(0)';
+        }, index * 50);
+    });
 }
 
 // ========== PANTALLA RESUMEN ==========
