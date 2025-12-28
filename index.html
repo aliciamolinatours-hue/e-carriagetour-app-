@@ -414,32 +414,78 @@
         </div>
       </div>
 
-      <!-- Desglose Financiero -->
-      <div class="financial-breakdown">
-        <h3><i class="fas fa-file-invoice-dollar"></i> Desglose Financiero</h3>
-        
-        <div class="breakdown-section">
-          <h4><i class="fas fa-cash-register"></i> A Entregar</h4>
-          <div class="breakdown-item">
-            <span>Efectivo recibido</span>
-            <span id="cash-received">0.00 €</span>
-          </div>
-          <div class="breakdown-item">
-            <span>Propinas tarjeta (tuya)</span>
-            <span id="card-tips-amount" class="text-success">0.00 €</span>
-          </div>
-          <div class="breakdown-divider"></div>
-          <div class="breakdown-total">
-            <span>Total a entregar</span>
-            <span id="cash-to-deliver" class="total-amount">0.00 €</span>
-          </div>
-          <div class="breakdown-note">
-            <i class="fas fa-info-circle"></i>
-            Las propinas en tarjeta son para ti
-          </div>
-        </div>
-      </div>
+<!-- Desglose Financiero ACTUALIZADO -->
+<div class="financial-breakdown">
+  <h3><i class="fas fa-file-invoice-dollar"></i> Desglose Financiero - <span id="summary-period-title">Hoy</span></h3>
+  
+  <!-- Estadísticas Rápidas -->
+  <div class="quick-stats">
+    <div class="quick-stat">
+      <div class="quick-stat-label">Viajes Totales</div>
+      <div id="total-trips-count" class="quick-stat-value">0</div>
     </div>
+    <div class="quick-stat">
+      <div class="quick-stat-label">Total Recaudado</div>
+      <div id="total-amount-collected" class="quick-stat-value">0 €</div>
+    </div>
+  </div>
+  
+  <!-- Desglose Detallado -->
+  <div class="breakdown-section cash-breakdown">
+    <h4><i class="fas fa-money-bill-wave"></i> Efectivo</h4>
+    <div class="breakdown-item">
+      <span>Viajes en efectivo</span>
+      <span id="cash-trips-breakdown">0 viajes × 70€ = 0€</span>
+    </div>
+    <div class="breakdown-item">
+      <span>Propina en efectivo</span>
+      <span id="cash-tips-breakdown">+ 0€</span>
+    </div>
+    <div class="breakdown-item total">
+      <span><strong>Total efectivo recibido</strong></span>
+      <span id="cash-total-received" class="amount-highlight">0€</span>
+    </div>
+  </div>
+  
+  <div class="breakdown-section card-breakdown">
+    <h4><i class="fas fa-credit-card"></i> Tarjeta</h4>
+    <div class="breakdown-item">
+      <span>Viajes con tarjeta</span>
+      <span id="card-trips-breakdown">0 viajes × 70€ = 0€</span>
+    </div>
+    <div class="breakdown-item">
+      <span>Propina con tarjeta</span>
+      <span id="card-tips-breakdown">+ 0€</span>
+    </div>
+    <div class="breakdown-item total">
+      <span><strong>Total tarjeta recibido</strong></span>
+      <span id="card-total-received" class="amount-highlight">0€</span>
+    </div>
+  </div>
+  
+  <!-- Resumen de Entrega -->
+  <div class="delivery-summary">
+    <h4><i class="fas fa-calculator"></i> Resumen de Entrega</h4>
+    <div class="breakdown-item">
+      <span>Efectivo recibido</span>
+      <span id="cash-received-amount">0€</span>
+    </div>
+    <div class="breakdown-item">
+      <span>(-) Propinas tarjeta (para ti)</span>
+      <span id="card-tips-for-you" class="text-success">- 0€</span>
+    </div>
+    <div class="breakdown-divider"></div>
+    <div class="breakdown-item final-amount">
+      <span><strong>EFECTIVO A ENTREGAR</strong></span>
+      <span id="cash-to-deliver-final" class="final-amount-value">0€</span>
+    </div>
+    <div class="delivery-explanation">
+      <i class="fas fa-info-circle"></i>
+      <strong>Fórmula:</strong> (Efectivo recibido) - (Propinas tarjeta) = Efectivo a entregar
+    </div>
+  </div>
+</div>
+
 
     <!-- PANTALLA ESTADÍSTICAS -->
     <div id="stats" class="screen app-screen">
