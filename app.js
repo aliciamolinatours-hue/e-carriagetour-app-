@@ -1,4 +1,4 @@
-// app.js - VERSIÓN COMPLETA CON RESUMEN DETALLADO
+// app.js - VERSIÓN SIMPLIFICADA
 console.log('🚀 app.js cargado correctamente');
 
 // ========== FUNCIONES BÁSICAS ==========
@@ -313,7 +313,7 @@ function resetForm() {
   }, 1000);
 }
 
-// ========== VIAJES DE HOY EN PANTALLA NUEVO VIAJE ==========
+// ========== VIAJES DE HOY (SOLO EN NUEVO VIAJE) ==========
 function updateTodayTrips() {
   console.log('📝 Actualizando lista de viajes de hoy...');
   
@@ -332,7 +332,7 @@ function updateTodayTrips() {
   const todayTrips = trips.filter(trip => {
     const tripDate = new Date(trip.timestamp);
     return tripDate >= today;
-  }).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Más reciente primero
+  }).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
   
   if (todayTrips.length === 0) {
     todayTripsList.innerHTML = '<div class="empty-state">No hay viajes registrados hoy</div>';
@@ -366,36 +366,29 @@ function updateTodayTrips() {
   console.log(`✅ Mostrando ${todayTrips.length} viajes de hoy`);
 }
 
-// ========== RESUMEN DETALLADO (NUEVA VERSIÓN) ==========
+// ========== RESUMEN DETALLADO ==========
 function updateSummary(period = 'today') {
-  console.log('📊 Actualizando Resumen detallado para:', period);
+  console.log('📊 Actualizando Resumen para:', period);
   
   const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-  
-  // Filtrar viajes según el periodo
   const filteredTrips = filterTripsByPeriod(trips, period);
   
-  // Separar viajes por método de pago
   const cashTrips = filteredTrips.filter(t => t.paymentMethod === 'cash');
   const cardTrips = filteredTrips.filter(t => t.paymentMethod === 'card');
   
-  // Calcular estadísticas de EFECTIVO
+  // Calcular estadísticas
   const cashTripsCount = cashTrips.length;
-  const cashTripsAmount = cashTrips.reduce((sum, trip) => sum + 70, 0); // 70€ por viaje
+  const cashTripsAmount = cashTrips.reduce((sum, trip) => sum + 70, 0);
   const cashTipsAmount = cashTrips.reduce((sum, trip) => sum + parseFloat(trip.tip || 0), 0);
   
-  // Calcular estadísticas de TARJETA
   const cardTripsCount = cardTrips.length;
-  const cardTripsAmount = cardTrips.reduce((sum, trip) => sum + 70, 0); // 70€ por viaje
+  const cardTripsAmount = cardTrips.reduce((sum, trip) => sum + 70, 0);
   const cardTipsAmount = cardTrips.reduce((sum, trip) => sum + parseFloat(trip.tip || 0), 0);
   
-  // Calcular totales
   const totalAllTrips = cashTripsCount + cardTripsCount;
-  
-  // Calcular efectivo a entregar (FÓRMULA: efectivo - propinas tarjeta)
   const cashToDeliver = cashTripsAmount - cardTipsAmount;
   
-  // Actualizar la fecha
+  // Actualizar fecha
   const currentDateElement = document.getElementById('current-date');
   if (currentDateElement) {
     const now = new Date();
@@ -408,53 +401,66 @@ function updateSummary(period = 'today') {
     currentDateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }
   
-  // Actualizar todos los elementos en pantalla
+  // Actualizar elementos
   document.getElementById('total-all-trips').textContent = totalAllTrips;
-  
   document.getElementById('cash-trips-count').textContent = cashTripsCount;
   document.getElementById('cash-trips-amount').textContent = `${cashTripsAmount.toFixed(2)} €`;
   document.getElementById('cash-tips-amount').textContent = `${cashTipsAmount.toFixed(2)} €`;
-  
   document.getElementById('card-trips-count').textContent = cardTripsCount;
   document.getElementById('card-trips-amount').textContent = `${cardTripsAmount.toFixed(2)} €`;
   document.getElementById('card-tips-amount').textContent = `${cardTipsAmount.toFixed(2)} €`;
-  
   document.getElementById('cash-to-deliver').textContent = `${Math.max(cashToDeliver, 0).toFixed(2)} €`;
   
-  // Mostrar fórmula si hay datos
   if (totalAllTrips > 0) {
     console.log(`💰 Resumen: ${cashTripsCount} efectivo + ${cardTripsCount} tarjeta = ${totalAllTrips} viajes`);
-    console.log(`💵 Efectivo a entregar: ${cashTripsAmount}€ - ${cardTipsAmount}€ = ${cashToDeliver}€`);
   }
 }
 
-// ========== ESTADÍSTICAS ==========
+// ========== ESTADÍSTICAS SIMPLIFICADAS ==========
 function updateStats(period = 'month') {
   console.log('📈 Actualizando Stats para:', period);
   
   const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+  const filteredTrips = filterTripsByPeriod(trips, period);
   
-  if (trips.length === 0) {
-    console.log('📭 No hay viajes para mostrar en Stats');
+  if (filteredTrips.length === 0) {
     showEmptyStats();
     return;
   }
   
-  const stats = calculateMonthlyStats(trips);
+  // Calcular estadísticas básicas
+  const totalTrips = filteredTrips.length;
+  const totalPassengers = filteredTrips.reduce((sum, t) => sum + t.passengers, 0);
+  const cashTrips = filteredTrips.filter(t => t.paymentMethod === 'cash').length;
+  const cardTrips = filteredTrips.filter(t => t.paymentMethod === 'card').length;
   
-  // Actualizar la pantalla de Stats
-  document.getElementById('monthly-total-trips').textContent = stats.totalTrips;
-  document.getElementById('monthly-total-passengers').textContent = stats.totalPassengers;
-  document.getElementById('monthly-cash-trips').textContent = stats.cashTrips;
-  document.getElementById('monthly-card-trips').textContent = stats.cardTrips;
+  // Porcentajes para el gráfico
+  const cashPercentage = totalTrips > 0 ? Math.round((cashTrips / totalTrips) * 100) : 0;
+  const cardPercentage = totalTrips > 0 ? Math.round((cardTrips / totalTrips) * 100) : 0;
   
-  // Actualizar distribución por países
-  updateCountriesDistribution(stats.countries);
+  // Distribución por países
+  const countryStats = {};
+  filteredTrips.forEach(trip => {
+    const country = trip.country || 'Sin especificar';
+    if (!countryStats[country]) countryStats[country] = { trips: 0, passengers: 0 };
+    countryStats[country].trips++;
+    countryStats[country].passengers += trip.passengers;
+  });
   
-  // Actualizar gráfico
-  updatePaymentChart(stats.cashPercentage, stats.cardPercentage);
+  const countriesArray = Object.entries(countryStats)
+    .map(([country, data]) => ({ country, trips: data.trips, passengers: data.passengers }))
+    .sort((a, b) => b.trips - a.trips);
   
-  console.log('✅ Stats actualizados:', stats);
+  // Actualizar pantalla
+  document.getElementById('monthly-total-trips').textContent = totalTrips;
+  document.getElementById('monthly-total-passengers').textContent = totalPassengers;
+  document.getElementById('monthly-cash-trips').textContent = cashTrips;
+  document.getElementById('monthly-card-trips').textContent = cardTrips;
+  
+  updateCountriesDistribution(countriesArray);
+  updatePaymentChart(cashPercentage, cardPercentage);
+  
+  console.log(`✅ Stats: ${totalTrips} viajes, ${cashTrips} efectivo, ${cardTrips} tarjeta`);
 }
 
 function filterTripsByPeriod(trips, period) {
@@ -475,42 +481,8 @@ function filterTripsByPeriod(trips, period) {
       semanaPasada.setDate(semanaPasada.getDate() - 7);
       return fechaViaje >= semanaPasada;
     }
-    return true; // 'all' o cualquier otro
+    return true; // 'month' o 'all'
   });
-}
-
-function calculateMonthlyStats(trips) {
-  const stats = {
-    totalTrips: trips.length,
-    totalPassengers: trips.reduce((sum, t) => sum + t.passengers, 0),
-    cashTrips: trips.filter(t => t.paymentMethod === 'cash').length,
-    cardTrips: trips.filter(t => t.paymentMethod === 'card').length
-  };
-  
-  // Porcentajes para el gráfico
-  stats.cashPercentage = stats.totalTrips > 0 ? 
-    Math.round((stats.cashTrips / stats.totalTrips) * 100) : 0;
-  stats.cardPercentage = stats.totalTrips > 0 ? 
-    Math.round((stats.cardTrips / stats.totalTrips) * 100) : 0;
-  
-  // Distribución por países
-  const paises = {};
-  trips.forEach(trip => {
-    const pais = trip.country || 'Sin especificar';
-    if (!paises[pais]) paises[pais] = { viajes: 0, pasajeros: 0 };
-    paises[pais].viajes++;
-    paises[pais].pasajeros += trip.passengers;
-  });
-  
-  stats.countries = Object.entries(paises)
-    .map(([pais, datos]) => ({
-      pais,
-      viajes: datos.viajes,
-      pasajeros: datos.pasajeros
-    }))
-    .sort((a, b) => b.viajes - a.viajes);
-  
-  return stats;
 }
 
 function updateCountriesDistribution(countries) {
@@ -523,13 +495,13 @@ function updateCountriesDistribution(countries) {
   }
   
   let html = '';
-  countries.forEach(pais => {
+  countries.forEach(country => {
     html += `
       <div class="country-item">
-        <div class="country-name">${pais.pais}</div>
+        <div class="country-name">${country.country}</div>
         <div class="country-stats">
-          <div class="country-trips">${pais.viajes} viaje${pais.viajes !== 1 ? 's' : ''}</div>
-          <div class="country-passengers">(${pais.pasajeros} pasajero${pais.pasajeros !== 1 ? 's' : ''})</div>
+          <div class="country-trips">${country.trips} viaje${country.trips !== 1 ? 's' : ''}</div>
+          <div class="country-passengers">(${country.passengers} pasajero${country.passengers !== 1 ? 's' : ''})</div>
         </div>
       </div>
     `;
@@ -561,7 +533,7 @@ function showEmptyStats() {
   
   const container = document.getElementById('countries-list');
   if (container) {
-    container.innerHTML = '<div class="empty-state">No hay viajes registrados</div>';
+    container.innerHTML = '<div class="empty-state">No hay datos para este periodo</div>';
   }
   
   updatePaymentChart(0, 0);
@@ -569,13 +541,40 @@ function showEmptyStats() {
 
 // ========== INICIALIZACIÓN ==========
 function initSummaryAndStats() {
-  console.log('📋 Inicializando resumen, stats y viajes de hoy...');
+  console.log('📋 Inicializando todas las pantallas...');
   
   document.addEventListener('tripAdded', function() {
-    console.log('🔄 Viaje añadido, actualizando todas las pantallas...');
+    console.log('🔄 Viaje añadido, actualizando pantallas...');
     updateSummary('today');
     updateStats('month');
     updateTodayTrips();
+  });
+  
+  // Configurar evento para el selector de periodo en Stats
+  const statsPeriodSelect = document.getElementById('stats-period');
+  if (statsPeriodSelect) {
+    statsPeriodSelect.addEventListener('change', function() {
+      updateStats(this.value);
+    });
+  }
+  
+  // Configurar eventos para los botones de periodo en Resumen
+  document.getElementById('today-btn')?.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('today-btn').classList.add('active');
+    updateSummary('today');
+  });
+  
+  document.getElementById('yesterday-btn')?.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('yesterday-btn').classList.add('active');
+    updateSummary('yesterday');
+  });
+  
+  document.getElementById('week-btn')?.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('week-btn').classList.add('active');
+    updateSummary('week');
   });
   
   // Inicializar con datos existentes
@@ -596,7 +595,6 @@ document.addEventListener('DOMContentLoaded', function() {
   initAddTripButton();
   updateTipDisplay();
   
-  // ¡IMPORTANTE! Inicializar Resumen y Stats
   initSummaryAndStats();
   
   // Navegación
