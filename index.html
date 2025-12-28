@@ -232,17 +232,16 @@
   <div class="price">70 €</div>
 
   <!-- Método de pago -->
-  <label>Método de pago</label>
-  <div class="payment">
-    <button type="button" onclick="setPayment('cash')">Efectivo</button>
-    <button type="button" onclick="setPayment('card')">Tarjeta</button>
-  </div>
+ <label>Método de pago</label>
+<div class="payment" id="payment-method">
+  <button type="button" class="payment-btn cash-btn active" data-method="cash">💵 Efectivo</button>
+  <button type="button" class="payment-btn card-btn" data-method="card">💳 Tarjeta</button>
+</div>
 
   <!-- Propina -->
+  <div id="tip-container">
   <label>Propina</label>
-  <input type="number" id="tip" placeholder="0 €">
-
-  <button class="primary">Añadir viaje</button>
+  <input type="number" id="tip-input" placeholder="0 €">
 </div>
 
 
