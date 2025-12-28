@@ -872,17 +872,19 @@ function animateCounter(element, start, end) {
 }
 
 function updateCurrentDate() {
-    const dateDisplay = document.getElementById('current-date-display');
-    if (dateDisplay) {
-        const now = new Date();
-        const options = { 
-            weekday: 'long', 
-            day: 'numeric', 
-            month: 'long' 
-        };
-        const formattedDate = now.toLocaleDateString('es-ES', options);
-        dateDisplay.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-    }
+  const dateDisplay = document.getElementById('current-date-display');
+  if (dateDisplay) {
+    const now = new Date();
+    const options = { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long',
+      year: 'numeric'
+    };
+    const formattedDate = now.toLocaleDateString('es-ES', options);
+    // Primera letra en mayúscula
+    dateDisplay.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+  }
 }
 
 function initNavigation() {
