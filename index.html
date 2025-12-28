@@ -329,6 +329,101 @@
   </div>
 </div>
 
+<!-- PANTALLA ESTADÍSTICAS -->
+<div id="stats" class="screen">
+  <header>Estadísticas</header>
+  
+  <div class="stats-controls">
+    <select id="stats-period">
+      <option value="today">Hoy</option>
+      <option value="yesterday">Ayer</option>
+      <option value="week">Esta semana</option>
+      <option value="month" selected>Este mes</option>
+      <option value="all">Todos</option>
+    </select>
+    
+    <select id="stats-month">
+      <!-- Se llenará dinámicamente con los meses disponibles -->
+    </select>
+  </div>
+  
+  <!-- RESÚMENES PRINCIPALES -->
+  <div class="monthly-summary">
+    <h3>📅 Resumen Mensual</h3>
+    
+    <div class="summary-grid">
+      <div class="summary-box">
+        <div class="summary-icon">🚗</div>
+        <div class="summary-content">
+          <div class="summary-label">Total Viajes</div>
+          <div id="monthly-total-trips" class="summary-value">0</div>
+        </div>
+      </div>
+      
+      <div class="summary-box">
+        <div class="summary-icon">👥</div>
+        <div class="summary-content">
+          <div class="summary-label">Total Pasajeros</div>
+          <div id="monthly-total-passengers" class="summary-value">0</div>
+        </div>
+      </div>
+      
+      <div class="summary-box">
+        <div class="summary-icon">💵</div>
+        <div class="summary-content">
+          <div class="summary-label">Viajes Efectivo</div>
+          <div id="monthly-cash-trips" class="summary-value">0</div>
+        </div>
+      </div>
+      
+      <div class="summary-box">
+        <div class="summary-icon">💳</div>
+        <div class="summary-content">
+          <div class="summary-label">Viajes Tarjeta</div>
+          <div id="monthly-card-trips" class="summary-value">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- DISTRIBUCIÓN POR PAÍS -->
+  <div class="countries-distribution">
+    <h3>🌍 Distribución por País</h3>
+    <div id="countries-list" class="countries-list">
+      <div class="empty-state">No hay datos de países</div>
+    </div>
+  </div>
+  
+  <!-- GRAFICOS DE BARRAS -->
+  <div class="charts-section">
+    <h3>📊 Métodos de Pago</h3>
+    <div class="chart-container">
+      <div class="chart-bar-horizontal">
+        <div class="chart-label">Efectivo</div>
+        <div class="chart-bar-track">
+          <div id="cash-bar" class="chart-bar-fill" style="width: 0%"></div>
+        </div>
+        <div id="cash-percent" class="chart-value">0%</div>
+      </div>
+      
+      <div class="chart-bar-horizontal">
+        <div class="chart-label">Tarjeta</div>
+        <div class="chart-bar-track">
+          <div id="card-bar" class="chart-bar-fill" style="width: 0%"></div>
+        </div>
+        <div id="card-percent" class="chart-value">0%</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- HISTORIAL COMPLETO (se mantiene) -->
+  <h3>📋 Historial Completo</h3>
+  <div id="all-trips" class="trip-list">
+    <div class="empty-state">No hay viajes registrados</div>
+  </div>
+</div>
+
+  
   <!-- NAVEGACIÓN -->
   <nav>
     <button onclick="showScreen('new-trip')">➕ Nuevo</button>
