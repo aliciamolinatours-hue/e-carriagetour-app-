@@ -120,8 +120,8 @@ body {
   width: auto;
   vertical-align: middle;
   margin-right: 12px;
-   /* Borde blanco para contrastar con el fondo */
-  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 1px white);
+  /* Invertir a blanco */
+  filter: brightness(0) invert(1);
 }
 
 .app-title {
