@@ -576,4 +576,240 @@ button.primary {
   }
 }
 
+/* ============================================
+   ESTILOS PARA ESTADÍSTICAS MEJORADAS
+   ============================================ */
+
+/* Controles mejorados */
+.stats-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.stats-controls select {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Resumen mensual */
+.monthly-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.monthly-summary h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.summary-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #2196f3;
+}
+
+.summary-box:nth-child(2) {
+  border-left-color: #4caf50;
+}
+
+.summary-box:nth-child(3) {
+  border-left-color: #ff9800;
+}
+
+.summary-box:nth-child(4) {
+  border-left-color: #9c27b0;
+}
+
+.summary-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.summary-content {
+  flex: 1;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.summary-value {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Distribución por países */
+.countries-distribution {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.countries-distribution h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.countries-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.country-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.country-item:last-child {
+  border-bottom: none;
+}
+
+.country-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.country-stats {
+  text-align: right;
+}
+
+.country-trips {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2196f3;
+}
+
+.country-passengers {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Gráficos de barras horizontales */
+.charts-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.charts-section h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.chart-bar-horizontal {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.chart-label {
+  width: 80px;
+  font-weight: 500;
+  color: #333;
+}
+
+.chart-bar-track {
+  flex: 1;
+  height: 25px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.chart-bar-fill {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 1s ease;
+}
+
+#cash-bar.chart-bar-fill {
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+}
+
+#card-bar.chart-bar-fill {
+  background: linear-gradient(90deg, #2196f3, #03a9f4);
+}
+
+.chart-value {
+  width: 60px;
+  text-align: right;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-controls {
+    flex-direction: column;
+  }
+  
+  .stats-controls select {
+    width: 100%;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.country-item, .summary-box {
+  animation: fadeIn 0.3s ease-out;
+}
+
 
