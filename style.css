@@ -277,3 +277,25 @@ select, input {
     transform: translateX(-50%) translateY(0);
   }
 }
+
+/* Ajustar grid para 5 botones */
+.tip-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Para pantallas más grandes */
+@media (min-width: 480px) {
+  .tip-buttons {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 350px) {
+  .tip-buttons {
+    grid-template-columns: 1fr;
+  }
+}
