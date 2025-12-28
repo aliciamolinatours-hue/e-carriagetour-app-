@@ -4,437 +4,236 @@
   <meta charset="UTF-8">
   <title>E-Carriage Tour App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
   <!-- PANTALLA NUEVO VIAJE -->
   <div id="new-trip" class="screen active">
-  <header>Nuevo viaje</header>
+    <header>Nuevo viaje</header>
 
- <!-- País -->
-<label>País de origen</label>
-<select id="country">
-    <option value="">Selecciona país</option>
-    <option>Afganistán</option>
-    <option>Albania</option>
-    <option>Alemania</option>
-    <option>Andorra</option>
-    <option>Angola</option>
-    <option>Antigua y Barbuda</option>
-    <option>Arabia Saudita</option>
-    <option>Argelia</option>
-    <option>Argentina</option>
-    <option>Armenia</option>
-    <option>Australia</option>
-    <option>Austria</option>
-    <option>Azerbaiyán</option>
-    <option>Bahamas</option>
-    <option>Bangladés</option>
-    <option>Barbados</option>
-    <option>Baréin</option>
-    <option>Bélgica</option>
-    <option>Belice</option>
-    <option>Benín</option>
-    <option>Bielorrusia</option>
-    <option>Birmania (Myanmar)</option>
-    <option>Bolivia</option>
-    <option>Bosnia y Herzegovina</option>
-    <option>Botsuana</option>
-    <option>Brasil</option>
-    <option>Brunéi</option>
-    <option>Bulgaria</option>
-    <option>Burkina Faso</option>
-    <option>Burundi</option>
-    <option>Bután</option>
-    <option>Cabo Verde</option>
-    <option>Camboya</option>
-    <option>Camerún</option>
-    <option>Canadá</option>
-    <option>Catar</option>
-    <option>Chad</option>
-    <option>Chile</option>
-    <option>China</option>
-    <option>Chipre</option>
-    <option>Colombia</option>
-    <option>Comoras</option>
-    <option>Corea del Norte</option>
-    <option>Corea del Sur</option>
-    <option>Costa de Marfil</option>
-    <option>Costa Rica</option>
-    <option>Croacia</option>
-    <option>Cuba</option>
-    <option>Dinamarca</option>
-    <option>Dominica</option>
-    <option>Ecuador</option>
-    <option>Egipto</option>
-    <option>El Salvador</option>
-    <option>Emiratos Árabes Unidos</option>
-    <option>Eritrea</option>
-    <option>Eslovaquia</option>
-    <option>Eslovenia</option>
-    <option>España</option>
-    <option>Estados Unidos</option>
-    <option>Estonia</option>
-    <option>Esuatini</option>
-    <option>Etiopía</option>
-    <option>Filipinas</option>
-    <option>Finlandia</option>
-    <option>Fiyi</option>
-    <option>Francia</option>
-    <option>Gabón</option>
-    <option>Gambia</option>
-    <option>Georgia</option>
-    <option>Ghana</option>
-    <option>Granada</option>
-    <option>Grecia</option>
-    <option>Guatemala</option>
-    <option>Guinea</option>
-    <option>Guinea Ecuatorial</option>
-    <option>Guinea-Bisáu</option>
-    <option>Guyana</option>
-    <option>Haití</option>
-    <option>Honduras</option>
-    <option>Hungría</option>
-    <option>India</option>
-    <option>Indonesia</option>
-    <option>Irak</option>
-    <option>Irán</option>
-    <option>Irlanda</option>
-    <option>Islandia</option>
-    <option>Islas Marshall</option>
-    <option>Islas Salomón</option>
-    <option>Israel</option>
-    <option>Italia</option>
-    <option>Jamaica</option>
-    <option>Japón</option>
-    <option>Jordania</option>
-    <option>Kazajistán</option>
-    <option>Kenia</option>
-    <option>Kirguistán</option>
-    <option>Kiribati</option>
-    <option>Kuwait</option>
-    <option>Laos</option>
-    <option>Lesoto</option>
-    <option>Letonia</option>
-    <option>Líbano</option>
-    <option>Liberia</option>
-    <option>Libia</option>
-    <option>Liechtenstein</option>
-    <option>Lituania</option>
-    <option>Luxemburgo</option>
-    <option>Madagascar</option>
-    <option>Malasia</option>
-    <option>Malaui</option>
-    <option>Maldivas</option>
-    <option>Malí</option>
-    <option>Malta</option>
-    <option>Marruecos</option>
-    <option>Mauricio</option>
-    <option>Mauritania</option>
-    <option>México</option>
-    <option>Micronesia</option>
-    <option>Moldavia</option>
-    <option>Mónaco</option>
-    <option>Mongolia</option>
-    <option>Montenegro</option>
-    <option>Mozambique</option>
-    <option>Namibia</option>
-    <option>Nauru</option>
-    <option>Nepal</option>
-    <option>Nicaragua</option>
-    <option>Níger</option>
-    <option>Nigeria</option>
-    <option>Noruega</option>
-    <option>Nueva Zelanda</option>
-    <option>Omán</option>
-    <option>Países Bajos</option>
-    <option>Pakistán</option>
-    <option>Palaos</option>
-    <option>Palestina</option>
-    <option>Panamá</option>
-    <option>Papúa Nueva Guinea</option>
-    <option>Paraguay</option>
-    <option>Perú</option>
-    <option>Polonia</option>
-    <option>Portugal</option>
-    <option>Reino Unido</option>
-    <option>República Centroafricana</option>
-    <option>República Checa</option>
-    <option>República del Congo</option>
-    <option>República Democrática del Congo</option>
-    <option>República Dominicana</option>
-    <option>Ruanda</option>
-    <option>Rumanía</option>
-    <option>Rusia</option>
-    <option>Samoa</option>
-    <option>San Cristóbal y Nieves</option>
-    <option>San Marino</option>
-    <option>San Vicente y las Granadinas</option>
-    <option>Santa Lucía</option>
-    <option>Santo Tomé y Príncipe</option>
-    <option>Senegal</option>
-    <option>Serbia</option>
-    <option>Seychelles</option>
-    <option>Sierra Leona</option>
-    <option>Singapur</option>
-    <option>Siria</option>
-    <option>Somalia</option>
-    <option>Sri Lanka</option>
-    <option>Sudáfrica</option>
-    <option>Sudán</option>
-    <option>Sudán del Sur</option>
-    <option>Suecia</option>
-    <option>Suiza</option>
-    <option>Surinam</option>
-    <option>Tailandia</option>
-    <option>Tanzania</option>
-    <option>Tayikistán</option>
-    <option>Timor Oriental</option>
-    <option>Togo</option>
-    <option>Tonga</option>
-    <option>Trinidad y Tobago</option>
-    <option>Túnez</option>
-    <option>Turkmenistán</option>
-    <option>Turquía</option>
-    <option>Tuvalu</option>
-    <option>Ucrania</option>
-    <option>Uganda</option>
-    <option>Uruguay</option>
-    <option>Uzbekistán</option>
-    <option>Vanuatu</option>
-    <option>Vaticano</option>
-    <option>Venezuela</option>
-    <option>Vietnam</option>
-    <option>Yemen</option>
-    <option>Yibuti</option>
-    <option>Zambia</option>
-    <option>Zimbabue</option>
-</select>
-
-  <!-- Pasajeros -->
-  <div class="passenger-selector">
-        <label for="passenger-input">Número de pasajeros</label>
-        <div class="passengers">
-            <button type="button" id="decrease-passenger" aria-label="Reducir número de pasajeros">−</button>
-            <span id="passenger-count">1</span>
-            <button type="button" id="increase-passenger" aria-label="Aumentar número de pasajeros">+</button>
-            <!-- Input oculto para formularios -->
-            <input type="hidden" id="passenger-input" name="passengers" value="1">
-        </div>
-    </div>
-    
-  <!-- Precio -->
-  <label>Precio del viaje</label>
-  <div class="price">70 €</div>
-
-  <!-- Método de pago -->
- <label>Método de pago</label>
-<div class="payment" id="payment-method">
-  <button type="button" class="payment-btn cash-btn active" data-method="cash">💵 Efectivo</button>
-  <button type="button" class="payment-btn card-btn" data-method="card">💳 Tarjeta</button>
-</div>
-
-  <!-- Propina -->
-  <div id="tip-container">
-  <label>Propina</label>
-  <input type="number" id="tip-input" placeholder="0 €">
-</div>
-
-
-<!-- BOTÓN AÑADIR VIAJE -->
-  <button id="add-trip-btn" class="primary">Añadir viaje</button>
-</div>
-
-<!-- Añade esto DESPUÉS del botón "Añadir viaje" -->
-<div class="today-trips-section">
-  <h3>📝 Viajes de hoy</h3>
-  <div id="today-trips-list" class="today-trips-list">
-    <div class="empty-state">No hay viajes registrados hoy</div>
-  </div>
-</div> 
- 
-<!-- PANTALLA RESUMEN -->
-<div id="summary" class="screen">
-  <header>Resumen del día</header>
-  
-  <div class="summary-controls">
-    <button id="today-btn" class="period-btn active">Hoy</button>
-    <button id="yesterday-btn" class="period-btn">Ayer</button>
-    <button id="week-btn" class="period-btn">Esta semana</button>
-  </div>
-  
-  <!-- DESGLOSE DETALLADO -->
-  <div class="detailed-summary">
-    <h3>💰 Desglose Financiero</h3>
-    
-    <!-- FECHA -->
-    <div class="summary-date" id="summary-date">
-      <span class="date-label">Fecha:</span>
-      <span class="date-value" id="current-date"></span>
-    </div>
-    
-    <!-- TOTALES GENERALES -->
-    <div class="summary-row total-row">
-      <div class="summary-label">Total viajes (tarjeta + efectivo)</div>
-      <div class="summary-value" id="total-all-trips">0</div>
-    </div>
-    
-    <!-- EFECTIVO -->
-    <div class="payment-section cash-section">
-      <h4 class="section-title">💵 Efectivo</h4>
-      
-      <div class="summary-row">
-        <div class="summary-label">Viajes en efectivo</div>
-        <div class="summary-value" id="cash-trips-count">0</div>
-      </div>
-      
-      <div class="summary-row">
-        <div class="summary-label">Importe viajes efectivo</div>
-        <div class="summary-value" id="cash-trips-amount">0 €</div>
-      </div>
-      
-      <div class="summary-row">
-        <div class="summary-label">Propina en efectivo</div>
-        <div class="summary-value" id="cash-tips-amount">0 €</div>
-      </div>
-    </div>
-    
-    <!-- TARJETA -->
-    <div class="payment-section card-section">
-      <h4 class="section-title">💳 Tarjeta</h4>
-      
-      <div class="summary-row">
-        <div class="summary-label">Viajes con tarjeta</div>
-        <div class="summary-value" id="card-trips-count">0</div>
-      </div>
-      
-      <div class="summary-row">
-        <div class="summary-label">Importe viajes tarjeta</div>
-        <div class="summary-value" id="card-trips-amount">0 €</div>
-      </div>
-      
-      <div class="summary-row">
-        <div class="summary-label">Propina en tarjeta</div>
-        <div class="summary-value" id="card-tips-amount">0 €</div>
-      </div>
-    </div>
-    
-    <!-- RESUMEN FINAL -->
-    <div class="final-summary">
-      <h4 class="section-title">📋 Resumen a entregar</h4>
-      
-      <div class="summary-row highlight">
-        <div class="summary-label">Efectivo a entregar</div>
-        <div class="summary-value" id="cash-to-deliver">0 €</div>
-      </div>
-      
-      <div class="explanation">
-        <small>
-          <strong>Fórmula:</strong> (Importe efectivo) - (Propina tarjeta)<br>
-          <em>Las propinas en tarjeta son para ti</em>
-        </small>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- PANTALLA ESTADÍSTICAS -->
-<div id="stats" class="screen">
-  <header>Estadísticas</header>
-  
-  <div class="stats-controls">
-    <select id="stats-period">
-      <option value="today">Hoy</option>
-      <option value="yesterday">Ayer</option>
-      <option value="week">Esta semana</option>
-      <option value="month" selected>Este mes</option>
-      <option value="all">Todos</option>
+    <!-- País -->
+    <label>País de origen</label>
+    <select id="country">
+      <option value="">Selecciona país</option>
+      <option>España</option>
+      <option>Francia</option>
+      <option>Portugal</option>
+      <option>Italia</option>
+      <option>Alemania</option>
+      <!-- Mantén tu lista completa de países aquí -->
     </select>
-    
-    <select id="stats-month">
-      <!-- Se llenará dinámicamente con los meses disponibles -->
-    </select>
-  </div>
-  
-  <!-- RESÚMENES PRINCIPALES -->
-  <div class="monthly-summary">
-    <h3>📅 Resumen Mensual</h3>
-    
-    <div class="summary-grid">
-      <div class="summary-box">
-        <div class="summary-icon">🚗</div>
-        <div class="summary-content">
-          <div class="summary-label">Total Viajes</div>
-          <div id="monthly-total-trips" class="summary-value">0</div>
-        </div>
-      </div>
-      
-      <div class="summary-box">
-        <div class="summary-icon">👥</div>
-        <div class="summary-content">
-          <div class="summary-label">Total Pasajeros</div>
-          <div id="monthly-total-passengers" class="summary-value">0</div>
-        </div>
-      </div>
-      
-      <div class="summary-box">
-        <div class="summary-icon">💵</div>
-        <div class="summary-content">
-          <div class="summary-label">Viajes Efectivo</div>
-          <div id="monthly-cash-trips" class="summary-value">0</div>
-        </div>
-      </div>
-      
-      <div class="summary-box">
-        <div class="summary-icon">💳</div>
-        <div class="summary-content">
-          <div class="summary-label">Viajes Tarjeta</div>
-          <div id="monthly-card-trips" class="summary-value">0</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- DISTRIBUCIÓN POR PAÍS -->
-  <div class="countries-distribution">
-    <h3>🌍 Distribución por País</h3>
-    <div id="countries-list" class="countries-list">
-      <div class="empty-state">No hay datos de países</div>
-    </div>
-  </div>
-  
-  <!-- GRAFICOS DE BARRAS -->
-  <div class="charts-section">
-    <h3>📊 Métodos de Pago</h3>
-    <div class="chart-container">
-      <div class="chart-bar-horizontal">
-        <div class="chart-label">Efectivo</div>
-        <div class="chart-bar-track">
-          <div id="cash-bar" class="chart-bar-fill" style="width: 0%"></div>
-        </div>
-        <div id="cash-percent" class="chart-value">0%</div>
-      </div>
-      
-      <div class="chart-bar-horizontal">
-        <div class="chart-label">Tarjeta</div>
-        <div class="chart-bar-track">
-          <div id="card-bar" class="chart-bar-fill" style="width: 0%"></div>
-        </div>
-        <div id="card-percent" class="chart-value">0%</div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- HISTORIAL COMPLETO (se mantiene) -->
-  <h3>📋 Historial Completo</h3>
-  <div id="all-trips" class="trip-list">
-    <div class="empty-state">No hay viajes registrados</div>
-  </div>
-</div>
 
-  
+    <!-- Pasajeros -->
+    <div class="passenger-selector">
+      <label for="passenger-input">Número de pasajeros</label>
+      <div class="passengers">
+        <button type="button" id="decrease-passenger" aria-label="Reducir número de pasajeros">−</button>
+        <span id="passenger-count">1</span>
+        <button type="button" id="increase-passenger" aria-label="Aumentar número de pasajeros">+</button>
+        <input type="hidden" id="passenger-input" name="passengers" value="1">
+      </div>
+    </div>
+
+    <!-- Precio -->
+    <label>Precio del viaje</label>
+    <div class="price">70 €</div>
+
+    <!-- Método de pago -->
+    <label>Método de pago</label>
+    <div class="payment" id="payment-method">
+      <button type="button" class="payment-btn cash-btn active" data-method="cash">💵 Efectivo</button>
+      <button type="button" class="payment-btn card-btn" data-method="card">💳 Tarjeta</button>
+    </div>
+
+    <!-- Propina -->
+    <div id="tip-container">
+      <label>Propina</label>
+      <input type="number" id="tip-input" placeholder="0 €">
+    </div>
+
+    <!-- BOTÓN AÑADIR VIAJE -->
+    <button id="add-trip-btn" class="primary">Añadir viaje</button>
+
+    <!-- VIAJES DE HOY (SOLO EN ESTA PANTALLA) -->
+    <div class="today-trips-section">
+      <h3>📝 Viajes de hoy</h3>
+      <div id="today-trips-list" class="today-trips-list">
+        <div class="empty-state">No hay viajes registrados hoy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANTALLA RESUMEN -->
+  <div id="summary" class="screen">
+    <header>Resumen del día</header>
+    
+    <div class="summary-controls">
+      <button id="today-btn" class="period-btn active">Hoy</button>
+      <button id="yesterday-btn" class="period-btn">Ayer</button>
+      <button id="week-btn" class="period-btn">Esta semana</button>
+    </div>
+    
+    <!-- DESGLOSE DETALLADO -->
+    <div class="detailed-summary">
+      <h3>💰 Desglose Financiero</h3>
+      
+      <!-- FECHA -->
+      <div class="summary-date" id="summary-date">
+        <span class="date-label">Fecha:</span>
+        <span class="date-value" id="current-date"></span>
+      </div>
+      
+      <!-- TOTALES GENERALES -->
+      <div class="summary-row total-row">
+        <div class="summary-label">Total viajes (tarjeta + efectivo)</div>
+        <div class="summary-value" id="total-all-trips">0</div>
+      </div>
+      
+      <!-- EFECTIVO -->
+      <div class="payment-section cash-section">
+        <h4 class="section-title">💵 Efectivo</h4>
+        
+        <div class="summary-row">
+          <div class="summary-label">Viajes en efectivo</div>
+          <div class="summary-value" id="cash-trips-count">0</div>
+        </div>
+        
+        <div class="summary-row">
+          <div class="summary-label">Importe viajes efectivo</div>
+          <div class="summary-value" id="cash-trips-amount">0 €</div>
+        </div>
+        
+        <div class="summary-row">
+          <div class="summary-label">Propina en efectivo</div>
+          <div class="summary-value" id="cash-tips-amount">0 €</div>
+        </div>
+      </div>
+      
+      <!-- TARJETA -->
+      <div class="payment-section card-section">
+        <h4 class="section-title">💳 Tarjeta</h4>
+        
+        <div class="summary-row">
+          <div class="summary-label">Viajes con tarjeta</div>
+          <div class="summary-value" id="card-trips-count">0</div>
+        </div>
+        
+        <div class="summary-row">
+          <div class="summary-label">Importe viajes tarjeta</div>
+          <div class="summary-value" id="card-trips-amount">0 €</div>
+        </div>
+        
+        <div class="summary-row">
+          <div class="summary-label">Propina en tarjeta</div>
+          <div class="summary-value" id="card-tips-amount">0 €</div>
+        </div>
+      </div>
+      
+      <!-- RESUMEN FINAL -->
+      <div class="final-summary">
+        <h4 class="section-title">📋 Resumen a entregar</h4>
+        
+        <div class="summary-row highlight">
+          <div class="summary-label">Efectivo a entregar</div>
+          <div class="summary-value" id="cash-to-deliver">0 €</div>
+        </div>
+        
+        <div class="explanation">
+          <small>
+            <strong>Fórmula:</strong> (Importe efectivo) - (Propina tarjeta)<br>
+            <em>Las propinas en tarjeta son para ti</em>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANTALLA ESTADÍSTICAS (SIMPLIFICADA) -->
+  <div id="stats" class="screen">
+    <header>Estadísticas</header>
+    
+    <!-- UN SOLO SELECTOR DE PERIODO -->
+    <div class="stats-controls">
+      <select id="stats-period">
+        <option value="today">Hoy</option>
+        <option value="yesterday">Ayer</option>
+        <option value="week">Esta semana</option>
+        <option value="month" selected>Este mes</option>
+        <option value="all">Todos</option>
+      </select>
+    </div>
+    
+    <!-- RESÚMENES PRINCIPALES -->
+    <div class="monthly-summary">
+      <h3>📅 Resumen del Periodo</h3>
+      
+      <div class="summary-grid">
+        <div class="summary-box">
+          <div class="summary-icon">🚗</div>
+          <div class="summary-content">
+            <div class="summary-label">Total Viajes</div>
+            <div id="monthly-total-trips" class="summary-value">0</div>
+          </div>
+        </div>
+        
+        <div class="summary-box">
+          <div class="summary-icon">👥</div>
+          <div class="summary-content">
+            <div class="summary-label">Total Pasajeros</div>
+            <div id="monthly-total-passengers" class="summary-value">0</div>
+          </div>
+        </div>
+        
+        <div class="summary-box">
+          <div class="summary-icon">💵</div>
+          <div class="summary-content">
+            <div class="summary-label">Viajes Efectivo</div>
+            <div id="monthly-cash-trips" class="summary-value">0</div>
+          </div>
+        </div>
+        
+        <div class="summary-box">
+          <div class="summary-icon">💳</div>
+          <div class="summary-content">
+            <div class="summary-label">Viajes Tarjeta</div>
+            <div id="monthly-card-trips" class="summary-value">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- DISTRIBUCIÓN POR PAÍS -->
+    <div class="countries-distribution">
+      <h3>🌍 Distribución por País</h3>
+      <div id="countries-list" class="countries-list">
+        <div class="empty-state">No hay datos de países</div>
+      </div>
+    </div>
+    
+    <!-- GRÁFICO DE MÉTODOS DE PAGO -->
+    <div class="charts-section">
+      <h3>📊 Métodos de Pago</h3>
+      <div class="chart-container">
+        <div class="chart-bar-horizontal">
+          <div class="chart-label">Efectivo</div>
+          <div class="chart-bar-track">
+            <div id="cash-bar" class="chart-bar-fill" style="width: 0%"></div>
+          </div>
+          <div id="cash-percent" class="chart-value">0%</div>
+        </div>
+        
+        <div class="chart-bar-horizontal">
+          <div class="chart-label">Tarjeta</div>
+          <div class="chart-bar-track">
+            <div id="card-bar" class="chart-bar-fill" style="width: 0%"></div>
+          </div>
+          <div id="card-percent" class="chart-value">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- NAVEGACIÓN -->
   <nav>
     <button onclick="showScreen('new-trip')">➕ Nuevo</button>
@@ -442,6 +241,6 @@
     <button onclick="showScreen('stats')">📈 Stats</button>
   </nav>
 
-<script src="./app.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>
