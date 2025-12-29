@@ -26,8 +26,11 @@
 
 <!-- CONTENIDO PRINCIPAL -->
 <main class="app-main">
-  
+
+  /* ======================================================================= */
   <!-- ========== PANTALLA 1: NUEVO VIAJE (ACTIVA POR DEFECTO) ========== -->
+  /* ======================================================================= */
+  
   <div id="new-trip" class="screen active app-screen">
     <div class="screen-header">
       <h2><i class="fas fa-plus-circle"></i> Nuevo Viaje</h2>
@@ -319,7 +322,10 @@
     </div>
   </div>
 
+ /* ============================================================= */
   <!-- ========== PANTALLA 2: RESUMEN (MODIFICADA) ========== -->
+ /* ============================================================= */
+  
   <div id="summary" class="screen app-screen">
     <div class="screen-header">
       <h2><i class="fas fa-chart-pie"></i> Resumen Diario</h2>
@@ -413,7 +419,10 @@
     </div>
   </div>
 
+  /* ============================================================= */
   <!-- ========== PANTALLA 3: ESTADÍSTICAS (REORDENADA) ========== -->
+  /* ============================================================= */
+  
   <div id="stats" class="screen app-screen">
     <div class="screen-header">
       <h2><i class="fas fa-chart-line"></i> Estadísticas</h2>
@@ -496,8 +505,10 @@
   </div>
 </main>
 
-  
+/* ============================================================= */  
 <!-- ========== PANTALLA 4: SERVICIO TÉCNICO ========== -->
+/* ============================================================= */
+  
 <div id="maintenance" class="screen">
   <header>🛠️ Servicio Técnico</header>
 
@@ -508,8 +519,12 @@
     <!-- HOTSPOTS -->
     <button class="hotspot" data-part="Rueda delantera izquierda" style="top: 70%; left: 20%;"></button>
     <button class="hotspot" data-part="Rueda delantera derecha" style="top: 70%; left: 80%;"></button>
+    <button class="hotspot" data-part="Rueda trasera izquierda" style="top: 70%; left: 20%;"></button>
+    <button class="hotspot" data-part="Rueda trasera derecha" style="top: 70%; left: 80%;"></button>
     <button class="hotspot" data-part="Luces delanteras" style="top: 30%; left: 50%;"></button>
-    <button class="hotspot" data-part="Puerta" style="top: 55%; left: 50%;"></button>
+    <button class="hotspot" data-part="Luces traseras" style="top: 30%; left: 50%;"></button>
+    <button class="hotspot" data-part="Puerta izquierda" style="top: 55%; left: 50%;"></button>
+    <button class="hotspot" data-part="Puerta derecha" style="top: 55%; left: 50%;"></button>
     <button class="hotspot" data-part="Maletero" style="top: 60%; left: 90%;"></button>
   </div>
 
@@ -521,8 +536,10 @@
 </div>
 
 
-
+/* ============================================================= */
 <!-- ========== BARRA DE NAVEGACIÓN INFERIOR ========== -->
+/* ============================================================= */
+  
 <nav class="app-nav">
   <button class="nav-btn active" data-screen="new-trip">
     <i class="fas fa-plus-circle"></i><span>Nuevo</span>
