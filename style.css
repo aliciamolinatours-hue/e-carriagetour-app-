@@ -1463,6 +1463,67 @@ body {
   font-family: 'SF Mono', Monaco, 'Courier New', monospace;
 }
 
+
+/* =============================================== */
+/* PANTALLA SERVICIO TÉCNICO – MAINTENANCE */
+/* =============================================== */
+
+#maintenance {
+  padding-bottom: 90px; /* espacio para la nav inferior */
+}
+
+/* Contenedor del carruaje */
+.carriage-container {
+  position: relative;
+  max-width: 360px;
+  margin: 20px auto;
+}
+
+.carriage-image {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+/* Hotspots */
+.hotspot {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: #ff4d4d;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.hotspot:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* Lista de incidencias */
+#maintenance-list {
+  margin: 16px;
+}
+
+.maintenance-item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.maintenance-item h4 {
+  margin: 0 0 6px;
+}
+
+.maintenance-item small {
+  color: #777;
+}
+
+
+
 /* ============================================
    NAVEGACIÓN INFERIOR ELEGANTE
    ============================================ */
