@@ -1476,15 +1476,17 @@ body {
 .carriage-container {
   position: relative;
   max-width: 360px;
+  width: 100%;
   margin: 20px auto;
 }
 
 .carriage-image {
   width: 100%;
-  border-radius: 12px;
+  height: auto;          /* 🔑 CLAVE */
+  max-height: 300px;     /* 🔑 LIMITA ALTURA */
+  object-fit: contain;
   display: block;
 }
-
 /* Hotspots */
 .hotspot {
   position: absolute;
