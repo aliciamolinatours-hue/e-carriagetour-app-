@@ -7,9 +7,9 @@ console.log('🚀 E-Carriage Tour App iniciada');
 // ========== CONFIGURACIÓN INICIAL ==========
 const CONFIG = {
     BASE_PRICE: 70.00,
-    MAX_PASSENGERS: 8,
+    MAX_PASSENGERS: 5,  // CAMBIADO de 8 a 5 (como en el HTML)
     MIN_PASSENGERS: 1,
-    STORAGE_KEY: 'ecarriage_trips',
+    STORAGE_KEY: 'eCarriageTrips', // Cambiado para coincidir con el HTML
     APP_VERSION: '2.0'
 };
 
@@ -22,15 +22,19 @@ const AppState = {
     customTipValue: '',
     currentPeriod: 'today',
     statsPeriod: 'month',
-    trips: []
+    trips: [],
+    tripsData: {  // Añadido para coincidir con estructura del HTML
+        today: [],
+        yesterday: [],
+        week: [],
+        month: [],
+        all: []
+    }
 };
 
 // ========== INICIALIZACIÓN ==========
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📱 Aplicación cargada - Versión', CONFIG.APP_VERSION);
-    
-    // Ejecutar migración primero
-    migrateFromOldVersion();
     
     // Cargar viajes desde localStorage
     loadTripsFromStorage();
@@ -59,32 +63,7 @@ function initApp() {
     // Evento para actualizar cuando se añade viaje
     document.addEventListener('tripAdded', handleNewTrip);
     
-    // Evento para cuando cambia la visibilidad de la página
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
     console.log('✅ Aplicación inicializada correctamente');
-}
-
-function handleVisibilityChange() {
-    if (!document.hidden) {
-        // Recargar datos cuando la app vuelve a estar visible
-        loadTripsFromStorage();
-        refreshCurrentScreen();
-    }
-}
-
-function refreshCurrentScreen() {
-    switch(AppState.currentScreen) {
-        case 'new-trip':
-            updateTodayTrips();
-            break;
-        case 'summary':
-            updateSummary(AppState.currentPeriod);
-            break;
-        case 'stats':
-            updateStats(AppState.statsPeriod);
-            break;
-    }
 }
 
 // ========== MANEJO DE PANTALLAS ==========
@@ -100,7 +79,7 @@ function showScreen(screenId) {
     });
     
     // Ocultar todas las pantallas
-    document.querySelectorAll('.app-screen').forEach(screen => {
+    document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
     });
     
@@ -109,12 +88,6 @@ function showScreen(screenId) {
     if (targetScreen) {
         targetScreen.classList.add('active');
         AppState.currentScreen = screenId;
-        
-        // Aplicar animación
-        targetScreen.classList.add('slide-in');
-        setTimeout(() => {
-            targetScreen.classList.remove('slide-in');
-        }, 300);
         
         // Actualizar datos de la pantalla
         updateScreenData(screenId);
@@ -144,7 +117,6 @@ function initPassengerSelector() {
     
     if (!passengerCountEl || !decreaseBtn || !increaseBtn) return;
     
-    // FUNCIÓN CORREGIDA - Sin duplicación
     function updatePassengerDisplay() {
         passengerCountEl.textContent = AppState.passengerCount;
         if (passengerInput) passengerInput.value = AppState.passengerCount;
@@ -152,10 +124,6 @@ function initPassengerSelector() {
         // Actualizar estado de botones
         decreaseBtn.disabled = AppState.passengerCount <= CONFIG.MIN_PASSENGERS;
         increaseBtn.disabled = AppState.passengerCount >= CONFIG.MAX_PASSENGERS;
-        
-        // Efecto visual
-        passengerCountEl.classList.add('pulse');
-        setTimeout(() => passengerCountEl.classList.remove('pulse'), 500);
         
         // Actualizar resumen
         updateTripSummary();
@@ -173,17 +141,6 @@ function initPassengerSelector() {
             AppState.passengerCount++;
             updatePassengerDisplay();
         }
-    });
-    
-    // Efectos táctiles
-    [decreaseBtn, increaseBtn].forEach(btn => {
-        btn.addEventListener('touchstart', () => {
-            btn.style.transform = 'scale(0.9)';
-        });
-        
-        btn.addEventListener('touchend', () => {
-            btn.style.transform = 'scale(1)';
-        });
     });
     
     updatePassengerDisplay();
@@ -208,177 +165,31 @@ function initPaymentMethods() {
             updateTipSystem();
             updateTripSummary();
         });
-        
-        // Efecto táctil
-        card.addEventListener('touchstart', () => {
-            card.style.transform = 'translateY(-2px)';
-        });
-        
-        card.addEventListener('touchend', () => {
-            card.style.transform = 'translateY(0)';
-        });
     });
 }
 
 // ========== COMPONENTE: SISTEMA DE PROPINAS ==========
 function initTipSystem() {
-  updateTipSystem();
+    // Usar el sistema del HTML (input simple)
+    const tipInput = document.getElementById('tip-input');
+    if (tipInput) {
+        tipInput.addEventListener('input', (e) => {
+            AppState.selectedTip = parseFloat(e.target.value) || 0;
+            updateTripSummary();
+        });
+    }
+    updateTipSystem();
 }
 
 function updateTipSystem() {
-  const tipContainer = document.getElementById('tip-container');
-  if (!tipContainer) return;
-  
-  if (AppState.paymentMethod === 'card') {
-    // Sistema de propinas para tarjeta con botones específicos
-    tipContainer.innerHTML = `
-      <div class="tip-buttons-grid">
-        <button type="button" class="tip-btn" data-tip="0">0 €</button>
-        <button type="button" class="tip-btn" data-tip="7">7 €</button>
-        <button type="button" class="tip-btn" data-tip="10.5">10,5 €</button>
-        <button type="button" class="tip-btn" data-tip="14">14 €</button>
-        <button type="button" class="tip-btn" data-tip="custom">Custom</button>
-      </div>
-      <div class="custom-tip-container" id="custom-tip-input-container" style="display: none; margin-top: 12px;">
-        <input type="number" id="custom-tip-input" placeholder="0.00" step="0.01" min="0" max="100">
-        <span class="currency">€</span>
-      </div>
-    `;
+    const tipContainer = document.getElementById('tip-container');
+    if (!tipContainer) return;
     
-    // Configurar botones de propina para tarjeta
-    const tipButtons = tipContainer.querySelectorAll('.tip-btn');
-    tipButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Quitar activo de todos los botones
-        tipButtons.forEach(b => b.classList.remove('active'));
-        
-        // Activar el botón clickeado
-        btn.classList.add('active');
-        
-        const tipValue = btn.dataset.tip;
-        
-        if (tipValue === 'custom') {
-          // Mostrar input personalizado
-          const customContainer = document.getElementById('custom-tip-input-container');
-          if (customContainer) {
-            customContainer.style.display = 'flex';
-            const input = document.getElementById('custom-tip-input');
-            if (input) {
-              input.focus();
-              
-              // Configurar evento para el input
-              input.addEventListener('input', (e) => {
-                AppState.customTipValue = e.target.value;
-                AppState.selectedTip = parseFloat(e.target.value) || 0;
-                updateTripSummary();
-              });
-            }
-          }
-        } else {
-          // Ocultar input personalizado
-          const customContainer = document.getElementById('custom-tip-input-container');
-          if (customContainer) customContainer.style.display = 'none';
-          
-          AppState.selectedTip = parseFloat(tipValue) || 0;
-          AppState.customTipValue = '';
-          updateTripSummary();
-        }
-        
-        console.log('💰 Propina seleccionada (tarjeta):', AppState.selectedTip);
-      });
-    });
-    
-    // Activar propina 0 por defecto para tarjeta
-    if (tipButtons.length > 0) {
-      const zeroBtn = Array.from(tipButtons).find(btn => btn.dataset.tip === '0');
-      if (zeroBtn) zeroBtn.click();
-    }
-    
-    // Añadir estilos para los botones de propina de tarjeta
-    const style = document.createElement('style');
-    style.textContent = `
-      .tip-buttons-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        margin-top: 8px;
-      }
-      
-      .tip-btn {
-        padding: 12px;
-        border: 2px solid var(--border-color);
-        border-radius: var(--border-radius-md);
-        background: white;
-        font-weight: 600;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all var(--transition-fast);
-      }
-      
-      .tip-btn:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-2px);
-      }
-      
-      .tip-btn.active {
-        background: var(--primary-color);
-        color: white;
-        border-color: var(--primary-color);
-      }
-      
-      .custom-tip-container {
-        display: flex;
-        align-items: center;
-        background: white;
-        border: 2px solid var(--border-color);
-        border-radius: var(--border-radius-md);
-        padding: 8px 12px;
-      }
-      
-      .custom-tip-container input {
-        flex: 1;
-        border: none;
-        font-size: 1.2rem;
-        font-weight: 600;
-        text-align: center;
-        padding: 8px;
-      }
-      
-      .custom-tip-container input:focus {
-        outline: none;
-      }
-    `;
-    
-    // Evitar duplicar estilos
-    if (!document.getElementById('tip-styles')) {
-      style.id = 'tip-styles';
-      document.head.appendChild(style);
-    }
-    
-  } else {
-    // Input simple para efectivo (sin flechas)
-    tipContainer.innerHTML = `
-      <div class="tip-amount-display">
-        <input type="number" id="tip-input" class="tip-input" placeholder="0.00" step="0.01" min="0">
-        <span class="currency">€</span>
-      </div>
-    `;
-    
+    // Sistema simple como en el HTML - solo input
     const tipInput = document.getElementById('tip-input');
     if (tipInput) {
-      // Remover cualquier atributo que muestre flechas
-      tipInput.style.appearance = 'textfield';
-      tipInput.style.MozAppearance = 'textfield';
-      tipInput.style.WebkitAppearance = 'none';
-      
-      tipInput.addEventListener('input', (e) => {
-        AppState.selectedTip = parseFloat(e.target.value) || 0;
-        updateTripSummary();
-      });
-      
-      tipInput.value = AppState.selectedTip || '';
+        tipInput.value = AppState.selectedTip || '0.00';
     }
-  }
 }
 
 // ========== COMPONENTE: RESUMEN DEL VIAJE ==========
@@ -387,7 +198,7 @@ function updateTripSummary() {
     const tipAmount = AppState.selectedTip || 0;
     const total = basePrice + tipAmount;
     
-    // Actualizar display
+    // Actualizar display - IDs CORREGIDOS según HTML
     const tipDisplay = document.getElementById('tip-amount-display');
     const totalDisplay = document.getElementById('total-amount-display');
     
@@ -402,15 +213,6 @@ function initAddTripButton() {
     if (!addTripBtn) return;
     
     addTripBtn.addEventListener('click', addNewTrip);
-    
-    // Efecto táctil
-    addTripBtn.addEventListener('touchstart', () => {
-        addTripBtn.style.transform = 'translateY(-2px)';
-    });
-    
-    addTripBtn.addEventListener('touchend', () => {
-        addTripBtn.style.transform = 'translateY(0)';
-    });
 }
 
 function addNewTrip() {
@@ -465,7 +267,7 @@ function addNewTrip() {
         const event = new CustomEvent('tripAdded', { detail: trip });
         document.dispatchEvent(event);
         
-        // ✅ PASO 2 COMPLETO: Actualizar pantalla actual
+        // Actualizar pantalla actual
         updateScreenData(AppState.currentScreen);
     } else {
         showNotification('❌ Error al guardar el viaje', 'error');
@@ -474,19 +276,22 @@ function addNewTrip() {
 
 function saveTrip(trip) {
     try {
-        // Cargar viajes existentes
-        const trips = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '[]');
+        // Cargar viajes existentes - usar la estructura del HTML
+        const tripsData = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '{"today":[],"yesterday":[],"week":[],"month":[],"all":[]}');
         
-        // Añadir nuevo viaje al principio
-        trips.unshift(trip);
+        // Agregar a todas las colecciones
+        tripsData.today.push(trip);
+        tripsData.all.push(trip);
+        tripsData.month.push(trip);
         
         // Guardar en localStorage
-        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(trips));
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(tripsData));
         
         // Actualizar estado global
-        AppState.trips = trips;
+        AppState.tripsData = tripsData;
+        AppState.trips = tripsData.all; // Para compatibilidad
         
-        console.log('💾 Viaje guardado. Total:', trips.length);
+        console.log('💾 Viaje guardado. Total:', tripsData.all.length);
         return true;
     } catch (error) {
         console.error('Error al guardar:', error);
@@ -496,14 +301,16 @@ function saveTrip(trip) {
 
 function loadTripsFromStorage() {
     try {
-        const trips = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '[]');
-        AppState.trips = trips;
-        console.log('📂 Viajes cargados:', trips.length);
-        return trips;
+        const tripsData = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '{"today":[],"yesterday":[],"week":[],"month":[],"all":[]}');
+        AppState.tripsData = tripsData;
+        AppState.trips = tripsData.all; // Para compatibilidad
+        console.log('📂 Viajes cargados:', tripsData.all.length);
+        return tripsData;
     } catch (error) {
         console.error('Error al cargar viajes:', error);
+        AppState.tripsData = { today: [], yesterday: [], week: [], month: [], all: [] };
         AppState.trips = [];
-        return [];
+        return { today: [], yesterday: [], week: [], month: [], all: [] };
     }
 }
 
@@ -513,12 +320,10 @@ function resetForm() {
     // Resetear pasajeros
     AppState.passengerCount = 1;
     const passengerCountEl = document.getElementById('passenger-count');
-    const decreaseBtn = document.getElementById('decrease-passenger');
-    const increaseBtn = document.getElementById('increase-passenger');
+    const passengerInput = document.getElementById('passenger-input');
     
     if (passengerCountEl) passengerCountEl.textContent = '1';
-    if (decreaseBtn) decreaseBtn.disabled = true;
-    if (increaseBtn) increaseBtn.disabled = false;
+    if (passengerInput) passengerInput.value = '1';
     
     // Resetear país
     const countrySelect = document.getElementById('country');
@@ -526,8 +331,16 @@ function resetForm() {
     
     // Resetear propina
     AppState.selectedTip = 0;
-    AppState.customTipValue = '';
-    updateTipSystem();
+    const tipInput = document.getElementById('tip-input');
+    if (tipInput) tipInput.value = '0.00';
+    
+    // Resetear método de pago a efectivo
+    document.querySelectorAll('.payment-method-card').forEach(card => {
+        card.classList.remove('active');
+    });
+    document.querySelector('.payment-method-card[data-method="cash"]').classList.add('active');
+    AppState.paymentMethod = 'cash';
+    
     updateTripSummary();
     
     console.log('✅ Formulario reseteado');
@@ -543,29 +356,15 @@ function updateTodayTrips() {
         return;
     }
     
-    // Filtrar viajes de hoy
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Principio del día
-    
-    const todayTrips = AppState.trips.filter(trip => {
-        try {
-            const tripDate = new Date(trip.timestamp);
-            return tripDate >= today;
-        } catch (error) {
-            console.error('Error procesando fecha del viaje:', error);
-            return false;
-        }
-    }).sort((a, b) => {
-        // Ordenar por fecha más reciente primero
-        return new Date(b.timestamp) - new Date(a.timestamp);
-    });
+    // Obtener viajes de hoy del estado
+    const todayTrips = AppState.tripsData.today || [];
     
     console.log('📅 Viajes de hoy encontrados:', todayTrips.length);
     
     // Actualizar contador
     todayTripsCount.textContent = todayTrips.length;
     
-    // Si no hay viajes, mostrar estado vacío
+    // Si no hay viajes, mostrar estado vacío (como en HTML)
     if (todayTrips.length === 0) {
         todayTripsList.innerHTML = `
             <div class="empty-state">
@@ -582,59 +381,39 @@ function updateTodayTrips() {
     todayTrips.forEach((trip, index) => {
         // Icono según método de pago
         const paymentIcon = trip.paymentMethod === 'cash' 
-            ? '<i class="fas fa-money-bill-wave" style="color: #009494;"></i>' 
-            : '<i class="fas fa-credit-card" style="color: #009494;"></i>';
+            ? '<i class="fas fa-money-bill-wave"></i>' 
+            : '<i class="fas fa-credit-card"></i>';
         
         const paymentText = trip.paymentMethod === 'cash' ? 'Efectivo' : 'Tarjeta';
-        const paymentClass = trip.paymentMethod === 'cash' ? 'cash' : 'card';
-        
-        // Formatear hora
-        let displayTime = trip.time || '--:--';
-        if (trip.timestamp) {
-            try {
-                const tripTime = new Date(trip.timestamp);
-                displayTime = tripTime.toLocaleTimeString('es-ES', { 
-                    hour: '2-digit', 
-                    minute: '2-digit',
-                    hour12: false 
-                });
-            } catch (e) {
-                console.error('Error formateando hora:', e);
-            }
-        }
         
         html += `
-            <div class="today-trip-item" style="animation-delay: ${index * 0.05}s">
-                <div class="today-trip-info">
-                    <div class="today-trip-time">${displayTime}</div>
-                    <div class="today-trip-details">
-                        <span class="today-trip-country ${paymentClass}">${trip.country || 'Sin país'}</span>
-                        <span>•</span>
-                        <span>${trip.passengers || 1} pasajero${trip.passengers !== 1 ? 's' : ''}</span>
-                        <span>•</span>
-                        <span class="today-trip-payment">${paymentIcon} ${paymentText}</span>
-                        ${trip.tip > 0 ? `<span>•</span><span class="tip-indicator" style="color: #009494;">+${trip.tip.toFixed(2)}€</span>` : ''}
+            <div class="trip-item">
+                <div class="trip-item-header">
+                    <span class="trip-number">Viaje #${index + 1}</span>
+                    <span class="trip-time">${trip.time || '--:--'}</span>
+                </div>
+                <div class="trip-item-details">
+                    <div class="detail">
+                        <i class="fas fa-globe"></i>
+                        <span>${trip.country || 'Sin país'}</span>
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-users"></i>
+                        <span>${trip.passengers || 1} Pax</span>
+                    </div>
+                    <div class="detail">
+                        ${paymentIcon}
+                        <span>${paymentText}</span>
                     </div>
                 </div>
-                <div class="today-trip-amount">${typeof trip.total === 'number' ? trip.total.toFixed(2) : '0.00'} €</div>
+                <div class="trip-item-amount">
+                    ${(trip.total || 0).toFixed(2)} €
+                </div>
             </div>
         `;
     });
     
     todayTripsList.innerHTML = html;
-    
-    // Añadir efecto de entrada si hay viajes
-    const items = todayTripsList.querySelectorAll('.today-trip-item');
-    items.forEach((item, index) => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateX(-20px)';
-        
-        setTimeout(() => {
-            item.style.transition = 'all 0.3s ease-out';
-            item.style.opacity = '1';
-            item.style.transform = 'translateX(0)';
-        }, index * 50);
-    });
 }
 
 // ========== NAVEGACIÓN ==========
@@ -648,45 +427,22 @@ function initNavigation() {
                 showScreen(screenId);
             }
         });
-        
-        // Efecto táctil
-        btn.addEventListener('touchstart', () => {
-            btn.style.transform = 'scale(0.95)';
-        });
-        
-        btn.addEventListener('touchend', () => {
-            btn.style.transform = 'scale(1)';
-        });
     });
     
     console.log('✅ Navegación inicializada');
 }
 
-// ========== ✅ PASO 3: FUNCIÓN handleNewTrip() COMPLETA ==========
+// ========== FUNCIÓN handleNewTrip() ==========
 function handleNewTrip() {
     console.log('🔄 Evento: Viaje añadido, actualizando todas las pantallas...');
     
-    // ✅ Actualizar pantalla actual (ya debería estar actualizada por addNewTrip)
+    // Actualizar pantalla actual
     updateScreenData(AppState.currentScreen);
-    
-    // ✅ Actualizar otras pantallas si NO estamos en ellas
-    if (AppState.currentScreen !== 'new-trip') {
-        console.log('📝 Actualizando Viajes de Hoy desde otra pantalla');
-        updateTodayTrips();
-    }
-    if (AppState.currentScreen !== 'summary') {
-        console.log('📊 Actualizando Resumen desde otra pantalla');
-        updateSummary(AppState.currentPeriod);
-    }
-    if (AppState.currentScreen !== 'stats') {
-        console.log('📈 Actualizando Estadísticas desde otra pantalla');
-        updateStats(AppState.statsPeriod);
-    }
 }
 
 // ========== PANTALLA RESUMEN ==========
 function initSummaryScreen() {
-    // Botones de periodo
+    // Botones de periodo - IDs CORREGIDOS según HTML
     const periodBtns = document.querySelectorAll('.period-btn');
     periodBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -694,8 +450,13 @@ function initSummaryScreen() {
             periodBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
-            // Actualizar periodo
-            AppState.currentPeriod = btn.id.replace('-btn', '');
+            // Actualizar periodo basado en el ID del botón
+            let period;
+            if (btn.id === 'today-btn') period = 'today';
+            else if (btn.id === 'yesterday-btn') period = 'yesterday';
+            else if (btn.id === 'week-btn') period = 'week';
+            
+            AppState.currentPeriod = period;
             
             // Actualizar resumen
             updateSummary(AppState.currentPeriod);
@@ -704,67 +465,69 @@ function initSummaryScreen() {
 }
 
 function updateSummary(period = 'today') {
-  console.log('📊 Actualizando resumen para:', period);
-  
-  // Actualizar título del periodo
-  const periodTitles = {
-    'today': 'Hoy',
-    'yesterday': 'Ayer', 
-    'week': 'Esta semana'
-  };
-  const periodTitleElement = document.getElementById('summary-period-title');
-  if (periodTitleElement) {
-    periodTitleElement.textContent = periodTitles[period] || 'Hoy';
-  }
-  
-  // Filtrar viajes por periodo
-  const filteredTrips = filterTripsByPeriod(AppState.trips, period);
-  
-  // Calcular estadísticas detalladas
-  const cashTrips = filteredTrips.filter(t => t.paymentMethod === 'cash');
-  const cardTrips = filteredTrips.filter(t => t.paymentMethod === 'card');
-  
-  const cashTripsCount = cashTrips.length;
-  const cashTripsAmount = cashTrips.reduce((sum, t) => sum + t.price, 0);
-  const cashTipsAmount = cashTrips.reduce((sum, t) => sum + (t.tip || 0), 0);
-  const cashTotalReceived = cashTripsAmount + cashTipsAmount;
-  
-  const cardTripsCount = cardTrips.length;
-  const cardTripsAmount = cardTrips.reduce((sum, t) => sum + t.price, 0);
-  const cardTipsAmount = cardTrips.reduce((sum, t) => sum + (t.tip || 0), 0);
-  const cardTotalReceived = cardTripsAmount + cardTipsAmount;
-  
-  const totalTrips = cashTripsCount + cardTripsCount;
-  const totalAmountCollected = cashTotalReceived + cardTotalReceived;
-  const cashToDeliver = cashTotalReceived - cardTipsAmount;
-  
-  // Actualizar TARJETAS DE RESUMEN (IDs viejos)
-  updateElement('total-all-trips', totalTrips);
-  updateElement('cash-trips-count', cashTripsCount);
-  updateElement('cash-trips-amount', `${cashTripsAmount.toFixed(2)} €`);
-  updateElement('card-trips-count', cardTripsCount);
-  updateElement('card-trips-amount', `${cardTripsAmount.toFixed(2)} €`);
-  updateElement('total-tips', `${(cashTipsAmount + cardTipsAmount).toFixed(2)} €`);
-  
-  // Actualizar DESGLOSE NUEVO (IDs nuevos - IMPORTANTE: usar los IDs correctos)
-  updateElement('quick-total-trips', totalTrips); // ID cambiado
-  updateElement('quick-total-amount', `${totalAmountCollected.toFixed(2)} €`); // ID cambiado
-  
-  updateElement('cash-trips-breakdown', 
-    `${cashTripsCount} viaje${cashTripsCount !== 1 ? 's' : ''} × 70€ = ${cashTripsAmount.toFixed(2)}€`);
-  updateElement('cash-tips-breakdown', `+ ${cashTipsAmount.toFixed(2)}€`);
-  updateElement('cash-total-received', `${cashTotalReceived.toFixed(2)}€`);
-  
-  updateElement('card-trips-breakdown', 
-    `${cardTripsCount} viaje${cardTripsCount !== 1 ? 's' : ''} × 70€ = ${cardTripsAmount.toFixed(2)}€`);
-  updateElement('card-tips-breakdown', `+ ${cardTipsAmount.toFixed(2)}€`);
-  updateElement('card-total-received', `${cardTotalReceived.toFixed(2)}€`);
-  
-  updateElement('cash-received-amount', `${cashTotalReceived.toFixed(2)}€`);
-  updateElement('card-tips-for-you', `- ${cardTipsAmount.toFixed(2)}€`);
-  updateElement('cash-to-deliver-final', `${Math.max(cashToDeliver, 0).toFixed(2)}€`);
-  
-  console.log(`💰 Resumen: ${totalTrips} viajes, ${cashToDeliver.toFixed(2)}€ a entregar`);
+    console.log('📊 Actualizando resumen para:', period);
+    
+    // Actualizar título del periodo
+    const periodTitles = {
+        'today': 'Hoy',
+        'yesterday': 'Ayer', 
+        'week': 'Esta semana'
+    };
+    const periodTitleElement = document.getElementById('summary-period-title');
+    if (periodTitleElement) {
+        periodTitleElement.textContent = periodTitles[period] || 'Hoy';
+    }
+    
+    // Filtrar viajes por periodo
+    let filteredTrips = [];
+    if (period === 'today') {
+        filteredTrips = AppState.tripsData.today || [];
+    } else if (period === 'yesterday') {
+        filteredTrips = AppState.tripsData.yesterday || [];
+    } else if (period === 'week') {
+        filteredTrips = AppState.tripsData.week || [];
+    }
+    
+    // Calcular estadísticas
+    const cashTrips = filteredTrips.filter(t => t.paymentMethod === 'cash');
+    const cardTrips = filteredTrips.filter(t => t.paymentMethod === 'card');
+    
+    const cashTripsCount = cashTrips.length;
+    const cashTripsAmount = cashTrips.reduce((sum, t) => sum + t.price, 0);
+    const cashTipsAmount = cashTrips.reduce((sum, t) => sum + (t.tip || 0), 0);
+    const cashTotalReceived = cashTripsAmount + cashTipsAmount;
+    
+    const cardTripsCount = cardTrips.length;
+    const cardTripsAmount = cardTrips.reduce((sum, t) => sum + t.price, 0);
+    const cardTipsAmount = cardTrips.reduce((sum, t) => sum + (t.tip || 0), 0);
+    const cardTotalReceived = cardTripsAmount + cardTipsAmount;
+    
+    const totalTrips = cashTripsCount + cardTripsCount;
+    const totalAmountCollected = cashTotalReceived + cardTotalReceived;
+    const cashToDeliver = cashTotalReceived - cardTipsAmount;
+    
+    // Actualizar CAJAS DE ESTADÍSTICAS (IDs del HTML)
+    updateElement('quick-total-trips', totalTrips);
+    updateElement('quick-total-amount', `${totalAmountCollected.toFixed(2)} €`);
+    updateElement('quick-cash-amount', `${cashTotalReceived.toFixed(2)} €`);
+    updateElement('quick-card-amount', `${cardTotalReceived.toFixed(2)} €`);
+    
+    // Actualizar DESGLOSE
+    updateElement('cash-trips-breakdown', 
+        `${cashTripsCount} viaje${cashTripsCount !== 1 ? 's' : ''} × 70€ = ${cashTripsAmount.toFixed(2)}€`);
+    updateElement('cash-tips-breakdown', `+ ${cashTipsAmount.toFixed(2)}€`);
+    updateElement('cash-total-received', `${cashTotalReceived.toFixed(2)}€`);
+    
+    updateElement('card-trips-breakdown', 
+        `${cardTripsCount} viaje${cardTripsCount !== 1 ? 's' : ''} × 70€ = ${cardTripsAmount.toFixed(2)}€`);
+    updateElement('card-tips-breakdown', `+ ${cardTipsAmount.toFixed(2)}€`);
+    updateElement('card-total-received', `${cardTotalReceived.toFixed(2)}€`);
+    
+    updateElement('cash-received-amount', `${cashTotalReceived.toFixed(2)}€`);
+    updateElement('card-tips-for-you', `- ${cardTipsAmount.toFixed(2)}€`);
+    updateElement('cash-to-deliver-final', `${Math.max(cashToDeliver, 0).toFixed(2)}€`);
+    
+    console.log(`💰 Resumen: ${totalTrips} viajes, ${cashToDeliver.toFixed(2)}€ a entregar`);
 }
 
 // ========== PANTALLA ESTADÍSTICAS ==========
@@ -782,8 +545,27 @@ function initStatsScreen() {
 function updateStats(period = 'month') {
     console.log('📈 Actualizando estadísticas para:', period);
     
-    // Filtrar viajes
-    const filteredTrips = filterTripsByPeriod(AppState.trips, period);
+    // Obtener viajes según el periodo
+    let filteredTrips = [];
+    switch(period) {
+        case 'today':
+            filteredTrips = AppState.tripsData.today || [];
+            break;
+        case 'yesterday':
+            filteredTrips = AppState.tripsData.yesterday || [];
+            break;
+        case 'week':
+            filteredTrips = AppState.tripsData.week || [];
+            break;
+        case 'month':
+            filteredTrips = AppState.tripsData.month || [];
+            break;
+        case 'all':
+            filteredTrips = AppState.tripsData.all || [];
+            break;
+        default:
+            filteredTrips = AppState.tripsData.month || [];
+    }
     
     if (filteredTrips.length === 0) {
         showEmptyStats();
@@ -838,7 +620,7 @@ function calculateCountryStats(trips) {
     return Object.entries(stats)
         .map(([country, data]) => ({ country, ...data }))
         .sort((a, b) => b.trips - a.trips)
-        .slice(0, 10); // Top 10 países
+        .slice(0, 5); // Top 5 países
 }
 
 function updatePaymentChart(cashPercent, cardPercent) {
@@ -848,7 +630,6 @@ function updatePaymentChart(cashPercent, cardPercent) {
     const cardText = document.getElementById('card-percent');
     
     if (cashBar && cardBar) {
-        // Animar el crecimiento de las barras
         cashBar.style.width = `${cashPercent}%`;
         cardBar.style.width = `${cardPercent}%`;
         
@@ -872,16 +653,19 @@ function updateCountriesList(countries) {
     }
     
     let html = '';
-    countries.forEach(country => {
+    countries.forEach((country, index) => {
         const totalTrips = AppState.trips.length;
         const percentage = totalTrips > 0 ? ((country.trips / totalTrips) * 100).toFixed(1) : '0.0';
         
         html += `
             <div class="country-item">
-                <div class="country-name">${country.country}</div>
-                <div class="country-stats">
-                    <div class="country-trips">${country.trips} viajes (${percentage}%)</div>
-                    <div class="country-passengers">${country.passengers} pasajeros</div>
+                <div class="country-rank">${index + 1}</div>
+                <div class="country-info">
+                    <div class="country-name">${country.country}</div>
+                    <div class="country-stats">
+                        <span class="country-trips">${country.trips} viajes</span>
+                        <span class="country-percent">${percentage}%</span>
+                    </div>
                 </div>
             </div>
         `;
@@ -902,89 +686,33 @@ function showEmptyStats() {
     if (container) {
         container.innerHTML = `
             <div class="empty-state">
-                <i class="fas fa-chart-line"></i>
-                <p>No hay datos para este periodo</p>
+                <i class="fas fa-flag"></i>
+                <p>No hay datos</p>
             </div>
         `;
     }
 }
 
 // ========== FUNCIONES UTILITARIAS ==========
-function filterTripsByPeriod(trips, period) {
-    const ahora = new Date();
-    const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
-    
-    return trips.filter(trip => {
-        const fechaViaje = new Date(trip.timestamp);
-        
-        switch(period) {
-            case 'today':
-                return fechaViaje >= hoy;
-            case 'yesterday':
-                const ayer = new Date(hoy);
-                ayer.setDate(ayer.getDate() - 1);
-                return fechaViaje >= ayer && fechaViaje < hoy;
-            case 'week':
-                const semanaPasada = new Date(hoy);
-                semanaPasada.setDate(semanaPasada.getDate() - 7);
-                return fechaViaje >= semanaPasada;
-            case 'month':
-                const mesPasado = new Date(hoy);
-                mesPasado.setMonth(mesPasado.getMonth() - 1);
-                return fechaViaje >= mesPasado;
-            case 'all':
-                return true;
-            default:
-                return fechaViaje >= hoy;
-        }
-    });
-}
-
 function updateElement(id, value) {
     const element = document.getElementById(id);
     if (element) {
-        // Efecto de contador si es un número
-        if (typeof value === 'number' || /^\d+$/.test(value)) {
-            animateCounter(element, parseInt(element.textContent) || 0, parseInt(value));
-        } else {
-            element.textContent = value;
-        }
+        element.textContent = value;
     }
 }
 
-function animateCounter(element, start, end) {
-    if (start === end) return;
-    
-    const duration = 500;
-    const steps = 20;
-    const stepTime = duration / steps;
-    const increment = (end - start) / steps;
-    
-    let current = start;
-    const timer = setInterval(() => {
-        current += increment;
-        if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-            current = end;
-            clearInterval(timer);
-        }
-        element.textContent = Math.round(current);
-    }, stepTime);
-}
-
 function updateCurrentDate() {
-  const dateDisplay = document.getElementById('current-date-display');
-  if (dateDisplay) {
-    const now = new Date();
-    const options = { 
-      weekday: 'long', 
-      day: 'numeric', 
-      month: 'long',
-      year: 'numeric'
-    };
-    const formattedDate = now.toLocaleDateString('es-ES', options);
-    // Primera letra en mayúscula
-    dateDisplay.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-  }
+    const dateDisplay = document.getElementById('current-date-display');
+    if (dateDisplay) {
+        const now = new Date();
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        };
+        dateDisplay.textContent = now.toLocaleDateString('es-ES', options);
+    }
 }
 
 function showNotification(message, type = 'info') {
@@ -1009,33 +737,16 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// ========== FUNCIONES DE MIGRACIÓN (si es necesario) ==========
+// ========== MIGRACIÓN DE DATOS ==========
 function migrateFromOldVersion() {
-    // Migrar datos de versiones anteriores si es necesario
-    const oldData = localStorage.getItem('trips');
+    // Verificar si hay datos de versión anterior
+    const oldData = localStorage.getItem('ecarriage_trips');
     if (oldData && !localStorage.getItem(CONFIG.STORAGE_KEY)) {
         try {
-            const trips = JSON.parse(oldData);
-            localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(trips));
+            localStorage.setItem(CONFIG.STORAGE_KEY, oldData);
             console.log('🔄 Datos migrados desde versión anterior');
         } catch (error) {
             console.error('Error migrando datos:', error);
         }
     }
 }
-
-// ========== FUNCIONES DE DEBUG ==========
-// Descomenta para debug
-// window.debugApp = function() {
-//     console.log('🔧 Estado de la App:', AppState);
-//     console.log('📊 Viajes totales:', AppState.trips.length);
-//     console.log('💾 Storage:', localStorage.getItem(CONFIG.STORAGE_KEY));
-// };
-
-// window.clearAllData = function() {
-//     if (confirm('¿Estás seguro de borrar todos los datos?')) {
-//         localStorage.removeItem(CONFIG.STORAGE_KEY);
-//         AppState.trips = [];
-//         location.reload();
-//     }
-// };
