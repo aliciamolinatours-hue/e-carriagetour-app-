@@ -838,3 +838,55 @@ function migrateFromOldVersion() {
         }
     }
 }
+
+let maintenanceIssues = JSON.parse(localStorage.getItem('maintenanceIssues')) || [];
+
+document.querySelectorAll('.hotspot').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const part = btn.dataset.part;
+    openMaintenanceForm(part);
+  });
+});
+
+function openMaintenanceForm(part) {
+  const issue = prompt(
+    `Parte: ${part}\nDescribe el problema:`
+  );
+
+  if (!issue) return;
+
+  const newIssue = {
+    id: Date.now(),
+    part,
+    issue,
+    status: 'Pendiente',
+    date: new Date().toISOString()
+  };
+
+  maintenanceIssues.push(newIssue);
+  localStorage.setItem('maintenanceIssues', JSON.stringify(maintenanceIssues));
+  renderMaintenanceList();
+}
+
+function renderMaintenanceList() {
+  const container = document.getElementById('maintenance-list');
+
+  if (maintenanceIssues.length === 0) {
+    container.innerHTML = `<div class="empty-state">No hay incidencias registradas</div>`;
+    return;
+  }
+
+  container.innerHTML = maintenanceIssues
+    .map(i => `
+      <div class="trip-item">
+        <strong>${i.part}</strong><br>
+        ${i.issue}<br>
+        <small>📅 ${new Date(i.date).toLocaleDateString()} – ${i.status}</small>
+      </div>
+    `)
+    .join('');
+}
+
+// Render inicial
+renderMaintenanceList();
+
