@@ -1527,8 +1527,9 @@ body {
 
 
 /* ============================================
-   NAVEGACIÓN INFERIOR ELEGANTE
+   NAVEGACIÓN INFERIOR – ICONOS REDONDOS (APP)
    ============================================ */
+
 .app-nav {
   position: fixed;
   bottom: 0;
@@ -1538,55 +1539,57 @@ body {
   backdrop-filter: blur(10px);
   border-top: 2px solid var(--teal-100);
   display: flex;
+  justify-content: space-around;
   padding: var(--spacing-md) var(--spacing-lg);
   padding-bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom, 0));
   z-index: 1000;
   max-width: 500px;
   margin: 0 auto;
   box-shadow: 0 -4px 20px rgba(0, 148, 148, 0.1);
-  flex-shrink: 0;
 }
 
+/* BOTONES REDONDOS SOLO ICONO */
 .nav-btn {
-  flex: 1;
+  width: 56px;
+  height: 56px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-sm);
   background: transparent;
   border: none;
   color: var(--teal-400);
   cursor: pointer;
   transition: all var(--transition-normal);
-  border-radius: var(--border-radius-md);
-  font-size: 0.8rem;
-  font-weight: 600;
-  gap: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  border-radius: 50%;
+  padding: 0;
 }
 
+/* Hover suave */
 .nav-btn:hover {
-  color: var(--teal-600);
   background: var(--teal-50);
+  color: var(--teal-600);
 }
 
+/* BOTÓN ACTIVO (DESTACA) */
 .nav-btn.active {
-  color: var(--teal-700);
-  background: var(--teal-100);
-  transform: translateY(-4px);
+  background: var(--gradient-primary);
+  color: white;
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
 }
 
+/* ICONOS */
 .nav-btn i {
-  font-size: 1.4rem;
-  margin-bottom: 2px;
+  font-size: 1.6rem;
+  margin: 0;
   transition: transform var(--transition-normal);
 }
 
+/* Icono activo un poco más grande */
 .nav-btn.active i {
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
+
 
 /* ============================================
    NOTIFICACIONES ELEGANTES
