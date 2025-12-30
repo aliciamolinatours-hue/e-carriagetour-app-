@@ -6,7 +6,7 @@ console.log('🚀 E-Carriage Tour App iniciada');
 
 // ========== CONFIGURACIÓN ==========
 const CONFIG = {
-  BASE_PRICE: 70.0,
+  BASE_PRICE: 70,
   MAX_PASSENGERS: 5,
   MIN_PASSENGERS: 1,
   STORAGE_KEY: 'eCarriageTrips',
@@ -54,14 +54,19 @@ function initApp() {
   initMaintenanceScreen();
 
   document.addEventListener('tripAdded', handleNewTrip);
-
-  console.log('✅ App inicializada');
 }
 
-// ========== NAVEGACIÓN / PANTALLAS ==========
-function showScreen(screenId) {
-  if (AppState.currentScreen === screenId) return;
+// ========== NAVEGACIÓN ==========
+function initNavigation() {
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const screenId = btn.dataset.screen;
+      if (screenId) showScreen(screenId);
+    });
+  });
+}
 
+function showScreen(screenId) {
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.screen === screenId);
   });
@@ -76,64 +81,54 @@ function showScreen(screenId) {
   target.classList.add('active');
   AppState.currentScreen = screenId;
 
-  // reset scroll del contenedor principal (clave para UX)
+  // reset scroll (clave para coherencia con CSS)
   const main = document.querySelector('.app-main');
-  if (main) main.scrollTo({ top: 0, behavior: 'instant' });
+  if (main) main.scrollTop = 0;
 
   updateScreenData(screenId);
 }
 
 function updateScreenData(screenId) {
-  switch (screenId) {
-    case 'new-trip':
-      updateTodayTrips();
-      break;
-    case 'summary':
-      updateSummary(AppState.currentPeriod);
-      break;
-    case 'stats':
-      updateStats(AppState.statsPeriod);
-      break;
-    case 'maintenance':
-      renderMaintenanceList();
-      break;
-  }
+  if (screenId === 'new-trip') updateTodayTrips();
+  if (screenId === 'summary') updateSummary(AppState.currentPeriod);
+  if (screenId === 'stats') updateStats(AppState.statsPeriod);
+  if (screenId === 'maintenance') renderMaintenanceList();
 }
 
 // ========== PASAJEROS ==========
 function initPassengerSelector() {
   const countEl = document.getElementById('passenger-count');
   const input = document.getElementById('passenger-input');
-  const decBtn = document.getElementById('decrease-passenger');
-  const incBtn = document.getElementById('increase-passenger');
+  const dec = document.getElementById('decrease-passenger');
+  const inc = document.getElementById('increase-passenger');
 
-  if (!countEl || !decBtn || !incBtn) return;
+  if (!countEl || !dec || !inc) return;
 
-  const update = () => {
+  const render = () => {
     countEl.textContent = AppState.passengerCount;
     if (input) input.value = AppState.passengerCount;
 
-    decBtn.disabled = AppState.passengerCount <= CONFIG.MIN_PASSENGERS;
-    incBtn.disabled = AppState.passengerCount >= CONFIG.MAX_PASSENGERS;
+    dec.disabled = AppState.passengerCount <= CONFIG.MIN_PASSENGERS;
+    inc.disabled = AppState.passengerCount >= CONFIG.MAX_PASSENGERS;
 
     updateTripSummary();
   };
 
-  decBtn.addEventListener('click', () => {
+  dec.onclick = () => {
     if (AppState.passengerCount > CONFIG.MIN_PASSENGERS) {
       AppState.passengerCount--;
-      update();
+      render();
     }
-  });
+  };
 
-  incBtn.addEventListener('click', () => {
+  inc.onclick = () => {
     if (AppState.passengerCount < CONFIG.MAX_PASSENGERS) {
       AppState.passengerCount++;
-      update();
+      render();
     }
-  });
+  };
 
-  update();
+  render();
 }
 
 // ========== MÉTODOS DE PAGO ==========
@@ -161,8 +156,8 @@ function updateTipSystem() {
   const container = document.getElementById('tip-container');
   if (!container) return;
 
+  container.innerHTML = '';
   AppState.selectedTip = 0;
-  AppState.customTipValue = '';
 
   if (AppState.paymentMethod === 'card') {
     container.innerHTML = `
@@ -186,16 +181,14 @@ function updateTipSystem() {
         btn.classList.add('active');
 
         if (btn.dataset.tip === 'custom') {
-          const input = document.getElementById('custom-tip-input');
           document.getElementById('custom-tip-input-container').style.display = 'flex';
-
-          input.addEventListener('input', e => {
+          document.getElementById('custom-tip-input').oninput = e => {
             AppState.selectedTip = parseFloat(e.target.value) || 0;
             updateTripSummary();
-          });
+          };
         } else {
           document.getElementById('custom-tip-input-container').style.display = 'none';
-          AppState.selectedTip = parseFloat(btn.dataset.tip) || 0;
+          AppState.selectedTip = parseFloat(btn.dataset.tip);
           updateTripSummary();
         }
       });
@@ -207,12 +200,10 @@ function updateTipSystem() {
       <input id="tip-input" type="number" min="0" step="0.01" value="0">
       <span>€</span>
     `;
-
-    const input = document.getElementById('tip-input');
-    input.addEventListener('input', e => {
+    document.getElementById('tip-input').oninput = e => {
       AppState.selectedTip = parseFloat(e.target.value) || 0;
       updateTripSummary();
-    });
+    };
   }
 }
 
@@ -250,8 +241,9 @@ function addNewTrip() {
 
   if (saveTrip(trip)) {
     resetForm();
+    updateTodayTrips();
     document.dispatchEvent(new CustomEvent('tripAdded', { detail: trip }));
-    showNotification('Viaje añadido', 'success');
+    showNotification(`Viaje añadido: ${trip.total.toFixed(2)} €`, 'success');
   }
 }
 
@@ -265,7 +257,8 @@ function saveTrip(trip) {
     localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
     AppState.tripsData = data;
     return true;
-  } catch {
+  } catch (e) {
+    console.error(e);
     return false;
   }
 }
@@ -276,6 +269,21 @@ function loadTripsFromStorage() {
   };
   AppState.tripsData = data;
   return data;
+}
+
+function resetForm() {
+  AppState.passengerCount = 1;
+  AppState.selectedTip = 0;
+  AppState.paymentMethod = 'cash';
+
+  document.getElementById('country').value = '';
+  document.getElementById('passenger-count').textContent = '1';
+
+  document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('active'));
+  document.querySelector('.payment-method-card[data-method="cash"]').classList.add('active');
+
+  updateTipSystem();
+  updateTripSummary();
 }
 
 // ========== VIAJES DE HOY ==========
@@ -300,8 +308,7 @@ function updateTodayTrips() {
   `).join('');
 }
 
-// ========== RESUMEN / ESTADÍSTICAS / MANTENIMIENTO ==========
-/* Se mantiene la lógica original, solo limpieza visual */
+// ========== RESUMEN / STATS / MANTENIMIENTO ==========
 function handleNewTrip() {
   updateScreenData(AppState.currentScreen);
 }
@@ -321,16 +328,18 @@ function updateElement(id, value) {
 
 function updateCurrentDate() {
   const el = document.getElementById('current-date-display');
-  if (el) el.textContent = new Date().toLocaleDateString('es-ES', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
+  if (el) {
+    el.textContent = new Date().toLocaleDateString('es-ES', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
 }
 
-function showNotification(msg, type = 'info') {
+function showNotification(message, type = 'info') {
   const n = document.getElementById('notification');
   if (!n) return;
 
-  n.textContent = msg;
+  n.textContent = message;
   n.className = `notification show ${type}`;
   setTimeout(() => n.classList.remove('show'), 3000);
 }
