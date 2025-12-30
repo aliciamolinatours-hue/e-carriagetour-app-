@@ -51,7 +51,6 @@ function initApp() {
   initNavigation();
   initSummaryScreen();
   initStatsScreen();
-  initMaintenanceScreen();
 
   document.addEventListener('tripAdded', handleNewTrip);
 }
@@ -343,3 +342,71 @@ function showNotification(message, type = 'info') {
   n.className = `notification show ${type}`;
   setTimeout(() => n.classList.remove('show'), 3000);
 }
+
+// ===============================
+// SERVICIO TÉCNICO – INCIDENCIAS
+// ===============================
+
+document.querySelectorAll('.zone-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const carriage = document.getElementById('carriage-select').value;
+    const zone = btn.dataset.zone;
+
+    if (!carriage) {
+      alert('Selecciona primero un carruaje');
+      return;
+    }
+
+    const issue = prompt(
+      `Carruaje: ${carriage}\nZona: ${zone}\nDescribe la incidencia:`
+    );
+
+    if (!issue) return;
+
+    const newIssue = {
+      id: Date.now(),
+      carriage,
+      zone,
+      issue,
+      status: 'Pendiente',
+      date: new Date().toISOString()
+    };
+
+    const issues = JSON.parse(localStorage.getItem('maintenanceIssues')) || [];
+    issues.push(newIssue);
+    localStorage.setItem('maintenanceIssues', JSON.stringify(issues));
+
+    renderMaintenanceList();
+  });
+});
+
+function renderMaintenanceList() {
+  const container = document.getElementById('maintenance-list');
+  const issues = JSON.parse(localStorage.getItem('maintenanceIssues')) || [];
+
+  if (!container) return;
+
+  if (issues.length === 0) {
+    container.innerHTML = `<div class="empty-state">No hay incidencias registradas</div>`;
+    return;
+  }
+
+  container.innerHTML = issues
+    .slice().reverse()
+    .map(i => `
+      <div class="maintenance-item">
+        <div class="maintenance-header">
+          <strong>${i.carriage}</strong> · ${i.zone}
+        </div>
+        <div class="maintenance-body">${i.issue}</div>
+        <div class="maintenance-footer">
+          ${new Date(i.date).toLocaleDateString('es-ES')} · ${i.status}
+        </div>
+      </div>
+    `)
+    .join('');
+}
+
+// Cargar incidencias al entrar en la app
+document.addEventListener('DOMContentLoaded', renderMaintenanceList);
+
