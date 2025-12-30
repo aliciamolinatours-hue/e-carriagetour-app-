@@ -337,3 +337,119 @@ html, body {
 }
 
 
+/* ============================================
+   MICRO UX — RITMO VERTICAL
+   ============================================ */
+.screen > *:not(:last-child) {
+  margin-bottom: 18px;
+}
+
+.screen h2,
+.screen h3,
+.screen h4 {
+  letter-spacing: -0.3px;
+}
+
+.screen h2 {
+  font-weight: 600;
+}
+
+.screen h3 {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+
+/* ============================================
+   TARJETAS PREMIUM
+   ============================================ */
+.form-card,
+.financial-breakdown,
+.general-stats,
+.payment-stats-card,
+.countries-card,
+.maintenance-list-section,
+.trip-summary-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-card:active,
+.payment-method-card:active,
+.trip-item-single-line:active {
+  transform: scale(0.985);
+}
+
+
+/* ============================================
+   BOTONES — FEELING NATIVO
+   ============================================ */
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.primary-action-btn {
+  border-radius: 16px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.primary-action-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+}
+
+
+/* ============================================
+   INPUTS SUAVES
+   ============================================ */
+input,
+select {
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 15px;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(56,189,248,0.35);
+}
+
+
+/* ============================================
+   LISTAS LIMPIAS
+   ============================================ */
+.trip-item-single-line {
+  padding: 14px 12px;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.02);
+}
+
+/* ============================================
+   HEADERS INTERNOS
+   ============================================ */
+.screen-header {
+  padding-bottom: 4px;
+}
+
+.screen-header h2 i {
+  opacity: 0.7;
+}
+
+/* ============================================
+   SCROLL NATIVO
+   ============================================ */
+.app-main {
+  scroll-behavior: smooth;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .app-main {
+    overscroll-behavior: contain;
+  }
+}
+
+
+
