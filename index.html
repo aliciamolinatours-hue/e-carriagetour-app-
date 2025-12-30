@@ -516,38 +516,58 @@
 <div class="carriage-container">
   <img src="carriage-clean.jpg" alt="Carruaje" class="carriage-image">
 
-  <!-- RUEDAS -->
-  <button class="hotspot" data-part="Rueda delantera izquierda" style="top:72%; left:78%;"></button>
-  <button class="hotspot" data-part="Rueda delantera derecha"  style="top:72%; left:62%;"></button>
-
-  <button class="hotspot" data-part="Rueda trasera izquierda"  style="top:72%; left:38%;"></button>
-  <button class="hotspot" data-part="Rueda trasera derecha"   style="top:72%; left:22%;"></button>
-
-  <!-- LUCES -->
-  <button class="hotspot" data-part="Luces delanteras izquierda" style="top:34%; left:82%;"></button>
-  <button class="hotspot" data-part="Luces delanteras derecha"   style="top:34%; left:74%;"></button>
-
-  <button class="hotspot" data-part="Luces traseras izquierda"   style="top:34%; left:26%;"></button>
-  <button class="hotspot" data-part="Luces traseras derecha"     style="top:34%; left:18%;"></button>
-
-  <!-- PUERTAS -->
-  <button class="hotspot" data-part="Puerta izquierda" style="top:56%; left:52%;"></button>
-  <button class="hotspot" data-part="Puerta derecha"   style="top:56%; left:60%;"></button>
-
-  <!-- MALETERO -->
-  <button class="hotspot" data-part="Maletero" style="top:48%; left:85%;"></button>
+<!-- SELECCIÓN DE CARRUAJE -->
+<div class="carriage-selector">
+  <label for="carriage-select">Carruaje</label>
+  <select id="carriage-select">
+    <option value="">Selecciona carruaje</option>
+    <option value="Carruaje I">Carruaje I</option>
+    <option value="Carruaje II">Carruaje II</option>
+    <option value="Carruaje III">Carruaje III</option>
+  </select>
 </div>
 
+<!-- IMAGEN DEL CARRUAJE (SOLO VISUAL) -->
+<div class="carriage-image-wrapper">
+  <img src="carriage-clean.jpg" alt="Carruaje">
+</div>
 
-    <!-- LISTA DE INCIDENCIAS -->
-    <div class="maintenance-list-section">
-      <h3>📋 Incidencias</h3>
-      <div id="maintenance-list" class="trip-list">
-        <div class="empty-state">No hay incidencias registradas</div>
-      </div>
-    </div>
-  </div>
-</main>
+<!-- ZONAS DEL CARRUAJE -->
+<div class="carriage-zones">
+  <button class="zone-btn" data-zone="Ruedas">
+    <i class="fas fa-circle-notch"></i>
+    <span>Ruedas</span>
+  </button>
+
+  <button class="zone-btn" data-zone="Luces">
+    <i class="fas fa-lightbulb"></i>
+    <span>Luces</span>
+  </button>
+
+  <button class="zone-btn" data-zone="Puertas">
+    <i class="fas fa-door-open"></i>
+    <span>Puertas</span>
+  </button>
+
+  <button class="zone-btn" data-zone="Interior">
+    <i class="fas fa-couch"></i>
+    <span>Interior</span>
+  </button>
+
+  <button class="zone-btn" data-zone="Frenos">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span>Frenos</span>
+  </button>
+
+  <button class="zone-btn" data-zone="Otros">
+    <i class="fas fa-ellipsis-h"></i>
+    <span>Otros</span>
+  </button>
+</div>
+
+<!-- HISTORIAL DE INCIDENCIAS -->
+<div id="maintenance-list" class="maintenance-list"></div>
+
 
 <!-- ========== BARRA DE NAVEGACIÓN INFERIOR ========== -->
 <nav class="app-nav">
