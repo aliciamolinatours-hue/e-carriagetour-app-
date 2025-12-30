@@ -42,7 +42,7 @@
         <label class="form-label"><i class="fas fa-globe-europe"></i> País de origen</label>
         <div class="select-wrapper">
           <select id="country" class="form-select">
-            <option value="">Selecciona país</option>
+             <option value="">Selecciona país</option>
             <option>Afganistán</option>
             <option>Albania</option>
             <option>Alemania</option>
@@ -240,7 +240,7 @@
         </div>
       </div>
 
-      <!-- Pasajeros - MODIFICADO: Máximo 5, "Pax" en lugar de "Pasajero(s)" -->
+      <!-- Pasajeros -->
       <div class="form-group">
         <label class="form-label"><i class="fas fa-users"></i> Pasajeros</label>
         <div class="passenger-selector-card">
@@ -248,7 +248,7 @@
             <button type="button" id="decrease-passenger" class="passenger-btn"><i class="fas fa-minus"></i></button>
             <div class="passenger-count-display">
               <span id="passenger-count">1</span>
-              <small>Pax</small> <!-- Cambiado de "pasajero(s)" a "Pax" -->
+              <small>Pax</small>
             </div>
             <button type="button" id="increase-passenger" class="passenger-btn"><i class="fas fa-plus"></i></button>
           </div>
@@ -264,7 +264,6 @@
             <div class="payment-icon"><i class="fas fa-money-bill-wave"></i></div>
             <div class="payment-info">
               <div class="payment-title">Efectivo</div>
-              <!-- Sin descripción -->
             </div>
             <div class="payment-check"><i class="fas fa-check-circle"></i></div>
           </button>
@@ -272,7 +271,6 @@
             <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
             <div class="payment-info">
               <div class="payment-title">Tarjeta</div>
-              <!-- Sin descripción -->
             </div>
             <div class="payment-check"><i class="fas fa-check-circle"></i></div>
           </button>
@@ -338,7 +336,7 @@
       <button id="week-btn" class="period-btn"><i class="fas fa-calendar-week"></i> Semana</button>
     </div>
 
-    <!-- Desglose Financiero Actualizado - CON 4 CAJAS -->
+    <!-- Desglose Financiero -->
     <div class="financial-breakdown">
       <h3><i class="fas fa-file-invoice-dollar"></i> Desglose Financiero - <span id="summary-period-title">Hoy</span></h3>
       
@@ -438,8 +436,8 @@
       </select>
     </div>
 
-    <!-- 1. ESTADÍSTICAS GENERALES (AHORA EN LA PARTE SUPERIOR) -->
-    <div class="general-stats" style="margin-bottom: var(--spacing-xl);">
+    <!-- 1. ESTADÍSTICAS GENERALES -->
+    <div class="general-stats">
       <div class="stat-item">
         <div class="stat-item-icon"><i class="fas fa-car-side"></i></div>
         <div class="stat-item-content">
@@ -503,43 +501,39 @@
     </div>
   </div>
 
-<!-- ============================= -->
-<!-- PANTALLA 4: SERVICIO TÉCNICO -->
-<!-- ============================= -->
+  <!-- ============================= -->
+  <!-- PANTALLA 4: SERVICIO TÉCNICO -->
+  <!-- ============================= -->
+  <div id="maintenance" class="screen app-screen">
+    <div class="screen-header">
+      <h2><i class="fas fa-tools"></i> Servicio Técnico</h2>
+    </div>
 
-<div id="maintenance" class="screen app-screen">
-  <div class="screen-header">
-    <h2><i class="fas fa-tools"></i> Servicio Técnico</h2>
-  </div>
+    <!-- IMAGEN DEL CARRUAJE -->
+    <div class="carriage-container">
+      <img src="carriage.png" alt="Carruaje" class="carriage-image">
 
-  <!-- IMAGEN DEL CARRUAJE -->
-  <div class="carriage-container">
-    <img src="carriage.png" alt="Carruaje" class="carriage-image">
+      <!-- HOTSPOTS -->
+      <button class="hotspot" data-part="Rueda delantera izquierda" style="top:70%; left:20%;"></button>
+      <button class="hotspot" data-part="Rueda delantera derecha" style="top:70%; left:80%;"></button>
+      <button class="hotspot" data-part="Luces delanteras" style="top:30%; left:50%;"></button>
+      <button class="hotspot" data-part="Puerta izquierda" style="top:55%; left:45%;"></button>
+      <button class="hotspot" data-part="Puerta derecha" style="top:55%; left:55%;"></button>
+      <button class="hotspot" data-part="Maletero" style="top:60%; left:90%;"></button>
+    </div>
 
-    <!-- HOTSPOTS -->
-    <button class="hotspot" data-part="Rueda delantera izquierda" style="top:70%; left:20%;"></button>
-    <button class="hotspot" data-part="Rueda delantera derecha" style="top:70%; left:80%;"></button>
-    <button class="hotspot" data-part="Luces delanteras" style="top:30%; left:50%;"></button>
-    <button class="hotspot" data-part="Puerta izquierda" style="top:55%; left:45%;"></button>
-    <button class="hotspot" data-part="Puerta derecha" style="top:55%; left:55%;"></button>
-    <button class="hotspot" data-part="Maletero" style="top:60%; left:90%;"></button>
-  </div>
-
-  <!-- LISTA DE INCIDENCIAS -->
-  <div class="maintenance-list-section">
-    <h3>📋 Incidencias</h3>
-    <div id="maintenance-list" class="trip-list">
-      <div class="empty-state">No hay incidencias registradas</div>
+    <!-- LISTA DE INCIDENCIAS -->
+    <div class="maintenance-list-section">
+      <h3>📋 Incidencias</h3>
+      <div id="maintenance-list" class="trip-list">
+        <div class="empty-state">No hay incidencias registradas</div>
+      </div>
     </div>
   </div>
-</div>
 </main>
 
-
 <!-- ========== BARRA DE NAVEGACIÓN INFERIOR ========== -->
-
 <nav class="app-nav">
-
   <button class="nav-btn active" data-screen="new-trip" aria-label="Nuevo viaje">
     <i class="fas fa-plus-circle"></i>
   </button>
@@ -552,14 +546,10 @@
     <i class="fas fa-chart-line"></i>
   </button>
 
-  <!-- BOTÓN SERVICIO TÉCNICO -->
   <button class="nav-btn" data-screen="maintenance" aria-label="Servicio técnico">
     <i class="fas fa-tools"></i>
   </button>
-
 </nav>
-
-
 
 <!-- NOTIFICACIONES -->
 <div id="notification" class="notification"></div>
