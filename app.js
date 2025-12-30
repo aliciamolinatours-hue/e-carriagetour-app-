@@ -7,9 +7,9 @@ console.log('🚀 E-Carriage Tour App iniciada');
 // ========== CONFIGURACIÓN INICIAL ==========
 const CONFIG = {
     BASE_PRICE: 70.00,
-    MAX_PASSENGERS: 5,  // CAMBIADO de 8 a 5 (como en el HTML)
+    MAX_PASSENGERS: 5,
     MIN_PASSENGERS: 1,
-    STORAGE_KEY: 'eCarriageTrips', // Cambiado para coincidir con el HTML
+    STORAGE_KEY: 'eCarriageTrips',
     APP_VERSION: '2.0'
 };
 
@@ -22,8 +22,7 @@ const AppState = {
     customTipValue: '',
     currentPeriod: 'today',
     statsPeriod: 'month',
-    trips: [],
-    tripsData: {  // Añadido para coincidir con estructura del HTML
+    tripsData: {
         today: [],
         yesterday: [],
         week: [],
@@ -59,6 +58,7 @@ function initApp() {
     initNavigation();
     initSummaryScreen();
     initStatsScreen();
+    initMaintenanceScreen();
     
     // Evento para actualizar cuando se añade viaje
     document.addEventListener('tripAdded', handleNewTrip);
@@ -104,6 +104,9 @@ function updateScreenData(screenId) {
             break;
         case 'stats':
             updateStats(AppState.statsPeriod);
+            break;
+        case 'maintenance':
+            renderMaintenanceList();
             break;
     }
 }
@@ -170,97 +173,97 @@ function initPaymentMethods() {
 
 // ========== COMPONENTE: SISTEMA DE PROPINAS ==========
 function initTipSystem() {
-  updateTipSystem();
+    updateTipSystem();
 }
 
 function updateTipSystem() {
-  const tipContainer = document.getElementById('tip-container');
-  if (!tipContainer) return;
-  
-  if (AppState.paymentMethod === 'card') {
-    // Sistema de propinas para tarjeta con botones específicos
-    tipContainer.innerHTML = `
-      <div class="tip-buttons-grid">
-        <button type="button" class="tip-btn" data-tip="0">0 €</button>
-        <button type="button" class="tip-btn" data-tip="7">7 €</button>
-        <button type="button" class="tip-btn" data-tip="10.5">10,5 €</button>
-        <button type="button" class="tip-btn" data-tip="14">14 €</button>
-        <button type="button" class="tip-btn" data-tip="custom">Custom</button>
-      </div>
-      <div class="custom-tip-container" id="custom-tip-input-container" style="display: none; margin-top: 12px;">
-        <input type="number" id="custom-tip-input" placeholder="0.00" step="0.01" min="0" max="100">
-        <span class="currency">€</span>
-      </div>
-    `;
+    const tipContainer = document.getElementById('tip-container');
+    if (!tipContainer) return;
     
-    // Configurar botones de propina para tarjeta
-    const tipButtons = tipContainer.querySelectorAll('.tip-btn');
-    tipButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Quitar activo de todos los botones
-        tipButtons.forEach(b => b.classList.remove('active'));
+    if (AppState.paymentMethod === 'card') {
+        // Sistema de propinas para tarjeta con botones específicos
+        tipContainer.innerHTML = `
+            <div class="tip-buttons-grid">
+                <button type="button" class="tip-btn" data-tip="0">0 €</button>
+                <button type="button" class="tip-btn" data-tip="7">7 €</button>
+                <button type="button" class="tip-btn" data-tip="10.5">10,5 €</button>
+                <button type="button" class="tip-btn" data-tip="14">14 €</button>
+                <button type="button" class="tip-btn" data-tip="custom">Custom</button>
+            </div>
+            <div class="custom-tip-container" id="custom-tip-input-container" style="display: none; margin-top: 12px;">
+                <input type="number" id="custom-tip-input" placeholder="0.00" step="0.01" min="0" max="100">
+                <span class="currency">€</span>
+            </div>
+        `;
         
-        // Activar el botón clickeado
-        btn.classList.add('active');
+        // Configurar botones de propina para tarjeta
+        const tipButtons = tipContainer.querySelectorAll('.tip-btn');
+        tipButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Quitar activo de todos los botones
+                tipButtons.forEach(b => b.classList.remove('active'));
+                
+                // Activar el botón clickeado
+                btn.classList.add('active');
+                
+                const tipValue = btn.dataset.tip;
+                
+                if (tipValue === 'custom') {
+                    // Mostrar input personalizado
+                    const customContainer = document.getElementById('custom-tip-input-container');
+                    if (customContainer) {
+                        customContainer.style.display = 'flex';
+                        const input = document.getElementById('custom-tip-input');
+                        if (input) {
+                            input.focus();
+                            
+                            // Configurar evento para el input
+                            input.addEventListener('input', (e) => {
+                                AppState.customTipValue = e.target.value;
+                                AppState.selectedTip = parseFloat(e.target.value) || 0;
+                                updateTripSummary();
+                            });
+                        }
+                    }
+                } else {
+                    // Ocultar input personalizado
+                    const customContainer = document.getElementById('custom-tip-input-container');
+                    if (customContainer) customContainer.style.display = 'none';
+                    
+                    AppState.selectedTip = parseFloat(tipValue) || 0;
+                    AppState.customTipValue = '';
+                    updateTripSummary();
+                }
+                
+                console.log('💰 Propina seleccionada (tarjeta):', AppState.selectedTip);
+            });
+        });
         
-        const tipValue = btn.dataset.tip;
-        
-        if (tipValue === 'custom') {
-          // Mostrar input personalizado
-          const customContainer = document.getElementById('custom-tip-input-container');
-          if (customContainer) {
-            customContainer.style.display = 'flex';
-            const input = document.getElementById('custom-tip-input');
-            if (input) {
-              input.focus();
-              
-              // Configurar evento para el input
-              input.addEventListener('input', (e) => {
-                AppState.customTipValue = e.target.value;
-                AppState.selectedTip = parseFloat(e.target.value) || 0;
-                updateTripSummary();
-              });
-            }
-          }
-        } else {
-          // Ocultar input personalizado
-          const customContainer = document.getElementById('custom-tip-input-container');
-          if (customContainer) customContainer.style.display = 'none';
-          
-          AppState.selectedTip = parseFloat(tipValue) || 0;
-          AppState.customTipValue = '';
-          updateTripSummary();
+        // Activar propina 0 por defecto para tarjeta
+        if (tipButtons.length > 0) {
+            const zeroBtn = Array.from(tipButtons).find(btn => btn.dataset.tip === '0');
+            if (zeroBtn) zeroBtn.click();
         }
         
-        console.log('💰 Propina seleccionada (tarjeta):', AppState.selectedTip);
-      });
-    });
-    
-    // Activar propina 0 por defecto para tarjeta
-    if (tipButtons.length > 0) {
-      const zeroBtn = Array.from(tipButtons).find(btn => btn.dataset.tip === '0');
-      if (zeroBtn) zeroBtn.click();
+    } else {
+        // Input simple para efectivo
+        tipContainer.innerHTML = `
+            <div class="tip-amount-display">
+                <input type="number" id="tip-input" class="tip-input" placeholder="0.00" step="0.01" min="0">
+                <span class="currency">€</span>
+            </div>
+        `;
+        
+        const tipInput = document.getElementById('tip-input');
+        if (tipInput) {
+            tipInput.addEventListener('input', (e) => {
+                AppState.selectedTip = parseFloat(e.target.value) || 0;
+                updateTripSummary();
+            });
+            
+            tipInput.value = AppState.selectedTip || '0.00';
+        }
     }
-    
-  } else {
-    // Input simple para efectivo
-    tipContainer.innerHTML = `
-      <div class="tip-amount-display">
-        <input type="number" id="tip-input" class="tip-input" placeholder="0.00" step="0.01" min="0">
-        <span class="currency">€</span>
-      </div>
-    `;
-    
-    const tipInput = document.getElementById('tip-input');
-    if (tipInput) {
-      tipInput.addEventListener('input', (e) => {
-        AppState.selectedTip = parseFloat(e.target.value) || 0;
-        updateTripSummary();
-      });
-      
-      tipInput.value = AppState.selectedTip || '0.00';
-    }
-  }
 }
 
 // ========== COMPONENTE: RESUMEN DEL VIAJE ==========
@@ -269,7 +272,7 @@ function updateTripSummary() {
     const tipAmount = AppState.selectedTip || 0;
     const total = basePrice + tipAmount;
     
-    // Actualizar display - IDs CORREGIDOS según HTML
+    // Actualizar display
     const tipDisplay = document.getElementById('tip-amount-display');
     const totalDisplay = document.getElementById('total-amount-display');
     
@@ -347,7 +350,7 @@ function addNewTrip() {
 
 function saveTrip(trip) {
     try {
-        // Cargar viajes existentes - usar la estructura del HTML
+        // Cargar viajes existentes
         const tripsData = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '{"today":[],"yesterday":[],"week":[],"month":[],"all":[]}');
         
         // Agregar a todas las colecciones
@@ -360,7 +363,6 @@ function saveTrip(trip) {
         
         // Actualizar estado global
         AppState.tripsData = tripsData;
-        AppState.trips = tripsData.all; // Para compatibilidad
         
         console.log('💾 Viaje guardado. Total:', tripsData.all.length);
         return true;
@@ -374,13 +376,11 @@ function loadTripsFromStorage() {
     try {
         const tripsData = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '{"today":[],"yesterday":[],"week":[],"month":[],"all":[]}');
         AppState.tripsData = tripsData;
-        AppState.trips = tripsData.all; // Para compatibilidad
         console.log('📂 Viajes cargados:', tripsData.all.length);
         return tripsData;
     } catch (error) {
         console.error('Error al cargar viajes:', error);
         AppState.tripsData = { today: [], yesterday: [], week: [], month: [], all: [] };
-        AppState.trips = [];
         return { today: [], yesterday: [], week: [], month: [], all: [] };
     }
 }
@@ -427,21 +427,8 @@ function updateTodayTrips() {
         return;
     }
     
-    // Filtrar viajes de hoy
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const todayTrips = AppState.trips.filter(trip => {
-        try {
-            const tripDate = new Date(trip.timestamp);
-            return tripDate >= today;
-        } catch (error) {
-            console.error('Error procesando fecha del viaje:', error);
-            return false;
-        }
-    }).sort((a, b) => {
-        return new Date(b.timestamp) - new Date(a.timestamp);
-    });
+    // Obtener viajes de hoy
+    const todayTrips = AppState.tripsData.today || [];
     
     console.log('📅 Viajes de hoy encontrados:', todayTrips.length);
     
@@ -470,25 +457,10 @@ function updateTodayTrips() {
         
         const paymentText = trip.paymentMethod === 'cash' ? 'Efectivo' : 'Tarjeta';
         
-        // Formatear hora
-        let displayTime = trip.time || '--:--';
-        if (trip.timestamp) {
-            try {
-                const tripTime = new Date(trip.timestamp);
-                displayTime = tripTime.toLocaleTimeString('es-ES', { 
-                    hour: '2-digit', 
-                    minute: '2-digit',
-                    hour12: false 
-                });
-            } catch (e) {
-                console.error('Error formateando hora:', e);
-            }
-        }
-        
         html += `
             <div class="trip-item-single-line" style="animation-delay: ${index * 0.05}s">
                 <div class="trip-info-compact">
-                    <div class="trip-time-compact">${displayTime}</div>
+                    <div class="trip-time-compact">${trip.time || '--:--'}</div>
                     <div class="trip-details-compact">
                         <span class="trip-country-compact">${trip.country || 'Sin país'}</span>
                         <span class="trip-passengers-compact">${trip.passengers || 1} Pax</span>
@@ -530,7 +502,7 @@ function handleNewTrip() {
 
 // ========== PANTALLA RESUMEN ==========
 function initSummaryScreen() {
-    // Botones de periodo - IDs CORREGIDOS según HTML
+    // Botones de periodo
     const periodBtns = document.querySelectorAll('.period-btn');
     periodBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -594,7 +566,7 @@ function updateSummary(period = 'today') {
     const totalAmountCollected = cashTotalReceived + cardTotalReceived;
     const cashToDeliver = cashTotalReceived - cardTipsAmount;
     
-    // Actualizar CAJAS DE ESTADÍSTICAS (IDs del HTML)
+    // Actualizar CAJAS DE ESTADÍSTICAS
     updateElement('quick-total-trips', totalTrips);
     updateElement('quick-total-amount', `${totalAmountCollected.toFixed(2)} €`);
     updateElement('quick-cash-amount', `${cashTotalReceived.toFixed(2)} €`);
@@ -708,7 +680,7 @@ function calculateCountryStats(trips) {
     return Object.entries(stats)
         .map(([country, data]) => ({ country, ...data }))
         .sort((a, b) => b.trips - a.trips)
-        .slice(0, 5); // Top 5 países
+        .slice(0, 5);
 }
 
 function updatePaymentChart(cashPercent, cardPercent) {
@@ -742,7 +714,7 @@ function updateCountriesList(countries) {
     
     let html = '';
     countries.forEach((country, index) => {
-        const totalTrips = AppState.trips.length;
+        const totalTrips = AppState.tripsData.all.length;
         const percentage = totalTrips > 0 ? ((country.trips / totalTrips) * 100).toFixed(1) : '0.0';
         
         html += `
@@ -779,6 +751,63 @@ function showEmptyStats() {
             </div>
         `;
     }
+}
+
+// ========== PANTALLA SERVICIO TÉCNICO ==========
+function initMaintenanceScreen() {
+    // Hotspots del carruaje
+    document.querySelectorAll('.hotspot').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const part = btn.dataset.part;
+            openMaintenanceForm(part);
+        });
+    });
+}
+
+let maintenanceIssues = JSON.parse(localStorage.getItem('maintenanceIssues')) || [];
+
+function openMaintenanceForm(part) {
+    const issue = prompt(
+        `Parte: ${part}\nDescribe el problema:`
+    );
+    
+    if (!issue) return;
+    
+    const newIssue = {
+        id: Date.now(),
+        part,
+        issue,
+        status: 'Pendiente',
+        date: new Date().toISOString()
+    };
+    
+    maintenanceIssues.push(newIssue);
+    localStorage.setItem('maintenanceIssues', JSON.stringify(maintenanceIssues));
+    renderMaintenanceList();
+}
+
+function renderMaintenanceList() {
+    const container = document.getElementById('maintenance-list');
+    
+    if (maintenanceIssues.length === 0) {
+        container.innerHTML = `<div class="empty-state">No hay incidencias registradas</div>`;
+        return;
+    }
+    
+    container.innerHTML = maintenanceIssues
+        .map(i => `
+            <div class="trip-item-single-line">
+                <div class="trip-info-compact">
+                    <div class="trip-time-compact">${new Date(i.date).toLocaleDateString('es-ES')}</div>
+                    <div class="trip-details-compact">
+                        <span class="trip-country-compact">${i.part}</span>
+                        <span class="trip-passengers-compact">${i.status}</span>
+                    </div>
+                </div>
+                <div class="trip-amount-compact">${i.issue.substring(0, 20)}${i.issue.length > 20 ? '...' : ''}</div>
+            </div>
+        `)
+        .join('');
 }
 
 // ========== FUNCIONES UTILITARIAS ==========
@@ -824,69 +853,3 @@ function showNotification(message, type = 'info') {
         }, 400);
     }, 3000);
 }
-
-// ========== MIGRACIÓN DE DATOS ==========
-function migrateFromOldVersion() {
-    // Verificar si hay datos de versión anterior
-    const oldData = localStorage.getItem('ecarriage_trips');
-    if (oldData && !localStorage.getItem(CONFIG.STORAGE_KEY)) {
-        try {
-            localStorage.setItem(CONFIG.STORAGE_KEY, oldData);
-            console.log('🔄 Datos migrados desde versión anterior');
-        } catch (error) {
-            console.error('Error migrando datos:', error);
-        }
-    }
-}
-
-let maintenanceIssues = JSON.parse(localStorage.getItem('maintenanceIssues')) || [];
-
-document.querySelectorAll('.hotspot').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const part = btn.dataset.part;
-    openMaintenanceForm(part);
-  });
-});
-
-function openMaintenanceForm(part) {
-  const issue = prompt(
-    `Parte: ${part}\nDescribe el problema:`
-  );
-
-  if (!issue) return;
-
-  const newIssue = {
-    id: Date.now(),
-    part,
-    issue,
-    status: 'Pendiente',
-    date: new Date().toISOString()
-  };
-
-  maintenanceIssues.push(newIssue);
-  localStorage.setItem('maintenanceIssues', JSON.stringify(maintenanceIssues));
-  renderMaintenanceList();
-}
-
-function renderMaintenanceList() {
-  const container = document.getElementById('maintenance-list');
-
-  if (maintenanceIssues.length === 0) {
-    container.innerHTML = `<div class="empty-state">No hay incidencias registradas</div>`;
-    return;
-  }
-
-  container.innerHTML = maintenanceIssues
-    .map(i => `
-      <div class="trip-item">
-        <strong>${i.part}</strong><br>
-        ${i.issue}<br>
-        <small>📅 ${new Date(i.date).toLocaleDateString()} – ${i.status}</small>
-      </div>
-    `)
-    .join('');
-}
-
-// Render inicial
-renderMaintenanceList();
-
