@@ -452,32 +452,29 @@ select:focus {
 }
 
 /* ============================================
-   FIX DEFINITIVO DE COLORES Y FONDOS
+   TEMA CLARO — FIX DEFINITIVO
    ============================================ */
 
-/* Fondo global */
 html, body {
   background: var(--bg-app);
   color: var(--text-main);
 }
 
-/* Contenedor app */
+/* Contenedor principal */
 .app-container {
   background: var(--bg-app);
+}
+
+/* Header */
+.app-header {
+  background: #ffffff;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border-soft);
 }
 
 /* Área scroll */
 .app-main {
   background: var(--bg-main);
-}
-
-/* Header */
-.app-header {
-  background: linear-gradient(
-    180deg,
-    #020617 0%,
-    #020617f2 100%
-  );
 }
 
 /* Tarjetas */
@@ -490,6 +487,7 @@ html, body {
 .trip-summary-card {
   background: var(--bg-card);
   color: var(--text-main);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 /* Textos secundarios */
@@ -504,7 +502,8 @@ small,
 
 /* Navegación inferior */
 .app-nav {
-  background: rgba(2,6,23,0.92);
+  background: #ffffff;
+  border-top: 1px solid var(--border-soft);
 }
 
 /* Botones nav */
@@ -514,20 +513,26 @@ small,
 
 .nav-btn.active {
   color: var(--accent);
-  background: rgba(56,189,248,0.15);
+  background: rgba(37,99,235,0.12);
+}
+
+/* Botón principal */
+.primary-action-btn {
+  background: var(--accent);
+  color: #ffffff;
 }
 
 /* Inputs */
 input,
 select {
-  background: #020617;
+  background: #ffffff;
   color: var(--text-main);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid var(--border-soft);
 }
 
 /* Placeholder */
 input::placeholder {
-  color: rgba(148,163,184,0.6);
+  color: #9ca3af;
 }
 
 
