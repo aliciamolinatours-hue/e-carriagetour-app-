@@ -1528,12 +1528,16 @@ html, body {
   display: flex;
   justify-content: space-around;
   padding: var(--spacing-sm) var(--spacing-md);
-  padding-bottom: calc(var(--spacing-sm) + env(safe-area-inset-bottom, 0));
   z-index: 1000;
   max-width: 500px;
   margin: 0 auto;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
   height: var(--nav-height);
+}
+
+/* Espacio inferior para que el contenido no quede tapado */
+.screen {
+  padding-bottom: calc(var(--nav-height) + 16px);
 }
 
 .nav-btn {
@@ -1542,56 +1546,16 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: none;
-  color: var(--teal-400);
-  cursor: pointer;
-  transition: all var(--transition-normal);
   border-radius: 50%;
-  padding: 0;
-  position: relative;
-}
-
-.nav-btn:hover {
-  background: var(--teal-50);
-  color: var(--teal-600);
+  transition: all var(--transition-normal);
 }
 
 .nav-btn.active {
   background: linear-gradient(135deg, var(--teal-500), var(--teal-700));
   color: white;
   transform: translateY(-8px);
-  box-shadow: var(--shadow-medium);
 }
 
-.nav-btn i {
-  font-size: 1.4rem;
-  margin: 0;
-  transition: transform var(--transition-normal);
-}
-
-.nav-btn.active i {
-  transform: scale(1.1);
-}
-
-/* Indicador activo */
-.nav-btn::after {
-  content: '';
-  position: absolute;
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  background: var(--teal-500);
-  border-radius: 50%;
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-}
-
-.nav-btn.active::after {
-  opacity: 1;
-}
 
 /* ============================================
    NOTIFICACIONES
@@ -1948,54 +1912,6 @@ html, body {
   color: #777;
 }
 
-/* ===============================
-   MENÚ INFERIOR – APP NAV
-   =============================== */
 
-.app-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  height: 64px;
-  background: #ffffff;
-
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-
-  border-top: 1px solid #e5e5e5;
-  z-index: 1000;
-}
-
-.nav-btn {
-  flex: 1;
-  background: none;
-  border: none;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 11px;
-  color: #888;
-  cursor: pointer;
-}
-
-.nav-btn i {
-  font-size: 18px;
-  margin-bottom: 4px;
-}
-
-.nav-btn.active {
-  color: #000;
-}
-
-/* Espacio para el menú inferior */
-.screen {
-  padding-bottom: 80px;
-}
 
 
