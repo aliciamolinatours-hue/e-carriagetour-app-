@@ -451,5 +451,84 @@ select:focus {
   }
 }
 
+/* ============================================
+   FIX DEFINITIVO DE COLORES Y FONDOS
+   ============================================ */
+
+/* Fondo global */
+html, body {
+  background: var(--bg-app);
+  color: var(--text-main);
+}
+
+/* Contenedor app */
+.app-container {
+  background: var(--bg-app);
+}
+
+/* Área scroll */
+.app-main {
+  background: var(--bg-main);
+}
+
+/* Header */
+.app-header {
+  background: linear-gradient(
+    180deg,
+    #020617 0%,
+    #020617f2 100%
+  );
+}
+
+/* Tarjetas */
+.form-card,
+.financial-breakdown,
+.general-stats,
+.payment-stats-card,
+.countries-card,
+.maintenance-list-section,
+.trip-summary-card {
+  background: var(--bg-card);
+  color: var(--text-main);
+}
+
+/* Textos secundarios */
+small,
+.badge,
+.date-display,
+.quick-stat-label,
+.country-stats,
+.trip-details-compact {
+  color: var(--text-muted);
+}
+
+/* Navegación inferior */
+.app-nav {
+  background: rgba(2,6,23,0.92);
+}
+
+/* Botones nav */
+.nav-btn {
+  color: var(--text-muted);
+}
+
+.nav-btn.active {
+  color: var(--accent);
+  background: rgba(56,189,248,0.15);
+}
+
+/* Inputs */
+input,
+select {
+  background: #020617;
+  color: var(--text-main);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Placeholder */
+input::placeholder {
+  color: rgba(148,163,184,0.6);
+}
+
 
 
