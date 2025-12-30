@@ -1357,22 +1357,20 @@ html, body {
 
 /* Hotspots */
 .hotspot {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  background: var(--danger-color);
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  border: 3px solid white;
+  background: #ffffff;
+  border: 2px solid #007aff; /* azul iOS */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   cursor: pointer;
   transform: translate(-50%, -50%);
-  transition: all var(--transition-normal);
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-  z-index: 10;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .hotspot:hover {
-  transform: translate(-50%, -50%) scale(1.3);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
 }
 
 .hotspot::after {
@@ -1396,6 +1394,33 @@ html, body {
 .hotspot:hover::after {
   opacity: 1;
 }
+
+/* IZQUIERDA */
+.hotspot[data-part*="izquierda"] {
+  border-color: #007aff;
+}
+
+/* DERECHA */
+.hotspot[data-part*="derecha"] {
+  border-color: #34c759; /* verde iOS */
+}
+
+/* DELANTERA */
+.hotspot[data-part*="delantera"],
+.hotspot[data-part*="delanteras"] {
+  background: #ffffff;
+}
+
+/* TRASERA */
+.hotspot[data-part*="trasera"],
+.hotspot[data-part*="traseras"] {
+  background: #f2f2f7;
+}
+
+.hotspot:active {
+  transform: translate(-50%, -50%) scale(0.95);
+}
+
 
 /* Lista de incidencias */
 .maintenance-list-section {
