@@ -31,124 +31,111 @@
   box-sizing: border-box;
 }
 
-html {
-  font-size: 16px;
-}
-
-body {
+html, body {
+  height: 100%;
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--app-bg);
-  color: var(--text-dark);
-  overflow-x: hidden; /* ✅ NO tocamos el scroll vertical */
+  padding: 0;
+  overflow: hidden; /* 👈 MUY IMPORTANTE */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ============================================
    CONTENEDOR PRINCIPAL APP
    ============================================ */
 .app-container {
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  max-width: 500px;
-  margin: 0 auto;
-  background: var(--app-bg);
-  position: relative;
+  background: #0f172a; /* fondo oscuro elegante */
 }
 
 /* ============================================
-   HEADER
+   HEADER FIJO
    ============================================ */
 .app-header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 20;
-  background: linear-gradient(135deg, var(--teal-700), var(--teal-500));
-  color: var(--white);
-  box-shadow: var(--shadow-soft);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, #020617, #020617);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .header-content {
-  padding: var(--spacing-md);
+  padding: 14px 16px 10px;
 }
 
 .app-title {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: 10px;
+  font-size: 18px;
   margin: 0;
-  font-size: 1.2rem;
 }
 
 .app-logo {
-  height: 32px;
+  height: 28px;
 }
 
 .date-display {
-  font-size: 0.85rem;
-  opacity: 0.9;
+  font-size: 13px;
+  opacity: 0.75;
 }
 
+
 /* ============================================
-   CONTENIDO PRINCIPAL (ÚNICO SCROLL)
+   MAIN — ÚNICO SCROLL
    ============================================ */
 .app-main {
   flex: 1;
+  margin-top: 78px;      /* altura real del header */
+  margin-bottom: 72px;   /* altura real del nav */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-
-  padding: var(--spacing-lg);
-  padding-bottom: calc(90px + var(--spacing-xl)); /* espacio navbar */
+  padding: 16px;
 }
 
 /* ============================================
-   PANTALLAS
+   SCREENS (PESTAÑAS)
    ============================================ */
 .screen {
   display: none;
+  animation: fadeIn 0.25s ease;
 }
 
 .screen.active {
   display: block;
 }
 
+/* Header interno de cada pestaña */
 .screen-header {
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 16px;
 }
 
 .screen-header h2 {
+  font-size: 20px;
   margin: 0;
-  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+
 
 /* ============================================
    FORMULARIOS / TARJETAS
    ============================================ */
-.form-card {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-soft);
-  margin-bottom: var(--spacing-lg);
-}
-
-.form-group {
-  margin-bottom: var(--spacing-lg);
-}
-
-.form-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: var(--spacing-xs);
-}
-
-.form-select,
-.tip-input {
-  width: 100%;
-  padding: var(--spacing-sm);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--teal-100);
-  font-size: 1rem;
+.form-card,
+.financial-breakdown,
+.general-stats,
+.payment-stats-card,
+.countries-card,
+.maintenance-list-section {
+  background: #020617;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }
 
 /* ============================================
@@ -280,34 +267,46 @@ body {
 }
 
 /* ============================================
-   NAVBAR INFERIOR (FIJA)
+   NAVEGACIÓN INFERIOR (TABS)
    ============================================ */
 .app-nav {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 500px;
-  height: 70px;
-  background: var(--white);
+  left: 0;
+  right: 0;
+  height: 72px;
+  background: rgba(2,6,23,0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.08);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 30;
+  z-index: 1000;
 }
 
 .nav-btn {
   background: none;
   border: none;
-  font-size: 1.4rem;
-  color: var(--text-muted);
+  color: #94a3b8;
+  font-size: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
 .nav-btn.active {
-  color: var(--teal-500);
+  background: rgba(56,189,248,0.15);
+  color: #38bdf8;
 }
+
+.nav-btn:active {
+  transform: scale(0.92);
+}
+
 
 /* ============================================
    DESKTOP (SIMULADOR APP)
@@ -322,3 +321,19 @@ body {
     margin-bottom: var(--spacing-md);
   }
 }
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
