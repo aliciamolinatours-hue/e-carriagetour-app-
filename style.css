@@ -1855,7 +1855,7 @@ body {
 
 /* =====================================================
    MEJORA GLOBAL DE SCROLL – APP TIPO MÓVIL
-   (añadido final, no sustituye código existente)
+   (no sustituye código existente)
    ===================================================== */
 
 /* El body no debe scrollear: solo el contenido */
@@ -1885,7 +1885,6 @@ html, body {
 
 /* ==============================
    ELIMINAR SCROLLS INTERNOS
-   (causa del doble scroll)
    ============================== */
 
 .resumen,
@@ -1909,4 +1908,54 @@ canvas,
 /* Seguridad extra para móviles */
 * {
   scroll-margin-bottom: 80px;
+}
+
+/* =====================================================
+   SCROLL INVISIBLE – EXPERIENCIA APP NATIVA
+   ===================================================== */
+
+/* El documento no scrollea */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ÚNICA zona con scroll: el contenido activo */
+.app-main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;       /* Firefox */
+}
+
+/* Ocultar scrollbar en Chrome / Safari / Edge */
+.app-main::-webkit-scrollbar {
+  display: none;
+}
+
+/* Las pantallas NO deben crear scroll propio */
+.app-screen {
+  height: auto;
+  overflow: visible;
+}
+
+/* Bloqueo ABSOLUTO de scrolls internos problemáticos */
+.today-trips-section,
+.financial-breakdown,
+.countries-card,
+.today-trips-list {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+/* Seguridad: evitar scrolls ocultos */
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
