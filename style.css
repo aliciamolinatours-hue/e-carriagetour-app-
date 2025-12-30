@@ -22,6 +22,73 @@
   --radius-lg: 20px;
 
   --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
+   
+/* Bolt Design System Gradient Tokens */
+  --m-bolt-bg-highlight: #FFFACD;  /* Amarillo claro */
+  --m-bolt-bg-lowlight: #AFEEEE;   /* Azul turquesa claro */
+  
+  /* Variables Bolt para referencia */
+  --bolt-color-teal: #20B2AA;
+  --bolt-color-navy-dark: #000080;
+  --bolt-color-navy-light: #E6E6FA;
+   
+}
+
+/* ============================================
+   BOLT DESIGN SYSTEM GRADIENTS
+   ============================================ */
+
+/* Clase base para gradientes */
+.u-bolt-bg-gradient {
+  background: linear-gradient(135deg, var(--m-bolt-bg-highlight) 0%, var(--m-bolt-bg-lowlight) 100%);
+}
+
+/* Clases de utilidad para padding */
+.u-bolt-padding-xlarge {
+  padding: var(--spacing-2xl);
+}
+
+.u-bolt-padding-large {
+  padding: var(--spacing-xl);
+}
+
+.u-bolt-padding-medium {
+  padding: var(--spacing-lg);
+}
+
+/* Tema navy light */
+.t-bolt-navy-light {
+  color: var(--bolt-color-navy-dark);
+  background-color: var(--bolt-color-navy-light);
+}
+
+/* Gradientes personalizados para diferentes secciones */
+.gradient-header {
+  background: linear-gradient(135deg, var(--m-bolt-bg-highlight) 0%, var(--m-bolt-bg-lowlight) 100%);
+  color: #333;
+  border: none;
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, var(--m-bolt-bg-highlight) 0%, var(--m-bolt-bg-lowlight) 100%);
+  color: #333;
+  border: none;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Efecto especial para gradientes */
+.gradient-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.05) 50%, 
+    rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
 }
 
 /* ============================================
