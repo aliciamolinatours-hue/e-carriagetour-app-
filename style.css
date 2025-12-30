@@ -537,3 +537,88 @@ input::placeholder {
 
 
 
+/* ============================================
+   ESTILO BOLT / UBER
+   ============================================ */
+
+/* Fondo general */
+.app-main {
+  background: var(--bg-app);
+}
+
+/* Cards estilo app de transporte */
+.form-card,
+.financial-breakdown,
+.general-stats,
+.payment-stats-card,
+.countries-card,
+.maintenance-list-section,
+.trip-summary-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: none;
+  border: 1px solid var(--divider);
+}
+
+/* Separación entre cards */
+.screen > * + * {
+  margin-top: 14px;
+}
+
+/* ============================================
+   FILAS CON ICONO (Uber-style)
+   ============================================ */
+
+.trip-item-single-line,
+.payment-method-card,
+.stat-row,
+.maintenance-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid var(--divider);
+}
+
+/* Iconos en círculo */
+.trip-item-single-line i,
+.payment-method-card i,
+.stat-row i,
+.maintenance-item i {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--icon-bg);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Texto principal */
+.trip-item-single-line strong,
+.payment-method-card strong,
+.stat-row strong {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Texto secundario */
+.trip-item-single-line span,
+.payment-method-card span,
+.stat-row span {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Feedback táctil */
+.trip-item-single-line:active,
+.payment-method-card:active {
+  background: #f9fafb;
+}
+
