@@ -1959,3 +1959,16 @@ body {
 *::-webkit-scrollbar {
   display: none;
 }
+/* =========================
+   NOTAS INFORMATIVAS SUAVES
+   ========================= */
+
+.note,
+.delivery-explanation,
+.form-note {
+  font-size: 0.85rem;
+  color: var(--teal-600);
+  opacity: 0.85;
+  line-height: 1.4;
+}
+
