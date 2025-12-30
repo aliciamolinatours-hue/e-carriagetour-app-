@@ -1,259 +1,59 @@
-/* ============================================
-   VARIABLES Y TOKENS
-   ============================================ */
-:root {
-  --teal-900: #0f4c5c;
-  --teal-700: #136f7a;
-  --teal-500: #1f9aaa;
-  --teal-300: #5bc2c7;
-  --teal-100: #cdecee;
-  --teal-50: #f0f9fa;
-
-  --app-bg: #f7f9fa;
-  --card-bg: #ffffff;
-  --text-dark: #1f2933;
-  --text-muted: #6b7280;
-  --border-color: #e5e7eb;
-
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --danger-color: #ef4444;
-
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-
-  --radius-md: 12px;
-  --radius-lg: 16px;
-
-  --shadow-soft: 0 2px 8px rgba(0,0,0,0.08);
-  --shadow-medium: 0 4px 16px rgba(0,0,0,0.12);
-
-  --transition-normal: 0.25s ease;
-
-  --header-height: 70px;
-  --nav-height: 70px;
-}
-
-/* ============================================
-   RESET
-   ============================================ */
-* {
+body {
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  background: #f5f5f5;
 }
 
-html, body {
-  height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--app-bg);
-  color: var(--text-dark);
-  overflow: hidden;
-}
-
-/* ============================================
-   LAYOUT
-   ============================================ */
-.app-container {
-  max-width: 500px;
-  margin: 0 auto;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--app-bg);
-  position: relative;
-}
-
-.app-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--header-height);
-  background: linear-gradient(135deg, var(--teal-700), var(--teal-500));
+header {
+  background: #0f4c5c;
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  box-shadow: var(--shadow-medium);
+  padding: 1rem;
+  text-align: center;
 }
 
-.app-main {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--spacing-md);
-  margin-top: var(--header-height);
-  margin-bottom: var(--nav-height);
+main {
+  padding: 1rem;
 }
 
-/* ============================================
-   PANTALLAS
-   ============================================ */
-.screen {
-  display: none;
-}
-
-.screen.active {
+form label {
   display: block;
+  margin: 0.5rem 0;
 }
 
-/* ============================================
-   TARJETAS
-   ============================================ */
-.form-card,
-.today-trips-section,
-.financial-breakdown,
-.payment-stats-card,
-.countries-card,
-.maintenance-list-section {
-  background: var(--card-bg);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-lg);
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--border-color);
-}
-
-/* ============================================
-   BOTÓN PRINCIPAL
-   ============================================ */
-.primary-action-btn {
+input, select, button {
+  padding: 0.5rem;
+  margin-top: 0.25rem;
   width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, var(--teal-700), var(--teal-500));
+  max-width: 300px;
+}
+
+button {
+  background: #0f4c5c;
   color: white;
   border: none;
-  border-radius: var(--radius-lg);
-  font-size: 1.1rem;
-  font-weight: 700;
   cursor: pointer;
-  transition: var(--transition-normal);
 }
 
-.primary-action-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-medium);
+button:hover {
+  background: #14576f;
 }
 
-/* ============================================
-   SERVICIO TÉCNICO – NUEVO SISTEMA SIMPLE
-   ============================================ */
-
-.carriage-selector {
-  margin-bottom: 16px;
-}
-
-.carriage-selector label {
-  display: block;
-  font-size: 13px;
-  margin-bottom: 6px;
-  color: var(--text-muted);
-}
-
-.carriage-selector select {
+table {
   width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border-collapse: collapse;
+  margin-top: 1rem;
 }
 
-.carriage-image-wrapper img {
-  width: 100%;
-  border-radius: 16px;
-  margin-bottom: 16px;
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: center;
 }
 
-.carriage-zones {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.zone-btn {
-  background: #f5f6f8;
-  border: none;
-  border-radius: 14px;
-  padding: 14px 8px;
-  font-size: 13px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: var(--transition-normal);
-}
-
-.zone-btn:hover {
-  background: #e9ebef;
-}
-
-/* ============================================
-   INCIDENCIAS
-   ============================================ */
-.maintenance-item {
+#resumen {
+  margin-top: 1rem;
+  padding: 1rem;
   background: white;
-  border-radius: 14px;
-  padding: 12px;
-  margin-bottom: 10px;
-  box-shadow: var(--shadow-soft);
-}
-
-.maintenance-header {
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.maintenance-body {
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-
-.maintenance-footer {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-/* ============================================
-   NAVEGACIÓN INFERIOR (RECUPERADA Y ESTABLE)
-   ============================================ */
-.app-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: var(--nav-height);
-  background: white;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-top: 2px solid var(--teal-100);
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-  max-width: 500px;
-  margin: 0 auto;
-  z-index: 1000;
-}
-
-.nav-btn {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  color: var(--teal-300);
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: var(--transition-normal);
-}
-
-.nav-btn.active {
-  background: linear-gradient(135deg, var(--teal-500), var(--teal-700));
-  color: white;
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-medium);
+  border: 1px solid #ddd;
 }
