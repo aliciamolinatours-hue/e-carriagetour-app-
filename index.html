@@ -1,83 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro Carruaje Eléctrico</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Carruaje Eléctrico</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Registro de Tours - Carruaje Eléctrico</h1>
-  </header>
 
-  <main>
-    <!-- Formulario de registro de viaje -->
-    <section id="registro-viaje">
-      <h2>Nuevo Viaje</h2>
-      <form id="form-viaje">
-        <label>
-          Número de pasajeros:
-          <input type="number" id="num-pax" min="1" max="5" required>
-        </label>
+<header>
+  <h1>App Carruaje Eléctrico</h1>
+</header>
 
-        <label>
-          País de origen:
-          <input type="text" id="pais-origen" placeholder="Buscar país" required>
-        </label>
+<nav class="menu-inferior">
+  <button data-section="nuevo-viaje">Nuevo Viaje</button>
+  <button data-section="resumen-viajes">Resumen</button>
+  <button data-section="estadisticas">Estadísticas</button>
+</nav>
 
-        <label>
-          Tipo de pago:
-          <select id="tipo-pago" required>
-            <option value="efectivo">Efectivo</option>
-            <option value="tarjeta">Tarjeta</option>
-          </select>
-        </label>
+<main>
+  <!-- Sección 1: Nuevo Viaje -->
+  <section id="nuevo-viaje" class="seccion-activa">
+    <h2>Nuevo Viaje</h2>
+    <form id="form-viaje">
+      <label>
+        Número de pasajeros:
+        <input type="number" id="num-pax" min="1" max="5" required>
+      </label>
 
-        <label>
-          Propina:
-          <select id="propina">
-            <option value="0">0€</option>
-            <option value="7">7€</option>
-            <option value="10.5">10,5€</option>
-            <option value="14">14€</option>
-            <option value="custom">Custom</option>
-          </select>
-          <input type="number" id="propina-custom" placeholder="€ Custom" style="display:none;">
-        </label>
+      <label>
+        País de origen:
+        <input type="text" id="pais-origen" placeholder="Buscar país" required>
+      </label>
 
-        <button type="submit">Registrar Viaje</button>
-      </form>
-    </section>
+      <label>
+        Tipo de pago:
+        <select id="tipo-pago" required>
+          <option value="efectivo">Efectivo</option>
+          <option value="tarjeta">Tarjeta</option>
+        </select>
+      </label>
 
-    <!-- Sección de historial -->
-    <section id="historial-viajes">
-      <h2>Historial de Viajes</h2>
-      <table id="tabla-viajes">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Pax</th>
-            <th>País</th>
-            <th>Pago</th>
-            <th>Propina</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Aquí se añadirán los viajes -->
-        </tbody>
-      </table>
-    </section>
+      <label>
+        Propina:
+        <select id="propina">
+          <option value="0">0€</option>
+          <option value="7">7€</option>
+          <option value="10.5">10,5€</option>
+          <option value="14">14€</option>
+          <option value="custom">Custom</option>
+        </select>
+        <input type="number" id="propina-custom" placeholder="€ Custom" style="display:none;">
+      </label>
 
-    <!-- Sección de estadísticas -->
-    <section id="estadisticas">
-      <h2>Estadísticas</h2>
-      <div id="resumen">
-        <!-- Aquí se mostrará resumen de efectivo, tarjeta, total, propinas -->
-      </div>
-    </section>
-  </main>
+      <button type="submit" class="btn-grande">Añadir viaje</button>
+    </form>
+    <div id="confirmacion" class="confirmacion"></div>
+  </section>
 
-  <script src="script.js"></script>
+  <!-- Sección 2: Resumen de viajes -->
+  <section id="resumen-viajes">
+    <h2>Resumen Financiero</h2>
+    <div id="resumen"></div>
+  </section>
+
+  <!-- Sección 3: Estadísticas -->
+  <section id="estadisticas">
+    <h2>Estadísticas</h2>
+    <canvas id="grafico-ingresos"></canvas>
+    <canvas id="grafico-tipo-pago"></canvas>
+  </section>
+</main>
+
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
