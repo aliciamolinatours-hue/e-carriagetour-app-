@@ -1863,3 +1863,88 @@ html, body {
   outline: 3px solid var(--teal-500);
   outline-offset: 2px;
 }
+
+/* ===============================
+   SERVICIO TÉCNICO – INCIDENCIAS
+   =============================== */
+
+.carriage-selector {
+  margin-bottom: 16px;
+}
+
+.carriage-selector label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.carriage-selector select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.carriage-image-wrapper img {
+  width: 100%;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.carriage-zones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.zone-btn {
+  background: #f5f6f8;
+  border: none;
+  border-radius: 14px;
+  padding: 14px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.zone-btn i {
+  font-size: 20px;
+}
+
+.zone-btn:hover {
+  background: #e9ebef;
+}
+
+.maintenance-list {
+  margin-top: 10px;
+}
+
+.maintenance-item {
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.maintenance-header {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.maintenance-body {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.maintenance-footer {
+  font-size: 11px;
+  color: #777;
+}
+
