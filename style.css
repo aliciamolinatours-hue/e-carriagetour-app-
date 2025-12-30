@@ -1948,3 +1948,54 @@ html, body {
   color: #777;
 }
 
+/* ===============================
+   MENÚ INFERIOR – APP NAV
+   =============================== */
+
+.app-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  height: 64px;
+  background: #ffffff;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  border-top: 1px solid #e5e5e5;
+  z-index: 1000;
+}
+
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 11px;
+  color: #888;
+  cursor: pointer;
+}
+
+.nav-btn i {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.nav-btn.active {
+  color: #000;
+}
+
+/* Espacio para el menú inferior */
+.screen {
+  padding-bottom: 80px;
+}
+
+
