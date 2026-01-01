@@ -1,20 +1,21 @@
-document.addEventListener("DOMContentLoaded", () => {
-  renderAll();
-});
-
 let trips = JSON.parse(localStorage.getItem("trips")) || [];
 let currentFilter = "day";
 
+document.addEventListener("DOMContentLoaded", renderAll);
+
 function showTab(tab) {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+
   document.getElementById(`tab-${tab}`).classList.add("active");
+  document.getElementById(`btn-${tab}`).classList.add("active");
 }
 
 document.getElementById("tripForm").addEventListener("submit", e => {
   e.preventDefault();
 
   const trip = {
-    date: new Date(),
+    date: new Date().toISOString(),
     pax: Number(pax.value),
     payment: payment.value,
     tip: Number(tip.value),
@@ -35,19 +36,18 @@ function renderAll() {
   renderStats();
 }
 
-function isSameDay(d1, d2) {
-  return d1.toDateString() === d2.toDateString();
-}
-
 function renderTodayTrips() {
-  const ul = document.getElementById("todayTrips");
-  ul.innerHTML = "";
+  const container = document.getElementById("todayTrips");
+  container.innerHTML = "";
 
-  trips.filter(t => isSameDay(new Date(t.date), new Date()))
+  const today = new Date().toDateString();
+
+  trips.filter(t => new Date(t.date).toDateString() === today)
     .forEach(t => {
-      const li = document.createElement("li");
-      li.textContent = `${new Date(t.date).toLocaleTimeString()} | Pax: ${t.pax} | ${t.payment} | Tip: €${t.tip}`;
-      ul.appendChild(li);
+      const div = document.createElement("div");
+      div.textContent =
+        `${new Date(t.date).toLocaleTimeString()} | Pax ${t.pax} | ${t.payment} | Tip €${t.tip}`;
+      container.appendChild(div);
     });
 }
 
@@ -61,18 +61,22 @@ function renderSummary() {
   let filtered = trips;
 
   if (currentFilter === "day") {
-    filtered = trips.filter(t => isSameDay(new Date(t.date), now));
+    filtered = trips.filter(t =>
+      new Date(t.date).toDateString() === now.toDateString()
+    );
   } else if (currentFilter === "week") {
-    const weekAgo = new Date();
-    weekAgo.setDate(now.getDate() - 7);
-    filtered = trips.filter(t => new Date(t.date) >= weekAgo);
+    const w = new Date();
+    w.setDate(now.getDate() - 7);
+    filtered = trips.filter(t => new Date(t.date) >= w);
   } else if (currentFilter === "month") {
-    filtered = trips.filter(t => new Date(t.date).getMonth() === now.getMonth());
+    filtered = trips.filter(t =>
+      new Date(t.date).getMonth() === now.getMonth()
+    );
   }
 
   summaryData.innerHTML = `
     Viajes: ${filtered.length}<br>
-    Pax total: ${filtered.reduce((a,t)=>a+t.pax,0)}<br>
+    Pax: ${filtered.reduce((a,t)=>a+t.pax,0)}<br>
     Propinas: €${filtered.reduce((a,t)=>a+t.tip,0).toFixed(2)}
   `;
 }
@@ -80,7 +84,7 @@ function renderSummary() {
 function renderMonthlyStats() {
   const stats = {};
   trips.forEach(t => {
-    const m = new Date(t.date).toISOString().slice(0,7);
+    const m = t.date.slice(0,7);
     stats[m] = (stats[m] || 0) + 1;
   });
 
@@ -90,19 +94,21 @@ function renderMonthlyStats() {
 }
 
 function renderStats() {
-  const cash = trips.filter(t => t.payment === "Efectivo").length;
-  const card = trips.filter(t => t.payment === "Tarjeta").length;
+  statsCash.textContent =
+    `Efectivo: ${trips.filter(t => t.payment === "Efectivo").length}`;
+
+  statsCard.textContent =
+    `Tarjeta: ${trips.filter(t => t.payment === "Tarjeta").length}`;
+
+  statsTotal.textContent =
+    `Total viajes: ${trips.length}`;
 
   const countries = {};
   trips.forEach(t => countries[t.country] = (countries[t.country] || 0) + 1);
 
-  statsCash.innerHTML = `Efectivo: ${cash}`;
-  statsCard.innerHTML = `Tarjeta: ${card}`;
-  statsTotal.innerHTML = `Total viajes: ${trips.length}`;
-
-  statsCountries.innerHTML = Object.entries(countries)
-    .map(([c,v]) => `${c}: ${v}`)
-    .join("<br>");
+  statsCountries.innerHTML =
+    "Países:<br>" +
+    Object.entries(countries).map(([c,v]) => `${c}: ${v}`).join("<br>");
 }
 
 function exportCSV() {
@@ -112,8 +118,8 @@ function exportCSV() {
   });
 
   const blob = new Blob([csv], { type: "text/csv" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "viajes.csv";
-  a.click();
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "viajes.csv";
+  link.click();
 }
