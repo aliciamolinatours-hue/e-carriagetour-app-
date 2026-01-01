@@ -5,608 +5,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Registro de Viajes - Taxi Eléctrico</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-            padding-bottom: 80px;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background: linear-gradient(135deg, #2ecc71, #1abc9c);
-            color: white;
-            padding: 20px;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 25px;
-        }
-        
-        h1 {
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        h1 i {
-            font-size: 2rem;
-        }
-        
-        .date-display {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-top: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .form-section {
-            background-color: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        h2 i {
-            color: #3498db;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #34495e;
-            font-size: 1.1rem;
-        }
-        
-        .pax-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        
-        .pax-btn {
-            flex: 1;
-            min-width: 60px;
-            height: 70px;
-            border: none;
-            background-color: #ecf0f1;
-            border-radius: 10px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #2c3e50;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .pax-btn:hover {
-            background-color: #d5dbdb;
-        }
-        
-        .pax-btn.selected {
-            background-color: #3498db;
-            color: white;
-            transform: scale(1.05);
-        }
-        
-        .country-input {
-            position: relative;
-        }
-        
-        #country {
-            width: 100%;
-            padding: 16px;
-            font-size: 1.1rem;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        
-        #country:focus {
-            border-color: #3498db;
-        }
-        
-        #country-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
-        }
-        
-        .suggestion-item {
-            padding: 12px 16px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .suggestion-item:hover {
-            background-color: #f2f2f2;
-        }
-        
-        .payment-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .payment-btn {
-            flex: 1;
-            padding: 18px 10px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .payment-btn.cash {
-            background-color: #ecf0f1;
-            color: #2c3e50;
-        }
-        
-        .payment-btn.card {
-            background-color: #ecf0f1;
-            color: #2c3e50;
-        }
-        
-        .payment-btn.selected.cash {
-            background-color: #2ecc71;
-            color: white;
-        }
-        
-        .payment-btn.selected.card {
-            background-color: #9b59b6;
-            color: white;
-        }
-        
-        .tip-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            display: none;
-        }
-        
-        .tip-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-        
-        .tip-btn {
-            flex: 1;
-            min-width: 80px;
-            padding: 14px 10px;
-            border: none;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .tip-btn.selected {
-            background-color: #f1c40f;
-            color: white;
-        }
-        
-        .custom-tip {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        #custom-tip-input {
-            flex: 1;
-            padding: 14px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-        }
-        
-        .custom-tip-btn {
-            padding: 14px 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .save-btn {
-            width: 100%;
-            padding: 22px;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.3rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
-        }
-        
-        .save-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
-        }
-        
-        .save-btn:active {
-            transform: translateY(0);
-        }
-        
-        .confirmation-message {
-            background-color: #2ecc71;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 1.2rem;
-            margin-top: 20px;
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .trips-section {
-            background-color: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        
-        .trips-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .stats {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        
-        .stat-item {
-            text-align: center;
-            flex: 1;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
-        
-        .trip-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .trip-item {
-            padding: 18px;
-            border-bottom: 1px solid #eee;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .trip-item:last-child {
-            border-bottom: none;
-        }
-        
-        .trip-item:first-child {
-            background-color: #f8f9fa;
-            border-radius: 10px 10px 0 0;
-        }
-        
-        .trip-header {
-            font-weight: 700;
-            color: #2c3e50;
-            background-color: #f1f8ff;
-            padding: 15px 18px;
-            border-radius: 10px 10px 0 0;
-            border-bottom: 2px solid #3498db;
-        }
-        
-        .trip-time {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .trip-pax {
-            text-align: center;
-            background-color: #e8f4fc;
-            padding: 6px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-        
-        .trip-country {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .trip-payment {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            font-weight: 600;
-        }
-        
-        .trip-payment.cash {
-            color: #2ecc71;
-        }
-        
-        .trip-payment.card {
-            color: #9b59b6;
-        }
-        
-        .trip-tip {
-            text-align: right;
-            font-weight: 600;
-            color: #f39c12;
-        }
-        
-        .empty-list {
-            text-align: center;
-            padding: 40px 20px;
-            color: #7f8c8d;
-        }
-        
-        .empty-list i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #bdc3c7;
-        }
-        
-        .reset-btn {
-            width: 100%;
-            padding: 16px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 25px;
-            transition: background-color 0.3s;
-        }
-        
-        .reset-btn:hover {
-            background-color: #c0392b;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            margin-top: 30px;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .form-section, .trips-section {
-                padding: 20px;
-            }
-            
-            .trip-item {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 15px;
-                padding: 15px;
-            }
-            
-            .trip-header {
-                grid-template-columns: 1fr 1fr 1fr;
-                padding: 15px;
-            }
-            
-            .trip-payment, .trip-tip {
-                grid-column: span 1;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
+        /* CSS actualizado se incluirá aquí */
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1><i class="fas fa-car"></i> Registro de Viajes</h1>
-            <div class="date-display">
-                <span id="current-date">Cargando fecha...</span>
-                <span id="trip-count">Viajes hoy: 0</span>
+            <div class="header-content">
+                <div class="header-main">
+                    <h1><i class="fas fa-bolt"></i> Taxi Eléctrico</h1>
+                    <div class="header-subtitle">
+                        <span id="current-date"></span>
+                        <span class="badge" id="trip-count">0 viajes hoy</span>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
     
     <main class="container">
         <section class="form-section">
-            <h2><i class="fas fa-plus-circle"></i> Registrar Nuevo Viaje</h2>
+            <h2 class="section-title">
+                <i class="fas fa-plus-circle"></i>
+                <span>Nuevo Viaje</span>
+            </h2>
             
-            <div class="form-group">
-                <label><i class="fas fa-users"></i> Número de Pasajeros</label>
-                <div class="pax-buttons">
-                    <button class="pax-btn" data-pax="1">1</button>
-                    <button class="pax-btn" data-pax="2">2</button>
-                    <button class="pax-btn" data-pax="3">3</button>
-                    <button class="pax-btn" data-pax="4">4</button>
-                    <button class="pax-btn" data-pax="5">5</button>
+            <div class="form-card">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-users"></i>
+                        <span>Pasajeros</span>
+                    </label>
+                    <div class="pax-buttons">
+                        <button class="pax-btn" data-pax="1">1</button>
+                        <button class="pax-btn" data-pax="2">2</button>
+                        <button class="pax-btn" data-pax="3">3</button>
+                        <button class="pax-btn" data-pax="4">4</button>
+                        <button class="pax-btn" data-pax="5">5</button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <label><i class="fas fa-globe-europe"></i> País</label>
-                <div class="country-input">
-                    <input type="text" id="country" placeholder="Escribe las primeras letras del país...">
-                    <div id="country-suggestions"></div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-globe-europe"></i>
+                        <span>País</span>
+                    </label>
+                    <div class="country-input">
+                        <input type="text" id="country" placeholder="Escribe el país...">
+                        <div id="country-suggestions"></div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <label><i class="fas fa-money-bill-wave"></i> Método de Pago</label>
-                <div class="payment-buttons">
-                    <button class="payment-btn cash" data-payment="cash">
-                        <i class="fas fa-money-bill"></i> Efectivo
-                    </button>
-                    <button class="payment-btn card" data-payment="card">
-                        <i class="fas fa-credit-card"></i> Tarjeta
-                    </button>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Método de Pago</span>
+                    </label>
+                    <div class="payment-buttons">
+                        <button class="payment-btn cash" data-payment="cash">
+                            <i class="fas fa-money-bill"></i>
+                            <span>Efectivo</span>
+                        </button>
+                        <button class="payment-btn card" data-payment="card">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Tarjeta</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            
-            <div id="tip-section-cash" class="tip-section">
-                <label><i class="fas fa-euro-sign"></i> Propina en Efectivo</label>
-                <div class="tip-buttons">
-                    <button class="tip-btn" data-tip="0">0€</button>
-                    <button class="tip-btn custom-tip-btn-open" data-tip="custom">Personalizar</button>
+                
+                <div id="tip-section-cash" class="tip-section">
+                    <label class="form-label">
+                        <i class="fas fa-euro-sign"></i>
+                        <span>Propina</span>
+                    </label>
+                    <div class="tip-buttons">
+                        <button class="tip-btn" data-tip="0">0€</button>
+                        <button class="tip-btn custom-tip-btn-open" data-tip="custom">
+                            <i class="fas fa-edit"></i>
+                            <span>Personalizar</span>
+                        </button>
+                    </div>
+                    <div class="custom-tip" id="custom-tip-cash" style="display: none;">
+                        <input type="number" id="custom-tip-input-cash" placeholder="Ej: 3.50" min="0" step="0.5">
+                        <button class="custom-tip-btn" id="set-tip-cash">Aplicar</button>
+                    </div>
                 </div>
-                <div class="custom-tip" id="custom-tip-cash" style="display: none;">
-                    <input type="number" id="custom-tip-input-cash" placeholder="Ej: 3.50" min="0" step="0.5">
-                    <button class="custom-tip-btn" id="set-tip-cash">Aplicar</button>
+                
+                <div id="tip-section-card" class="tip-section">
+                    <label class="form-label">
+                        <i class="fas fa-euro-sign"></i>
+                        <span>Propina</span>
+                    </label>
+                    <div class="tip-buttons">
+                        <button class="tip-btn" data-tip="0">0€</button>
+                        <button class="tip-btn" data-tip="7">7€</button>
+                        <button class="tip-btn" data-tip="10.5">10.5€</button>
+                        <button class="tip-btn" data-tip="14">14€</button>
+                        <button class="tip-btn custom-tip-btn-open" data-tip="custom">
+                            <i class="fas fa-edit"></i>
+                            <span>Personalizar</span>
+                        </button>
+                    </div>
+                    <div class="custom-tip" id="custom-tip-card" style="display: none;">
+                        <input type="number" id="custom-tip-input-card" placeholder="Ej: 5.00" min="0" step="0.5">
+                        <button class="custom-tip-btn" id="set-tip-card">Aplicar</button>
+                    </div>
                 </div>
-            </div>
-            
-            <div id="tip-section-card" class="tip-section">
-                <label><i class="fas fa-euro-sign"></i> Propina con Tarjeta</label>
-                <div class="tip-buttons">
-                    <button class="tip-btn" data-tip="0">0€</button>
-                    <button class="tip-btn" data-tip="7">7€</button>
-                    <button class="tip-btn" data-tip="10.5">10.5€</button>
-                    <button class="tip-btn" data-tip="14">14€</button>
-                    <button class="tip-btn custom-tip-btn-open" data-tip="custom">Personalizar</button>
+                
+                <button id="save-trip" class="save-btn">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Guardar Viaje</span>
+                </button>
+                
+                <div id="confirmation-message" class="confirmation-message">
+                    <i class="fas fa-check"></i>
+                    <span>Viaje guardado</span>
                 </div>
-                <div class="custom-tip" id="custom-tip-card" style="display: none;">
-                    <input type="number" id="custom-tip-input-card" placeholder="Ej: 5.00" min="0" step="0.5">
-                    <button class="custom-tip-btn" id="set-tip-card">Aplicar</button>
-                </div>
-            </div>
-            
-            <button id="save-trip" class="save-btn">
-                <i class="fas fa-save"></i> GUARDAR VIAJE
-            </button>
-            
-            <div id="confirmation-message" class="confirmation-message">
-                <i class="fas fa-check-circle"></i> Viaje guardado correctamente
             </div>
         </section>
         
         <section class="trips-section">
-            <div class="trips-header">
-                <h2><i class="fas fa-list"></i> Viajes de Hoy</h2>
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="total-trips">0</div>
-                        <div class="stat-label">Viajes</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="total-pax">0</div>
-                        <div class="stat-label">Pasajeros</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="total-tips">0€</div>
-                        <div class="stat-label">Propinas</div>
-                    </div>
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                <span>Viajes de Hoy</span>
+            </h2>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-trips">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-pax">0</div>
+                    <div class="stat-label">Pasajeros</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-tips">0€</div>
+                    <div class="stat-label">Propinas</div>
                 </div>
             </div>
             
             <div class="trip-list">
-                <div class="trip-item trip-header">
-                    <div>Hora</div>
-                    <div>Pax</div>
-                    <div>País</div>
-                    <div>Pago</div>
-                    <div>Propina</div>
-                </div>
                 <div id="trips-container">
                     <div class="empty-list" id="empty-list-message">
-                        <i class="fas fa-car-side"></i>
-                        <p>No hay viajes registrados hoy.<br>Comienza registrando tu primer viaje arriba.</p>
+                        <i class="fas fa-car"></i>
+                        <p>No hay viajes registrados hoy</p>
+                        <small>Registra tu primer viaje arriba</small>
                     </div>
                 </div>
             </div>
-            
-            <button id="reset-trips" class="reset-btn">
-                <i class="fas fa-trash-alt"></i> BORRAR TODOS LOS VIAJES
-            </button>
         </section>
     </main>
     
     <footer>
         <div class="container">
-            <p>Aplicación para conductor de taxi eléctrico &copy; 2023</p>
-            <p>Los datos se guardan localmente en tu dispositivo</p>
+            <p>Registro de viajes • Taxi eléctrico</p>
+            <small>Datos guardados localmente en tu dispositivo</small>
         </div>
     </footer>
 
@@ -630,28 +186,21 @@
         
         // Inicializar aplicación
         document.addEventListener('DOMContentLoaded', function() {
-            // Actualizar fecha actual
             updateCurrentDate();
-            
-            // Cargar viajes almacenados
             loadTrips();
             updateStats();
-            
-            // Configurar eventos
             setupEventListeners();
-            
-            // Configurar autocompletado de países
             setupCountryAutocomplete();
         });
         
         function updateCurrentDate() {
             const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const options = { weekday: 'short', day: 'numeric', month: 'short' };
             document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
         }
         
         function setupEventListeners() {
-            // Botones de número de pasajeros
+            // Botones de pasajeros
             document.querySelectorAll('.pax-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.pax-btn').forEach(b => b.classList.remove('selected'));
@@ -660,7 +209,7 @@
                 });
             });
             
-            // Botones de método de pago
+            // Botones de pago
             document.querySelectorAll('.payment-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('selected'));
@@ -668,46 +217,39 @@
                     selectedPayment = this.getAttribute('data-payment');
                     currentPaymentType = selectedPayment;
                     
-                    // Mostrar sección de propinas correspondiente
+                    // Mostrar sección de propinas
                     document.querySelectorAll('.tip-section').forEach(section => {
                         section.style.display = 'none';
                     });
                     
                     if (selectedPayment === 'cash') {
                         document.getElementById('tip-section-cash').style.display = 'block';
-                        selectedTip = 0; // Resetear propina al cambiar tipo de pago
+                        selectedTip = 0;
                     } else if (selectedPayment === 'card') {
                         document.getElementById('tip-section-card').style.display = 'block';
-                        selectedTip = 0; // Resetear propina al cambiar tipo de pago
+                        selectedTip = 0;
                     }
                     
-                    // Resetear botones de propina seleccionados
                     document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
-                    
-                    // Ocultar inputs personalizados
                     document.getElementById('custom-tip-cash').style.display = 'none';
                     document.getElementById('custom-tip-card').style.display = 'none';
                 });
             });
             
-            // Botones de propina (genéricos)
+            // Botones de propina
             document.querySelectorAll('.tip-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const tipValue = this.getAttribute('data-tip');
                     
                     if (tipValue === 'custom') {
-                        // Mostrar input personalizado según tipo de pago
                         if (currentPaymentType === 'cash') {
                             document.getElementById('custom-tip-cash').style.display = 'flex';
                         } else if (currentPaymentType === 'card') {
                             document.getElementById('custom-tip-card').style.display = 'flex';
                         }
                     } else {
-                        // Ocultar inputs personalizados
                         document.getElementById('custom-tip-cash').style.display = 'none';
                         document.getElementById('custom-tip-card').style.display = 'none';
-                        
-                        // Seleccionar botón de propina
                         document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
                         this.classList.add('selected');
                         selectedTip = parseFloat(tipValue);
@@ -724,14 +266,13 @@
                     selectedTip = tipValue;
                     document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
                     
-                    // Mostrar mensaje de confirmación
                     const confirmation = document.getElementById('confirmation-message');
-                    confirmation.innerHTML = `<i class="fas fa-check-circle"></i> Propina personalizada: ${tipValue.toFixed(2)}€ aplicada`;
-                    confirmation.style.display = 'block';
+                    confirmation.innerHTML = `<i class="fas fa-check"></i><span>Propina: ${tipValue.toFixed(2)}€</span>`;
+                    confirmation.style.display = 'flex';
                     
                     setTimeout(() => {
                         confirmation.style.display = 'none';
-                    }, 3000);
+                    }, 2000);
                 }
             });
             
@@ -743,38 +284,18 @@
                     selectedTip = tipValue;
                     document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
                     
-                    // Mostrar mensaje de confirmación
                     const confirmation = document.getElementById('confirmation-message');
-                    confirmation.innerHTML = `<i class="fas fa-check-circle"></i> Propina personalizada: ${tipValue.toFixed(2)}€ aplicada`;
-                    confirmation.style.display = 'block';
+                    confirmation.innerHTML = `<i class="fas fa-check"></i><span>Propina: ${tipValue.toFixed(2)}€</span>`;
+                    confirmation.style.display = 'flex';
                     
                     setTimeout(() => {
                         confirmation.style.display = 'none';
-                    }, 3000);
+                    }, 2000);
                 }
             });
             
-            // Botón para guardar viaje
+            // Guardar viaje
             document.getElementById('save-trip').addEventListener('click', saveTrip);
-            
-            // Botón para resetear viajes
-            document.getElementById('reset-trips').addEventListener('click', function() {
-                if (confirm('¿Estás seguro de que quieres borrar todos los viajes registrados?')) {
-                    trips = [];
-                    localStorage.setItem('taxiTrips', JSON.stringify(trips));
-                    loadTrips();
-                    updateStats();
-                    
-                    // Mostrar mensaje de confirmación
-                    const confirmation = document.getElementById('confirmation-message');
-                    confirmation.innerHTML = `<i class="fas fa-trash-alt"></i> Todos los viajes han sido eliminados`;
-                    confirmation.style.display = 'block';
-                    
-                    setTimeout(() => {
-                        confirmation.style.display = 'none';
-                    }, 3000);
-                }
-            });
         }
         
         function setupCountryAutocomplete() {
@@ -811,7 +332,6 @@
                 }
             });
             
-            // Ocultar sugerencias al hacer clic fuera
             document.addEventListener('click', function(e) {
                 if (!countryInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
                     suggestionsContainer.style.display = 'none';
@@ -820,25 +340,23 @@
         }
         
         function saveTrip() {
-            // Validar datos
             const country = document.getElementById('country').value.trim();
             
             if (!selectedPax) {
-                alert('Por favor, selecciona el número de pasajeros');
+                alert('Selecciona el número de pasajeros');
                 return;
             }
             
             if (!country) {
-                alert('Por favor, introduce el país');
+                alert('Introduce el país');
                 return;
             }
             
             if (!selectedPayment) {
-                alert('Por favor, selecciona el método de pago');
+                alert('Selecciona el método de pago');
                 return;
             }
             
-            // Crear objeto de viaje
             const now = new Date();
             const trip = {
                 id: Date.now(),
@@ -847,38 +365,27 @@
                 country: country,
                 payment: selectedPayment,
                 tip: selectedTip,
-                date: now.toISOString().split('T')[0] // Fecha en formato YYYY-MM-DD
+                date: now.toISOString().split('T')[0]
             };
             
-            // Agregar a la lista de viajes
             trips.push(trip);
-            
-            // Guardar en localStorage
             localStorage.setItem('taxiTrips', JSON.stringify(trips));
             
-            // Actualizar interfaz
             loadTrips();
             updateStats();
             
-            // Mostrar mensaje de confirmación
             const confirmation = document.getElementById('confirmation-message');
-            confirmation.innerHTML = `<i class="fas fa-check-circle"></i> Viaje guardado correctamente`;
-            confirmation.style.display = 'block';
+            confirmation.innerHTML = `<i class="fas fa-check"></i><span>Viaje guardado</span>`;
+            confirmation.style.display = 'flex';
             
-            // Resetear formulario
             resetForm();
             
-            // Ocultar mensaje después de 3 segundos
             setTimeout(() => {
                 confirmation.style.display = 'none';
-            }, 3000);
-            
-            // Hacer scroll para mostrar el viaje recién agregado
-            document.querySelector('.trips-section').scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
         }
         
         function resetForm() {
-            // Resetear selecciones
             document.querySelectorAll('.pax-btn').forEach(b => b.classList.remove('selected'));
             document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('selected'));
             document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
@@ -889,7 +396,6 @@
             document.getElementById('custom-tip-input-cash').value = '';
             document.getElementById('custom-tip-input-card').value = '';
             
-            // Resetear variables
             selectedPax = null;
             selectedPayment = null;
             selectedTip = 0;
@@ -900,26 +406,22 @@
             const tripsContainer = document.getElementById('trips-container');
             const emptyListMessage = document.getElementById('empty-list-message');
             
-            // Filtrar viajes de hoy
             const today = new Date().toISOString().split('T')[0];
             const todayTrips = trips.filter(trip => trip.date === today);
             
-            // Actualizar contador de viajes hoy
-            document.getElementById('trip-count').textContent = `Viajes hoy: ${todayTrips.length}`;
+            document.getElementById('trip-count').textContent = `${todayTrips.length} viajes hoy`;
             
             if (todayTrips.length === 0) {
                 tripsContainer.innerHTML = '';
                 tripsContainer.appendChild(emptyListMessage);
-                emptyListMessage.style.display = 'block';
+                emptyListMessage.style.display = 'flex';
                 return;
             }
             
-            // Ocultar mensaje de lista vacía
             emptyListMessage.style.display = 'none';
             
-            // Crear HTML para los viajes (ordenados por hora, más reciente primero)
             const tripsHTML = todayTrips
-                .sort((a, b) => b.id - a.id) // Ordenar por ID descendente (más reciente primero)
+                .sort((a, b) => b.id - a.id)
                 .map(trip => `
                 <div class="trip-item">
                     <div class="trip-time">${trip.time}</div>
@@ -927,7 +429,6 @@
                     <div class="trip-country">${trip.country}</div>
                     <div class="trip-payment ${trip.payment}">
                         <i class="fas ${trip.payment === 'cash' ? 'fa-money-bill' : 'fa-credit-card'}"></i>
-                        ${trip.payment === 'cash' ? 'Efectivo' : 'Tarjeta'}
                     </div>
                     <div class="trip-tip">${trip.tip > 0 ? trip.tip.toFixed(2) + '€' : '-'}</div>
                 </div>
@@ -937,16 +438,13 @@
         }
         
         function updateStats() {
-            // Filtrar viajes de hoy
             const today = new Date().toISOString().split('T')[0];
             const todayTrips = trips.filter(trip => trip.date === today);
             
-            // Calcular estadísticas
             const totalTrips = todayTrips.length;
             const totalPax = todayTrips.reduce((sum, trip) => sum + trip.pax, 0);
             const totalTips = todayTrips.reduce((sum, trip) => sum + trip.tip, 0);
             
-            // Actualizar UI
             document.getElementById('total-trips').textContent = totalTrips;
             document.getElementById('total-pax').textContent = totalPax;
             document.getElementById('total-tips').textContent = totalTips.toFixed(2) + '€';
