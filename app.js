@@ -50,6 +50,13 @@ const PRICE_PER_TRIP = 70;
 // Variable para evitar guardados múltiples
 let isSaving = false;
 
+// Variables para el gráfico
+let weeklyChart = null;
+
+// Días de la semana en español
+const weekDays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const weekDaysFull = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
 // Inicializar aplicación
 document.addEventListener('DOMContentLoaded', function() {
     updateCurrentDate();
@@ -59,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupCountryAutocomplete();
     setupTabs();
     updateMonthStats();
+    updateStatsTab();
     
     // Configurar botón de exportación
     document.getElementById('export-month').addEventListener('click', exportMonthData);
@@ -231,6 +239,11 @@ function setupTabs() {
                 updateSummary();
             }
             
+            // Si se activa la pestaña de estadísticas, actualizar los datos
+            if (tabId === 'stats') {
+                updateStatsTab();
+            }
+            
             // Hacer scroll al inicio de la página
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
@@ -275,7 +288,8 @@ function saveTrip() {
         country: country,
         payment: selectedPayment,
         tip: selectedTip,
-        date: now.toISOString().split('T')[0]
+        date: now.toISOString().split('T')[0],
+        dayOfWeek: now.getDay() // 0=Domingo, 1=Lunes, etc.
     };
     
     // Añadir viaje y guardar
@@ -298,6 +312,14 @@ function saveTrip() {
     if (document.getElementById('summary-tab').classList.contains('active')) {
         updateSummary();
     }
+    
+    // Actualizar las estadísticas si la pestaña está activa
+    if (document.getElementById('stats-tab').classList.contains('active')) {
+        updateStatsTab();
+    }
+    
+    // Actualizar las estadísticas del mes
+    updateMonthStats();
     
     // Restaurar botón después de 1 segundo
     setTimeout(() => {
@@ -435,6 +457,185 @@ function updateMonthStats() {
     
     document.getElementById('month-trips').textContent = monthTrips.length;
     document.getElementById('month-earnings').textContent = monthEarnings.toFixed(2) + '€';
+}
+
+// ===== FUNCIONES PARA LA PESTAÑA DE ESTADÍSTICAS =====
+function updateStatsTab() {
+    updateKPIs();
+    updatePaymentDistribution();
+    updateWeeklyChart();
+    updateLastUpdateTime();
+}
+
+function updateKPIs() {
+    // Tours totales hasta el momento
+    const totalTours = trips.length;
+    document.getElementById('total-tours').textContent = totalTours;
+    
+    // Tours del mes actual
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    const monthTours = trips.filter(trip => {
+        const tripDate = new Date(trip.date);
+        return tripDate.getMonth() === currentMonth && 
+               tripDate.getFullYear() === currentYear;
+    }).length;
+    
+    document.getElementById('month-tours').textContent = monthTours;
+    
+    // Total de pasajeros
+    const totalPax = trips.reduce((sum, trip) => sum + trip.pax, 0);
+    document.getElementById('total-pax-stats').textContent = totalPax;
+    
+    // Países únicos visitados
+    const uniqueCountries = [...new Set(trips.map(trip => trip.country))].length;
+    document.getElementById('total-countries').textContent = uniqueCountries;
+}
+
+function updatePaymentDistribution() {
+    // Contar viajes por método de pago
+    const cashTrips = trips.filter(trip => trip.payment === 'cash').length;
+    const cardTrips = trips.filter(trip => trip.payment === 'card').length;
+    const totalTrips = trips.length;
+    
+    // Calcular porcentajes
+    const cashPercentage = totalTrips > 0 ? Math.round((cashTrips / totalTrips) * 100) : 50;
+    const cardPercentage = totalTrips > 0 ? Math.round((cardTrips / totalTrips) * 100) : 50;
+    
+    // Actualizar barras y porcentajes
+    document.getElementById('cash-bar').style.width = `${cashPercentage}%`;
+    document.getElementById('card-bar').style.width = `${cardPercentage}%`;
+    
+    document.getElementById('cash-percentage').textContent = `${cashPercentage}%`;
+    document.getElementById('card-percentage').textContent = `${cardPercentage}%`;
+}
+
+function updateWeeklyChart() {
+    // Obtener viajes del último mes (30 días) para la gráfica
+    const now = new Date();
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(now.getDate() - 30);
+    
+    const recentTrips = trips.filter(trip => {
+        const tripDate = new Date(trip.date);
+        return tripDate >= thirtyDaysAgo;
+    });
+    
+    // Inicializar contador para cada día de la semana
+    const tripsByDay = [0, 0, 0, 0, 0, 0, 0]; // 0=Lunes, 6=Domingo
+    
+    // Contar viajes por día de la semana
+    recentTrips.forEach(trip => {
+        // Asegurarse de que dayOfWeek esté definido
+        if (trip.dayOfWeek !== undefined) {
+            // Convertir domingo (0) a 6 para que la semana empiece en lunes (0)
+            const dayIndex = trip.dayOfWeek === 0 ? 6 : trip.dayOfWeek - 1;
+            tripsByDay[dayIndex]++;
+        }
+    });
+    
+    // Crear o actualizar el gráfico
+    const ctx = document.getElementById('weekly-chart').getContext('2d');
+    
+    // Si ya existe un gráfico, destruirlo
+    if (weeklyChart) {
+        weeklyChart.destroy();
+    }
+    
+    // Encontrar el día con más viajes
+    const maxTrips = Math.max(...tripsByDay);
+    const maxDayIndex = tripsByDay.indexOf(maxTrips);
+    
+    // Crear colores para las barras
+    const barColors = tripsByDay.map((count, index) => {
+        return index === maxDayIndex ? 'rgba(102, 126, 234, 0.8)' : 'rgba(102, 126, 234, 0.5)';
+    });
+    
+    // Crear bordes para las barras
+    const borderColors = tripsByDay.map((count, index) => {
+        return index === maxDayIndex ? 'rgba(102, 126, 234, 1)' : 'rgba(102, 126, 234, 0.7)';
+    });
+    
+    // Crear el gráfico
+    weeklyChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: weekDays,
+            datasets: [{
+                label: 'Tours',
+                data: tripsByDay,
+                backgroundColor: barColors,
+                borderColor: borderColors,
+                borderWidth: 2,
+                borderRadius: 6,
+                hoverBackgroundColor: 'rgba(102, 126, 234, 0.9)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#94a3b8',
+                        font: {
+                            size: 12
+                        },
+                        precision: 0
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#94a3b8',
+                        font: {
+                            size: 12
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                    titleColor: '#f1f5f9',
+                    bodyColor: '#f1f5f9',
+                    borderColor: '#667eea',
+                    borderWidth: 1,
+                    cornerRadius: 6,
+                    callbacks: {
+                        label: function(context) {
+                            return `Tours: ${context.parsed.y}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    // Actualizar texto explicativo
+    const explanation = document.getElementById('chart-explanation');
+    if (maxTrips > 0) {
+        explanation.textContent = `El día con mayor demanda es ${weekDaysFull[maxDayIndex]} con ${maxTrips} tours registrados.`;
+    } else {
+        explanation.textContent = 'No hay datos suficientes para mostrar tendencias. Registra algunos tours primero.';
+    }
+}
+
+function updateLastUpdateTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('last-update-text').textContent = `Actualizado: ${timeString}`;
 }
 
 function exportMonthData() {
