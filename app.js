@@ -43,6 +43,8 @@ let selectedPax = null;
 let selectedPayment = null;
 let selectedTip = 0;
 let currentPaymentType = null;
+// Precio fijo por viaje (puedes ajustarlo según tu tarifa)
+const PRICE_PER_TRIP = 70;
 
 // Inicializar aplicación
 document.addEventListener('DOMContentLoaded', function() {
@@ -196,6 +198,30 @@ function setupCountryAutocomplete() {
         if (!countryInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
             suggestionsContainer.style.display = 'none';
         }
+    });
+}
+
+function setupTabs() {
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            // Remover clase active de todas las pestañas y contenidos
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Activar pestaña clickeada
+            this.classList.add('active');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            
+            // Si se activa la pestaña de resumen, actualizar los datos
+            if (tabId === 'summary') {
+                updateSummary();
+            }
+        });
     });
 }
 
