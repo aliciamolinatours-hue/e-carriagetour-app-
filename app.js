@@ -1,52 +1,56 @@
-// Lista de países para autocompletar - 195 países de la ONU ordenados alfabéticamente en francés
+// Lista de países para autocompletar - 195 países de la ONU ordenados alfabéticamente
 const countries = [
-    "Afghanistan", "Afrique du Sud", "Albanie", "Algérie", "Allemagne", "Andorre", "Angola", 
-    "Antigua-et-Barbuda", "Arabie saoudite", "Argentine", "Arménie", "Australie", "Autriche", 
-    "Azerbaïdjan", "Bahamas", "Bahreïn", "Bangladesh", "Barbade", "Bélarus", "Belgique", 
-    "Belize", "Bénin", "Bhoutan", "Birmanie (Myanmar)", "Bolivie", "Bosnie-Herzégovine", 
-    "Botswana", "Brésil", "Brunei", "Bulgarie", "Burkina Faso", "Burundi", "Cambodge", 
-    "Cameroun", "Canada", "Cap-Vert", "Centrafrique", "Chili", "Chine", "Chypre", 
-    "Colombie", "Comores", "Congo", "Congo (RDC)", "Corée du Nord", "Corée du Sud", 
-    "Costa Rica", "Côte d'Ivoire", "Croatie", "Cuba", "Danemark", "Djibouti", 
-    "Dominique", "Égypte", "Émirats arabes unis", "Équateur", "Érythrée", "Espagne", 
-    "Estonie", "Eswatini", "États-Unis", "Éthiopie", "Fidji", "Finlande", "France", 
-    "Gabon", "Gambie", "Géorgie", "Ghana", "Grèce", "Grenade", "Guatemala", "Guinée", 
-    "Guinée équatoriale", "Guinée-Bissau", "Guyana", "Haïti", "Honduras", "Hongrie", 
-    "Îles Marshall", "Îles Salomon", "Inde", "Indonésie", "Irak", "Iran", "Irlande", 
-    "Islande", "Israël", "Italie", "Jamaïque", "Japon", "Jordanie", "Kazakhstan", 
-    "Kenya", "Kirghizistan", "Kiribati", "Koweït", "Laos", "Lesotho", "Lettonie", 
-    "Liban", "Liberia", "Libye", "Liechtenstein", "Lituanie", "Luxembourg", 
-    "Macédoine du Nord", "Madagascar", "Malaisie", "Malawi", "Maldives", "Mali", 
-    "Malte", "Maroc", "Maurice", "Mauritanie", "Mexique", "Micronésie", "Moldavie", 
-    "Monaco", "Mongolie", "Monténégro", "Mozambique", "Namibie", "Nauru", "Népal", 
-    "Nicaragua", "Niger", "Nigeria", "Norvège", "Nouvelle-Zélande", "Oman", 
-    "Ouganda", "Ouzbékistan", "Pakistan", "Palaos", "Palestine", "Panama", 
-    "Papouasie-Nouvelle-Guinée", "Paraguay", "Pays-Bas", "Pérou", "Philippines", 
-    "Pologne", "Portugal", "Qatar", "Roumanie", "Royaume-Uni", "Russie", "Rwanda", 
-    "Saint-Christophe-et-Niévès", "Saint-Marin", "Saint-Vincent-et-les-Grenadines", 
-    "Sainte-Lucie", "Salvador", "Samoa", "São Tomé-et-Príncipe", "Sénégal", 
-    "Serbie", "Seychelles", "Sierra Leone", "Singapour", "Slovaquie", "Slovénie", 
-    "Somalie", "Soudan", "Soudan du Sud", "Sri Lanka", "Suède", "Suisse", "Suriname", 
-    "Syrie", "Tadjikistan", "Tanzanie", "Tchad", "République tchèque", "Thaïlande", 
-    "Timor oriental", "Togo", "Tonga", "Trinité-et-Tobago", "Tunisie", "Turkménistan", 
-    "Turquie", "Tuvalu", "Ukraine", "Uruguay", "Vanuatu", "Vatican", "Venezuela", 
-    "Viêt Nam", "Yémen", "Zambie", "Zimbabwe"
+    "Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda",
+    "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria",
+    "Azerbaiyán", "Bahamas", "Bangladés", "Barbados", "Baréin", "Bélgica",
+    "Belice", "Benín", "Bielorrusia", "Birmania (Myanmar)", "Bolivia",
+    "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria",
+    "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún",
+    "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Colombia",
+    "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil",
+    "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador",
+    "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia",
+    "Eslovenia", "España", "Estados Unidos", "Estonia", "Esuatini", "Etiopía",
+    "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia",
+    "Ghana", "Granada", "Grecia", "Guatemala", "Guinea", "Guinea Ecuatorial",
+    "Guinea-Bisáu", "Guyana", "Haití", "Honduras", "Hungría", "India",
+    "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall",
+    "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania",
+    "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos",
+    "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein",
+    "Lituania", "Luxemburgo", "Macedonia del Norte", "Madagascar", "Malasia",
+    "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania",
+    "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro",
+    "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria",
+    "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos",
+    "Palestina", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia",
+    "Portugal", "Reino Unido", "República Centroafricana", "República Checa",
+    "República del Congo", "República Democrática del Congo", "República Dominicana",
+    "Ruanda", "Rumanía", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino",
+    "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe",
+    "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria",
+    "Somalia", "Sri Lanka", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia",
+    "Suiza", "Surinam", "Tailandia", "Tanzania", "Tayikistán", "Timor Oriental",
+    "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía",
+    "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu",
+    "Vaticano (Santa Sede)", "Venezuela", "Vietnam", "Yemen", "Yibuti",
+    "Zambia", "Zimbabue"
 ];
 
 // Datos iniciales
-let trips = JSON.parse(localStorage.getItem('calècheTours')) || [];
+let trips = JSON.parse(localStorage.getItem('taxiTrips')) || [];
 let selectedPax = null;
 let selectedPayment = null;
 let selectedTip = 0;
 let currentPaymentType = null;
 
-// Prix fixe par tour (calèche électrique exclusive)
-const PRICE_PER_TOUR = 150;
+// Precio fijo por viaje (puedes ajustarlo según tu tarifa)
+const PRICE_PER_TRIP = 70;
 
-// Variable pour éviter enregistrements multiples
+// Variable para evitar guardados múltiples
 let isSaving = false;
 
-// Initialiser l'application
+// Inicializar aplicación
 document.addEventListener('DOMContentLoaded', function() {
     updateCurrentDate();
     loadTrips();
@@ -56,18 +60,18 @@ document.addEventListener('DOMContentLoaded', function() {
     setupTabs();
     updateMonthStats();
     
-    // Configurer bouton d'exportation
+    // Configurar botón de exportación
     document.getElementById('export-month').addEventListener('click', exportMonthData);
 });
 
 function updateCurrentDate() {
     const now = new Date();
     const options = { weekday: 'short', day: 'numeric', month: 'short' };
-    document.getElementById('current-date').textContent = now.toLocaleDateString('fr-FR', options);
+    document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
 }
 
 function setupEventListeners() {
-    // Boutons passagers
+    // Botones de pasajeros
     document.querySelectorAll('.pax-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.pax-btn').forEach(b => b.classList.remove('selected'));
@@ -76,7 +80,7 @@ function setupEventListeners() {
         });
     });
     
-    // Boutons paiement
+    // Botones de pago
     document.querySelectorAll('.payment-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('selected'));
@@ -84,7 +88,7 @@ function setupEventListeners() {
             selectedPayment = this.getAttribute('data-payment');
             currentPaymentType = selectedPayment;
             
-            // Afficher section pourboires
+            // Mostrar sección de propinas
             document.querySelectorAll('.tip-section').forEach(section => {
                 section.style.display = 'none';
             });
@@ -103,7 +107,7 @@ function setupEventListeners() {
         });
     });
     
-    // Boutons pourboire
+    // Botones de propina
     document.querySelectorAll('.tip-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const tipValue = this.getAttribute('data-tip');
@@ -124,7 +128,7 @@ function setupEventListeners() {
         });
     });
     
-    // Boutons pour appliquer pourboire personnalisé
+    // Botones para aplicar propina personalizada
     document.getElementById('set-tip-cash').addEventListener('click', function() {
         const customTipInput = document.getElementById('custom-tip-input-cash');
         const tipValue = parseFloat(customTipInput.value);
@@ -134,7 +138,7 @@ function setupEventListeners() {
             document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
             
             const confirmation = document.getElementById('confirmation-message');
-            confirmation.innerHTML = `<i class="fas fa-check"></i><span>Pourboire: ${tipValue.toFixed(2)}€ appliqué</span>`;
+            confirmation.innerHTML = `<i class="fas fa-check"></i><span>Propina: ${tipValue.toFixed(2)}€ aplicada</span>`;
             confirmation.style.display = 'flex';
             
             setTimeout(() => {
@@ -152,7 +156,7 @@ function setupEventListeners() {
             document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
             
             const confirmation = document.getElementById('confirmation-message');
-            confirmation.innerHTML = `<i class="fas fa-check"></i><span>Pourboire: ${tipValue.toFixed(2)}€ appliqué</span>`;
+            confirmation.innerHTML = `<i class="fas fa-check"></i><span>Propina: ${tipValue.toFixed(2)}€ aplicada</span>`;
             confirmation.style.display = 'flex';
             
             setTimeout(() => {
@@ -161,7 +165,7 @@ function setupEventListeners() {
         }
     });
     
-    // Enregistrer tour
+    // Guardar viaje
     document.getElementById('save-trip').addEventListener('click', saveTrip);
 }
 
@@ -214,27 +218,27 @@ function setupTabs() {
         tab.addEventListener('click', function() {
             const tabId = this.getAttribute('data-tab');
             
-            // Supprimer classe active de tous les onglets et contenus
+            // Remover clase active de todas las pestañas y contenidos
             tabs.forEach(t => t.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
             
-            // Activer onglet cliqué
+            // Activar pestaña clickeada
             this.classList.add('active');
             document.getElementById(`${tabId}-tab`).classList.add('active');
             
-            // Si on active l'onglet résumé, mettre à jour les données
+            // Si se activa la pestaña de resumen, actualizar los datos
             if (tabId === 'summary') {
                 updateSummary();
             }
             
-            // Faire défiler au début de la page
+            // Hacer scroll al inicio de la página
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 }
 
 function saveTrip() {
-    // Prévenir clics multiples
+    // Prevenir múltiples clics
     if (isSaving) {
         return;
     }
@@ -242,31 +246,31 @@ function saveTrip() {
     const country = document.getElementById('country').value.trim();
     
     if (!selectedPax) {
-        alert('Sélectionnez le nombre de passagers');
+        alert('Selecciona el número de pasajeros');
         return;
     }
     
     if (!country) {
-        alert('Entrez le pays d\'origine');
+        alert('Introduce el país');
         return;
     }
     
     if (!selectedPayment) {
-        alert('Sélectionnez la méthode de paiement');
+        alert('Selecciona el método de pago');
         return;
     }
     
     isSaving = true;
     
-    // Désactiver bouton temporairement
+    // Deshabilitar botón temporalmente
     const saveButton = document.getElementById('save-trip');
     saveButton.disabled = true;
-    saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Enregistrement...</span>';
+    saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Guardando...</span>';
     
     const now = new Date();
     const trip = {
         id: Date.now(),
-        time: now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+        time: now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
         pax: selectedPax,
         country: country,
         payment: selectedPayment,
@@ -274,35 +278,35 @@ function saveTrip() {
         date: now.toISOString().split('T')[0]
     };
     
-    // Ajouter tour et enregistrer
+    // Añadir viaje y guardar
     trips.push(trip);
-    localStorage.setItem('calècheTours', JSON.stringify(trips));
+    localStorage.setItem('taxiTrips', JSON.stringify(trips));
     
-    // Mettre à jour l'interface immédiatement
+    // Actualizar la interfaz inmediatamente
     loadTrips();
     updateStats();
     
-    // Afficher message de confirmation
+    // Mostrar mensaje de confirmación
     const confirmation = document.getElementById('confirmation-message');
-    confirmation.innerHTML = `<i class="fas fa-check"></i><span>Tour enregistré</span>`;
+    confirmation.innerHTML = `<i class="fas fa-check"></i><span>Viaje guardado</span>`;
     confirmation.style.display = 'flex';
     
-    // Réinitialiser formulaire
+    // Resetear formulario
     resetForm();
     
-    // Mettre à jour le résumé si l'onglet est actif
+    // Actualizar el resumen si la pestaña está activa
     if (document.getElementById('summary-tab').classList.contains('active')) {
         updateSummary();
     }
     
-    // Restaurer bouton après 1 seconde
+    // Restaurar botón después de 1 segundo
     setTimeout(() => {
         saveButton.disabled = false;
-        saveButton.innerHTML = '<i class="fas fa-check-circle"></i><span>Enregistrer le Tour</span>';
+        saveButton.innerHTML = '<i class="fas fa-check-circle"></i><span>Guardar Viaje</span>';
         confirmation.style.display = 'none';
         isSaving = false;
         
-        // Faire défiler à la liste des tours
+        // Hacer scroll a la lista de viajes
         const tripsSection = document.querySelector('.trips-section');
         if (tripsSection) {
             tripsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -334,7 +338,7 @@ function loadTrips() {
     const today = new Date().toISOString().split('T')[0];
     const todayTrips = trips.filter(trip => trip.date === today);
     
-    document.getElementById('trip-count').textContent = `${todayTrips.length} tours aujourd'hui`;
+    document.getElementById('trip-count').textContent = `${todayTrips.length} viajes hoy`;
     
     if (todayTrips.length === 0) {
         tripsContainer.innerHTML = '';
@@ -379,40 +383,40 @@ function updateSummary() {
     const today = new Date().toISOString().split('T')[0];
     const todayTrips = trips.filter(trip => trip.date === today);
     
-    // Tours par type de paiement
+    // Viajes por tipo de pago
     const cashTrips = todayTrips.filter(trip => trip.payment === 'cash');
     const cardTrips = todayTrips.filter(trip => trip.payment === 'card');
     
-    // Totaux basiques
+    // Totales básicos
     document.getElementById('total-trips-summary').textContent = todayTrips.length;
     document.getElementById('total-pax-summary').textContent = todayTrips.reduce((sum, trip) => sum + trip.pax, 0);
     document.getElementById('total-tips-summary').textContent = todayTrips.reduce((sum, trip) => sum + trip.tip, 0).toFixed(2) + '€';
     
-    // Revenus en espèces
+    // Ingresos en efectivo
     const cashTripsCount = cashTrips.length;
-    const totalCash = cashTripsCount * PRICE_PER_TOUR;
+    const totalCash = cashTripsCount * PRICE_PER_TRIP;
     
     document.getElementById('cash-trips').textContent = cashTripsCount;
     document.getElementById('total-cash').textContent = totalCash.toFixed(2) + '€';
-    document.getElementById('cash-detail').textContent = `${cashTripsCount} tours × ${PRICE_PER_TOUR}€ = ${totalCash.toFixed(2)}€`;
+    document.getElementById('cash-detail').textContent = `${cashTripsCount} viajes × ${PRICE_PER_TRIP}€ = ${totalCash.toFixed(2)}€`;
     
-    // Revenus par carte
+    // Ingresos en tarjeta
     const cardTripsCount = cardTrips.length;
-    const totalCard = cardTripsCount * PRICE_PER_TOUR;
+    const totalCard = cardTripsCount * PRICE_PER_TRIP;
     const cardTipsTotal = cardTrips.reduce((sum, trip) => sum + trip.tip, 0);
     
     document.getElementById('card-trips').textContent = cardTripsCount;
     document.getElementById('total-card').textContent = totalCard.toFixed(2) + '€';
-    document.getElementById('card-detail').textContent = `${cardTripsCount} tours × ${PRICE_PER_TOUR}€ = ${totalCard.toFixed(2)}€`;
+    document.getElementById('card-detail').textContent = `${cardTripsCount} viajes × ${PRICE_PER_TRIP}€ = ${totalCard.toFixed(2)}€`;
     document.getElementById('card-tips').textContent = cardTipsTotal.toFixed(2) + '€';
     
-    // Espèces à remettre
+    // Efectivo a entregar
     const cashToDeliver = totalCash - cardTipsTotal;
     
     document.getElementById('cash-to-deliver').textContent = cashToDeliver.toFixed(2) + '€';
     document.getElementById('delivery-detail').textContent = `${totalCash.toFixed(2)}€ - ${cardTipsTotal.toFixed(2)}€ = ${cashToDeliver.toFixed(2)}€`;
     
-    // Mettre à jour statistiques du mois
+    // Actualizar estadísticas del mes
     updateMonthStats();
 }
 
@@ -427,7 +431,7 @@ function updateMonthStats() {
                tripDate.getFullYear() === currentYear;
     });
     
-    const monthEarnings = monthTrips.length * PRICE_PER_TOUR;
+    const monthEarnings = monthTrips.length * PRICE_PER_TRIP;
     
     document.getElementById('month-trips').textContent = monthTrips.length;
     document.getElementById('month-earnings').textContent = monthEarnings.toFixed(2) + '€';
@@ -438,7 +442,7 @@ function exportMonthData() {
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
     
-    // Filtrer tours du mois actuel
+    // Filtrar viajes del mes actual
     const monthTrips = trips.filter(trip => {
         const tripDate = new Date(trip.date);
         return tripDate.getMonth() === currentMonth && 
@@ -446,37 +450,37 @@ function exportMonthData() {
     });
     
     if (monthTrips.length === 0) {
-        alert('Aucune donnée à exporter ce mois-ci.');
+        alert('No hay datos para exportar este mes.');
         return;
     }
     
-    // Créer objet avec les données du mois
+    // Crear objeto con los datos del mes
     const exportData = {
-        mois: now.toLocaleString('fr-FR', { month: 'long', year: 'numeric' }),
-        totalTours: monthTrips.length,
-        totalPassagers: monthTrips.reduce((sum, trip) => sum + trip.pax, 0),
-        totalToursEspeces: monthTrips.filter(t => t.payment === 'cash').length,
-        totalToursCarte: monthTrips.filter(t => t.payment === 'card').length,
-        totalRevenus: monthTrips.length * PRICE_PER_TOUR,
-        totalPourboires: monthTrips.reduce((sum, trip) => sum + trip.tip, 0),
-        tours: monthTrips
+        month: now.toLocaleString('es-ES', { month: 'long', year: 'numeric' }),
+        totalTrips: monthTrips.length,
+        totalPassengers: monthTrips.reduce((sum, trip) => sum + trip.pax, 0),
+        totalCashTrips: monthTrips.filter(t => t.payment === 'cash').length,
+        totalCardTrips: monthTrips.filter(t => t.payment === 'card').length,
+        totalEarnings: monthTrips.length * PRICE_PER_TRIP,
+        totalTips: monthTrips.reduce((sum, trip) => sum + trip.tip, 0),
+        trips: monthTrips
     };
     
-    // Convertir en JSON
+    // Convertir a JSON
     const jsonData = JSON.stringify(exportData, null, 2);
     
-    // Créer fichier téléchargeable
+    // Crear archivo descargable
     const blob = new Blob([jsonData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `tours_caleche_${now.getFullYear()}_${now.getMonth() + 1}.json`;
+    a.download = `viajes_${now.getFullYear()}_${now.getMonth() + 1}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    // Afficher message de confirmation
+    // Mostrar mensaje de confirmación
     const exportMessage = document.getElementById('export-message');
     exportMessage.style.display = 'flex';
     
