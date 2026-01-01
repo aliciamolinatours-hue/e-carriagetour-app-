@@ -47,6 +47,9 @@ let currentPaymentType = null;
 // Precio fijo por viaje (puedes ajustarlo según tu tarifa)
 const PRICE_PER_TRIP = 70;
 
+// Variable para evitar guardados múltiples
+let isSaving = false;
+
 // Inicializar aplicación
 document.addEventListener('DOMContentLoaded', function() {
     updateCurrentDate();
@@ -135,12 +138,12 @@ function setupEventListeners() {
             document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
             
             const confirmation = document.getElementById('confirmation-message');
-            confirmation.innerHTML = `<i class="fas fa-check"></i><span>Propina: ${tipValue.toFixed(2)}€</span>`;
+            confirmation.innerHTML = `<i class="fas fa-check"></i><span>Propina: ${tipValue.toFixed(2)}€ aplicada</span>`;
             confirmation.style.display = 'flex';
             
             setTimeout(() => {
                 confirmation.style.display = 'none';
-            }, 2000);
+            }, 1500);
         }
     });
     
@@ -153,12 +156,12 @@ function setupEventListeners() {
             document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('selected'));
             
             const confirmation = document.getElementById('confirmation-message');
-            confirmation.innerHTML = `<i class="fas fa-check"></i><span>Propina: ${tipValue.toFixed(2)}€</span>`;
+            confirmation.innerHTML = `<i class="fas fa-check"></i><span>Propina: ${tipValue.toFixed(2)}€ aplicada</span>`;
             confirmation.style.display = 'flex';
             
             setTimeout(() => {
                 confirmation.style.display = 'none';
-            }, 2000);
+            }, 1500);
         }
     });
     
@@ -208,7 +211,7 @@ function setupCountryAutocomplete() {
 }
 
 function setupTabs() {
-    const tabs = document.querySelectorAll('.tab');
+    const tabs = document.querySelectorAll('.bottom-tab');
     const tabContents = document.querySelectorAll('.tab-content');
     
     tabs.forEach(tab => {
@@ -227,11 +230,19 @@ function setupTabs() {
             if (tabId === 'summary') {
                 updateSummary();
             }
+            
+            // Hacer scroll al inicio de la página
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 }
 
 function saveTrip() {
+    // Prevenir múltiples clics
+    if (isSaving) {
+        return;
+    }
+    
     const country = document.getElementById('country').value.trim();
     
     if (!selectedPax) {
@@ -249,6 +260,13 @@ function saveTrip() {
         return;
     }
     
+    isSaving = true;
+    
+    // Deshabilitar botón temporalmente
+    const saveButton = document.getElementById('save-trip');
+    saveButton.disabled = true;
+    saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Guardando...</span>';
+    
     const now = new Date();
     const trip = {
         id: Date.now(),
@@ -260,16 +278,20 @@ function saveTrip() {
         date: now.toISOString().split('T')[0]
     };
     
+    // Añadir viaje y guardar
     trips.push(trip);
     localStorage.setItem('taxiTrips', JSON.stringify(trips));
     
+    // Actualizar la interfaz inmediatamente
     loadTrips();
     updateStats();
     
+    // Mostrar mensaje de confirmación
     const confirmation = document.getElementById('confirmation-message');
     confirmation.innerHTML = `<i class="fas fa-check"></i><span>Viaje guardado</span>`;
     confirmation.style.display = 'flex';
     
+    // Resetear formulario
     resetForm();
     
     // Actualizar el resumen si la pestaña está activa
@@ -277,9 +299,19 @@ function saveTrip() {
         updateSummary();
     }
     
+    // Restaurar botón después de 1 segundo
     setTimeout(() => {
+        saveButton.disabled = false;
+        saveButton.innerHTML = '<i class="fas fa-check-circle"></i><span>Guardar Viaje</span>';
         confirmation.style.display = 'none';
-    }, 2000);
+        isSaving = false;
+        
+        // Hacer scroll a la lista de viajes
+        const tripsSection = document.querySelector('.trips-section');
+        if (tripsSection) {
+            tripsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 1000);
 }
 
 function resetForm() {
