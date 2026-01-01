@@ -1,12 +1,9 @@
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
   background: #f4f6f8;
-  color: #222;
 }
 
 header {
@@ -21,24 +18,16 @@ main {
   padding-bottom: 90px;
 }
 
-h2 {
-  margin-top: 0;
-}
+.tab { display: none; }
+.tab.active { display: block; }
 
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-label {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.9rem;
+  display: grid;
+  gap: 0.7rem;
 }
 
 input, select, button {
-  padding: 0.6rem;
+  padding: 0.7rem;
   font-size: 1rem;
 }
 
@@ -49,29 +38,15 @@ button {
   border-radius: 6px;
 }
 
-button:active {
-  opacity: 0.8;
+h3 {
+  margin-top: 1.5rem;
 }
 
-ul {
-  padding: 0;
-  list-style: none;
-}
-
-li {
+.card, #todayTrips div {
   background: white;
-  margin-bottom: 0.5rem;
-  padding: 0.6rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-}
-
-.tab {
-  display: none;
-}
-
-.tab.active {
-  display: block;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 0.6rem;
 }
 
 nav {
@@ -86,21 +61,17 @@ nav {
 
 nav button {
   flex: 1;
-  border-radius: 0;
-  background: #ffffff;
+  background: none;
   color: #0f4c5c;
   font-weight: bold;
+}
+
+nav button.active {
+  background: #0f4c5c;
+  color: white;
 }
 
 .filters {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-#summaryData, #monthlyStats, #statsCash, #statsCard, #statsCountries, #statsTotal {
-  background: white;
-  padding: 0.8rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
 }
