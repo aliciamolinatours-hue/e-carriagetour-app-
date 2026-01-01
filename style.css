@@ -1,16 +1,19 @@
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
   background: #f4f6f8;
+  color: #222;
 }
 
 header {
   background: #0f4c5c;
   color: white;
-  text-align: center;
   padding: 1rem;
+  text-align: center;
 }
 
 main {
@@ -18,75 +21,86 @@ main {
   padding-bottom: 90px;
 }
 
-section { display: none; }
-section.active { display: block; }
-
-label {
-  display: block;
-  margin-bottom: 1rem;
+h2 {
+  margin-top: 0;
 }
 
-input, select {
-  width: 100%;
-  padding: 0.8rem;
-  margin-top: 0.3rem;
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+input, select, button {
+  padding: 0.6rem;
   font-size: 1rem;
 }
 
-.btn-main {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.2rem;
+button {
   background: #0f4c5c;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
-.ok {
-  text-align: center;
-  color: green;
-  opacity: 0;
-  transition: opacity 0.3s;
+button:active {
+  opacity: 0.8;
 }
 
-.nav-bottom {
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  background: white;
+  margin-bottom: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+nav {
   position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  width: 100%;
   background: white;
   border-top: 1px solid #ccc;
 }
 
-.nav-bottom button {
+nav button {
   flex: 1;
-  padding: 1rem;
-  border: none;
-  background: none;
+  border-radius: 0;
+  background: #ffffff;
+  color: #0f4c5c;
+  font-weight: bold;
 }
 
 .filters {
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap;
   margin-bottom: 1rem;
 }
 
-.card {
+#summaryData, #monthlyStats, #statsCash, #statsCard, #statsCountries, #statsTotal {
   background: white;
-  padding: 1rem;
+  padding: 0.8rem;
   border-radius: 8px;
-}
-
-.lista {
-  list-style: none;
-  padding: 0;
-}
-
-.lista li {
-  background: white;
-  margin-bottom: 0.5rem;
-  padding: 0.6rem;
-  border-radius: 6px;
+  margin-bottom: 1rem;
 }
