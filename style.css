@@ -21,8 +21,6 @@ main {
 section { display: none; }
 section.active { display: block; }
 
-h2 { margin-top: 0; }
-
 label {
   display: block;
   margin-bottom: 1rem;
@@ -47,7 +45,6 @@ input, select {
 
 .ok {
   text-align: center;
-  margin-top: 0.5rem;
   color: green;
   opacity: 0;
   transition: opacity 0.3s;
@@ -67,7 +64,6 @@ input, select {
   padding: 1rem;
   border: none;
   background: none;
-  font-size: 1rem;
 }
 
 .filters {
@@ -77,13 +73,20 @@ input, select {
   margin-bottom: 1rem;
 }
 
-.filters button {
-  flex: 1;
-  padding: 0.6rem;
-}
-
 .card {
   background: white;
   padding: 1rem;
   border-radius: 8px;
+}
+
+.lista {
+  list-style: none;
+  padding: 0;
+}
+
+.lista li {
+  background: white;
+  margin-bottom: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 6px;
 }
