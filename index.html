@@ -2,92 +2,94 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carruaje Eléctrico</title>
-  <link rel="stylesheet" href="style.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Driver Trips App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
 <header>
-  <h1>Carruaje Eléctrico</h1>
+  <h1>Driver Trips</h1>
 </header>
-
-<nav class="nav-bottom">
-  <button data-section="nuevo">Nuevo Viaje</button>
-  <button data-section="resumen">Resumen</button>
-  <button data-section="estadisticas">Estadísticas</button>
-</nav>
 
 <main>
 
-<!-- ================= NUEVO VIAJE ================= -->
-<section id="nuevo" class="active">
-  <h2>Nuevo Viaje</h2>
+  <!-- NUEVO VIAJE -->
+  <section class="tab active" id="tab-new">
+    <h2>Nuevo Viaje</h2>
 
-  <form id="form-viaje">
-    <label>Pax
-      <input type="number" id="pax" min="1" max="5" required inputmode="numeric">
+    <form id="tripForm">
+      <label>
+        Pax
+        <input type="number" id="pax" min="1" required />
+      </label>
+
+      <label>
+        Pago
+        <select id="payment">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+        </select>
+      </label>
+
+      <label>
+        Propina (€)
+        <input type="number" id="tip" min="0" step="0.5" value="0" />
+      </label>
+
+      <label>
+        País
+        <input type="text" id="country" placeholder="ES, FR, BE..." />
+      </label>
+
+      <button type="submit">Añadir viaje</button>
+    </form>
+
+    <h3>Viajes de hoy</h3>
+    <ul id="todayTrips"></ul>
+
+    <h3>Estadísticas por mes</h3>
+    <div id="monthlyStats"></div>
+  </section>
+
+  <!-- RESUMEN -->
+  <section class="tab" id="tab-summary">
+    <h2>Resumen</h2>
+
+    <div class="filters">
+      <button onclick="setFilter('day')">Hoy</button>
+      <button onclick="setFilter('week')">Semana</button>
+      <button onclick="setFilter('month')">Mes</button>
+    </div>
+
+    <div id="summaryData"></div>
+
+    <label>
+      Elegir mes
+      <input type="month" id="monthPicker" />
     </label>
+  </section>
 
-    <label>País
-      <input type="text" id="pais" required>
-    </label>
+  <!-- ESTADÍSTICAS -->
+  <section class="tab" id="tab-stats">
+    <h2>Estadísticas</h2>
 
-    <label>Pago
-      <select id="pago">
-        <option value="efectivo">Efectivo</option>
-        <option value="tarjeta">Tarjeta</option>
-      </select>
-    </label>
+    <div id="statsCash"></div>
+    <div id="statsCard"></div>
+    <div id="statsCountries"></div>
+    <div id="statsTotal"></div>
 
-    <label>Propina
-      <select id="propina">
-        <option value="0">Sin propina</option>
-        <option value="7">7 €</option>
-        <option value="10.5">10,5 €</option>
-        <option value="14">14 €</option>
-        <option value="custom">Custom</option>
-      </select>
-      <input type="number" id="propinaCustom" placeholder="€" inputmode="decimal">
-    </label>
-
-    <button class="btn-main">Añadir viaje</button>
-    <div id="ok" class="ok">✔ Viaje registrado</div>
-  </form>
-
-  <h3>Viajes de hoy</h3>
-  <ul id="listaHoy" class="lista"></ul>
-
-  <h3>Estadísticas mensuales</h3>
-  <canvas id="chartMes"></canvas>
-</section>
-
-<!-- ================= RESUMEN ================= -->
-<section id="resumen">
-  <h2>Resumen</h2>
-
-  <div class="filters">
-    <button data-range="dia">Hoy</button>
-    <button data-range="semana">Semana</button>
-    <button data-range="mes">Mes</button>
-    <input type="month" id="mesSelect">
-  </div>
-
-  <div id="summary" class="card"></div>
-</section>
-
-<!-- ================= ESTADÍSTICAS ================= -->
-<section id="estadisticas">
-  <h2>Estadísticas</h2>
-
-  <canvas id="chartPagos"></canvas>
-  <canvas id="chartPaises"></canvas>
-  <canvas id="chartTotal"></canvas>
-</section>
+    <button onclick="exportCSV()">Exportar CSV</button>
+  </section>
 
 </main>
+
+<nav>
+  <button onclick="showTab('new')">Nuevo Viaje</button>
+  <button onclick="showTab('summary')">Resumen</button>
+  <button onclick="showTab('stats')">Estadísticas</button>
+</nav>
 
 <script src="script.js"></script>
 </body>
