@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>e-carriagetour • Calèche Électrique Exclusive</title>
+    <title>Registro de Viajes - e-carriagetour</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,10 +12,10 @@
         <div class="container">
             <div class="header-content">
                 <div class="header-main">
-                    <h1><i class="fas fa-crown"></i> e-carriagetour</h1>
+                    <h1><i class="fas fa-bolt"></i> e-carriagetour</h1>
                     <div class="header-subtitle">
                         <span id="current-date"></span>
-                        <span class="badge" id="trip-count">0 tours aujourd'hui</span>
+                        <span class="badge" id="trip-count">0 viajes hoy</span>
                     </div>
                 </div>
             </div>
@@ -28,14 +28,14 @@
             <section class="form-section">
                 <h2 class="section-title">
                     <i class="fas fa-plus-circle"></i>
-                    <span>Nouveau Tour</span>
+                    <span>Nuevo Viaje</span>
                 </h2>
                 
                 <div class="form-card">
                     <div class="form-group">
                         <label class="form-label">
                             <i class="fas fa-users"></i>
-                            <span>Passagers</span>
+                            <span>Pasajeros</span>
                         </label>
                         <div class="pax-buttons">
                             <button class="pax-btn" data-pax="1">1</button>
@@ -49,10 +49,10 @@
                     <div class="form-group">
                         <label class="form-label">
                             <i class="fas fa-globe-europe"></i>
-                            <span>Pays d'origine</span>
+                            <span>País</span>
                         </label>
                         <div class="country-input">
-                            <input type="text" id="country" placeholder="Écrire le pays...">
+                            <input type="text" id="country" placeholder="Escribe el país...">
                             <div id="country-suggestions"></div>
                         </div>
                     </div>
@@ -60,16 +60,16 @@
                     <div class="form-group">
                         <label class="form-label">
                             <i class="fas fa-money-bill-wave"></i>
-                            <span>Méthode de Paiement</span>
+                            <span>Método de Pago</span>
                         </label>
                         <div class="payment-buttons">
                             <button class="payment-btn cash" data-payment="cash">
                                 <i class="fas fa-money-bill"></i>
-                                <span>Espèces</span>
+                                <span>Efectivo</span>
                             </button>
                             <button class="payment-btn card" data-payment="card">
                                 <i class="fas fa-credit-card"></i>
-                                <span>Carte</span>
+                                <span>Tarjeta</span>
                             </button>
                         </div>
                     </div>
@@ -77,25 +77,25 @@
                     <div id="tip-section-cash" class="tip-section">
                         <label class="form-label">
                             <i class="fas fa-euro-sign"></i>
-                            <span>Pourboire</span>
+                            <span>Propina</span>
                         </label>
                         <div class="tip-buttons">
                             <button class="tip-btn" data-tip="0">0€</button>
                             <button class="tip-btn custom-tip-btn-open" data-tip="custom">
                                 <i class="fas fa-edit"></i>
-                                <span>Personnaliser</span>
+                                <span>Personalizar</span>
                             </button>
                         </div>
                         <div class="custom-tip" id="custom-tip-cash" style="display: none;">
-                            <input type="number" id="custom-tip-input-cash" placeholder="Ex: 3.50" min="0" step="0.5">
-                            <button class="custom-tip-btn" id="set-tip-cash">Appliquer</button>
+                            <input type="number" id="custom-tip-input-cash" placeholder="Ej: 3.50" min="0" step="0.5">
+                            <button class="custom-tip-btn" id="set-tip-cash">Aplicar</button>
                         </div>
                     </div>
                     
                     <div id="tip-section-card" class="tip-section">
                         <label class="form-label">
                             <i class="fas fa-euro-sign"></i>
-                            <span>Pourboire</span>
+                            <span>Propina</span>
                         </label>
                         <div class="tip-buttons">
                             <button class="tip-btn" data-tip="0">0€</button>
@@ -104,23 +104,23 @@
                             <button class="tip-btn" data-tip="14">14€</button>
                             <button class="tip-btn custom-tip-btn-open" data-tip="custom">
                                 <i class="fas fa-edit"></i>
-                                <span>Personnaliser</span>
+                                <span>Personalizar</span>
                             </button>
                         </div>
                         <div class="custom-tip" id="custom-tip-card" style="display: none;">
-                            <input type="number" id="custom-tip-input-card" placeholder="Ex: 5.00" min="0" step="0.5">
-                            <button class="custom-tip-btn" id="set-tip-card">Appliquer</button>
+                            <input type="number" id="custom-tip-input-card" placeholder="Ej: 5.00" min="0" step="0.5">
+                            <button class="custom-tip-btn" id="set-tip-card">Aplicar</button>
                         </div>
                     </div>
                     
                     <button id="save-trip" class="save-btn">
                         <i class="fas fa-check-circle"></i>
-                        <span>Enregistrer le Tour</span>
+                        <span>Guardar Viaje</span>
                     </button>
                     
                     <div id="confirmation-message" class="confirmation-message">
                         <i class="fas fa-check"></i>
-                        <span>Tour enregistré</span>
+                        <span>Viaje guardado</span>
                     </div>
                 </div>
             </section>
@@ -128,7 +128,7 @@
             <section class="trips-section">
                 <h2 class="section-title">
                     <i class="fas fa-history"></i>
-                    <span>Tours d'Aujourd'hui</span>
+                    <span>Viajes de Hoy</span>
                 </h2>
                 
                 <div class="stats">
@@ -138,94 +138,94 @@
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="total-pax">0</div>
-                        <div class="stat-label">Passagers</div>
+                        <div class="stat-label">Pasajeros</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="total-tips">0€</div>
-                        <div class="stat-label">Pourboires</div>
+                        <div class="stat-label">Propinas</div>
                     </div>
                 </div>
                 
                 <div class="trip-list">
                     <div id="trips-container">
                         <div class="empty-list" id="empty-list-message">
-                            <i class="fas fa-horse-head"></i>
-                            <p>Aucun tour enregistré aujourd'hui</p>
-                            <small>Enregistrez votre premier tour ci-dessus</small>
+                            <i class="fas fa-car"></i>
+                            <p>No hay viajes registrados hoy</p>
+                            <small>Registra tu primer viaje arriba</small>
                         </div>
                     </div>
                 </div>
             </section>
         </div>
-        <!-- FIN de la pestaña de Tour -->
+        <!-- FIN de la pestaña de Viaje -->
         
         <!-- INICIO de la pestaña de Resumen -->
         <div id="summary-tab" class="tab-content">
             <section class="summary-section">
                 <h2 class="section-title">
                     <i class="fas fa-chart-line"></i>
-                    <span>Résumé de la Journée</span>
+                    <span>Resumen del Día</span>
                 </h2>
                 
                 <div class="summary-card">
                     <!-- Resumen General -->
                     <div class="summary-group">
-                        <h3><i class="fas fa-calendar-day"></i> Aujourd'hui</h3>
+                        <h3><i class="fas fa-calendar-day"></i> Hoy</h3>
                         <div class="summary-item">
-                            <div class="summary-label">Total des tours</div>
+                            <div class="summary-label">Total de viajes</div>
                             <div class="summary-value" id="total-trips-summary">0</div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-label">Total passagers</div>
+                            <div class="summary-label">Total pasajeros</div>
                             <div class="summary-value" id="total-pax-summary">0</div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-label">Total pourboires</div>
+                            <div class="summary-label">Total propinas</div>
                             <div class="summary-value" id="total-tips-summary">0€</div>
                         </div>
                     </div>
                     
                     <!-- Ingresos en Efectivo -->
                     <div class="summary-group">
-                        <h3><i class="fas fa-money-bill-wave"></i> Revenus en Espèces</h3>
+                        <h3><i class="fas fa-money-bill-wave"></i> Ingresos en Efectivo</h3>
                         <div class="summary-item">
-                            <div class="summary-label">Tours en espèces</div>
+                            <div class="summary-label">Viajes en efectivo</div>
                             <div class="summary-value" id="cash-trips">0</div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-label">Total espèces</div>
+                            <div class="summary-label">Total efectivo</div>
                             <div class="summary-value" id="total-cash">0€</div>
                         </div>
                         <div class="summary-item detail">
-                            <div class="summary-detail" id="cash-detail">0 tours × 0€ = 0€</div>
+                            <div class="summary-detail" id="cash-detail">0 viajes × 0€ = 0€</div>
                         </div>
                     </div>
                     
                     <!-- Ingresos en Tarjeta -->
                     <div class="summary-group">
-                        <h3><i class="fas fa-credit-card"></i> Revenus par Carte</h3>
+                        <h3><i class="fas fa-credit-card"></i> Ingresos en Tarjeta</h3>
                         <div class="summary-item">
-                            <div class="summary-label">Tours par carte</div>
+                            <div class="summary-label">Viajes en tarjeta</div>
                             <div class="summary-value" id="card-trips">0</div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-label">Total carte</div>
+                            <div class="summary-label">Total tarjeta</div>
                             <div class="summary-value" id="total-card">0€</div>
                         </div>
                         <div class="summary-item detail">
-                            <div class="summary-detail" id="card-detail">0 tours × 0€ = 0€</div>
+                            <div class="summary-detail" id="card-detail">0 viajes × 0€ = 0€</div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-label">Pourboires par carte</div>
+                            <div class="summary-label">Propinas en tarjeta</div>
                             <div class="summary-value" id="card-tips">0€</div>
                         </div>
                     </div>
                     
                     <!-- Efectivo a entregar -->
                     <div class="summary-group highlight">
-                        <h3><i class="fas fa-hand-holding-usd"></i> Espèces à Remettre</h3>
+                        <h3><i class="fas fa-hand-holding-usd"></i> Efectivo a Entregar</h3>
                         <div class="summary-item large">
-                            <div class="summary-label">Total espèces - Pourboires carte</div>
+                            <div class="summary-label">Total efectivo - Propinas tarjeta</div>
                             <div class="summary-value total" id="cash-to-deliver">0€</div>
                         </div>
                         <div class="summary-item detail">
@@ -237,11 +237,11 @@
                     <div class="export-section">
                         <button id="export-month" class="export-btn">
                             <i class="fas fa-file-export"></i>
-                            <span>Exporter Données du Mois</span>
+                            <span>Exportar Datos del Mes</span>
                         </button>
                         <div id="export-message" class="export-message">
                             <i class="fas fa-check"></i>
-                            <span>Données exportées</span>
+                            <span>Datos exportados</span>
                         </div>
                     </div>
                 </div>
@@ -251,16 +251,16 @@
             <section class="month-history-section">
                 <h2 class="section-title">
                     <i class="fas fa-history"></i>
-                    <span>Historique du Mois</span>
+                    <span>Historial del Mes</span>
                 </h2>
                 <div class="month-stats">
                     <div class="month-stat">
                         <div class="month-stat-value" id="month-trips">0</div>
-                        <div class="month-stat-label">Tours ce mois</div>
+                        <div class="month-stat-label">Viajes este mes</div>
                     </div>
                     <div class="month-stat">
                         <div class="month-stat-value" id="month-earnings">0€</div>
-                        <div class="month-stat-label">Revenus totaux</div>
+                        <div class="month-stat-label">Ingresos totales</div>
                     </div>
                 </div>
             </section>
@@ -272,20 +272,20 @@
     <nav class="bottom-tabs">
         <div class="tabs-container">
             <button class="bottom-tab active" data-tab="register">
-                <i class="fas fa-horse-head"></i>
-                <span>Tour</span>
+                <i class="fas fa-car"></i>
+                <span>Viaje</span>
             </button>
             <button class="bottom-tab" data-tab="summary">
                 <i class="fas fa-chart-pie"></i>
-                <span>Résumé</span>
+                <span>Resumen</span>
             </button>
         </div>
     </nav>
     
     <footer>
         <div class="container">
-            <p>e-carriagetour • Calèche Électrique Exclusive</p>
-            <small>Données enregistrées localement sur votre appareil</small>
+            <p>Registro de viajes • e-carriagetour</p>
+            <small>Datos guardados localmente en tu dispositivo</small>
         </div>
     </footer>
 
