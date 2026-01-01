@@ -1,78 +1,86 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Carruaje Eléctrico</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carruaje Eléctrico</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
 <header>
-  <h1>App Carruaje Eléctrico</h1>
+  <h1>Carruaje Eléctrico</h1>
 </header>
 
-<nav class="menu-inferior">
-  <button data-section="nuevo-viaje">Nuevo Viaje</button>
-  <button data-section="resumen-viajes">Resumen</button>
+<nav class="nav-bottom">
+  <button data-section="nuevo">Nuevo Viaje</button>
+  <button data-section="resumen">Resumen</button>
   <button data-section="estadisticas">Estadísticas</button>
 </nav>
 
 <main>
-  <!-- Sección 1: Nuevo Viaje -->
-  <section id="nuevo-viaje" class="seccion-activa">
-    <h2>Nuevo Viaje</h2>
-    <form id="form-viaje">
-      <label>
-        Número de pasajeros:
-        <input type="number" id="num-pax" min="1" max="5" required>
-      </label>
 
-      <label>
-        País de origen:
-        <input type="text" id="pais-origen" placeholder="Buscar país" required>
-      </label>
+<!-- NUEVO VIAJE -->
+<section id="nuevo" class="active">
+  <h2>Nuevo Viaje</h2>
 
-      <label>
-        Tipo de pago:
-        <select id="tipo-pago" required>
-          <option value="efectivo">Efectivo</option>
-          <option value="tarjeta">Tarjeta</option>
-        </select>
-      </label>
+  <form id="form-viaje">
+    <label>Pax
+      <input type="number" id="pax" min="1" max="5" required inputmode="numeric">
+    </label>
 
-      <label>
-        Propina:
-        <select id="propina">
-          <option value="0">0€</option>
-          <option value="7">7€</option>
-          <option value="10.5">10,5€</option>
-          <option value="14">14€</option>
-          <option value="custom">Custom</option>
-        </select>
-        <input type="number" id="propina-custom" placeholder="€ Custom" style="display:none;">
-      </label>
+    <label>País
+      <input type="text" id="pais" required>
+    </label>
 
-      <button type="submit" class="btn-grande">Añadir viaje</button>
-    </form>
-    <div id="confirmacion" class="confirmacion"></div>
-  </section>
+    <label>Pago
+      <select id="pago">
+        <option value="efectivo">Efectivo</option>
+        <option value="tarjeta">Tarjeta</option>
+      </select>
+    </label>
 
-  <!-- Sección 2: Resumen de viajes -->
-  <section id="resumen-viajes">
-    <h2>Resumen Financiero</h2>
-    <div id="resumen"></div>
-  </section>
+    <label>Propina
+      <select id="propina">
+        <option value="0">0 €</option>
+        <option value="7">7 €</option>
+        <option value="10.5">10,5 €</option>
+        <option value="14">14 €</option>
+        <option value="custom">Custom</option>
+      </select>
+      <input type="number" id="propinaCustom" placeholder="€" inputmode="decimal">
+    </label>
 
-  <!-- Sección 3: Estadísticas -->
-  <section id="estadisticas">
-    <h2>Estadísticas</h2>
-    <canvas id="grafico-ingresos"></canvas>
-    <canvas id="grafico-tipo-pago"></canvas>
-  </section>
+    <button class="btn-main">Añadir viaje</button>
+    <div id="ok" class="ok">✔ Viaje registrado</div>
+  </form>
+</section>
+
+<!-- RESUMEN -->
+<section id="resumen">
+  <h2>Resumen</h2>
+
+  <div class="filters">
+    <button data-filter="hoy">Hoy</button>
+    <button data-filter="semana">Semana</button>
+    <button data-filter="mes">Mes</button>
+    <button id="exportCSV">Exportar CSV</button>
+  </div>
+
+  <div id="summary" class="card"></div>
+</section>
+
+<!-- ESTADÍSTICAS -->
+<section id="estadisticas">
+  <h2>Estadísticas</h2>
+  <canvas id="chartIngresos"></canvas>
+  <canvas id="chartPagos"></canvas>
+</section>
+
 </main>
 
 <script src="script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
