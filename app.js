@@ -1,18 +1,17 @@
 const PRECIO = 70;
 let viajes = JSON.parse(localStorage.getItem("viajes")) || [];
-let filtroActual = "hoy";
+let rango = "dia";
 
-// DOM
-const sections = document.querySelectorAll("section");
-document.querySelectorAll(".nav-bottom button").forEach(b =>
-  b.onclick = () => {
-    sections.forEach(s => s.classList.remove("active"));
-    document.getElementById(b.dataset.section).classList.add("active");
-    actualizar();
-  }
-);
+// Navegación
+document.querySelectorAll(".nav-bottom button").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    document.getElementById(btn.dataset.section).classList.add("active");
+    actualizarTodo();
+  };
+});
 
-// Form
+// Formulario
 const form = document.getElementById("form-viaje");
 const propina = document.getElementById("propina");
 const propinaCustom = document.getElementById("propinaCustom");
@@ -23,54 +22,63 @@ propina.onchange = () =>
 
 form.onsubmit = e => {
   e.preventDefault();
-  const viaje = {
+
+  viajes.push({
     fecha: new Date().toISOString(),
     pax: +pax.value,
     pais: pais.value,
     pago: pago.value,
     propina: propina.value === "custom" ? +propinaCustom.value || 0 : +propina.value
-  };
-  viajes.push(viaje);
+  });
+
   localStorage.setItem("viajes", JSON.stringify(viajes));
   ok.style.opacity = 1;
-  setTimeout(() => ok.style.opacity = 0, 1500);
+  setTimeout(() => ok.style.opacity = 0, 1200);
   form.reset();
-  actualizar();
+  actualizarTodo();
 };
 
-// Filtros
-document.querySelectorAll(".filters button[data-filter]").forEach(b =>
-  b.onclick = () => { filtroActual = b.dataset.filter; actualizar(); }
+// Filtros resumen
+document.querySelectorAll("[data-range]").forEach(b =>
+  b.onclick = () => { rango = b.dataset.range; actualizarResumen(); }
 );
+mesSelect.onchange = actualizarResumen;
 
-// Export CSV
-document.getElementById("exportCSV").onclick = () => {
-  let csv = "Fecha,Pax,Pais,Pago,Propina\n";
-  viajesFiltrados().forEach(v =>
-    csv += `${v.fecha},${v.pax},${v.pais},${v.pago},${v.propina}\n`
-  );
-  const blob = new Blob([csv], { type: "text/csv" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "viajes.csv";
-  a.click();
-};
+// ================= FUNCIONES =================
 
-// Filtrado fechas
-function viajesFiltrados() {
-  const ahora = new Date();
+function hoy(v) {
+  return new Date(v.fecha).toDateString() === new Date().toDateString();
+}
+
+function filtrar() {
+  const now = new Date();
   return viajes.filter(v => {
     const f = new Date(v.fecha);
-    if (filtroActual === "hoy") return f.toDateString() === ahora.toDateString();
-    if (filtroActual === "semana") return ahora - f < 7 * 86400000;
-    if (filtroActual === "mes") return f.getMonth() === ahora.getMonth();
+    if (rango === "dia") return hoy(v);
+    if (rango === "semana") return now - f < 7 * 86400000;
+    if (rango === "mes") {
+      const m = mesSelect.value ? new Date(mesSelect.value) : now;
+      return f.getMonth() === m.getMonth() && f.getFullYear() === m.getFullYear();
+    }
   });
 }
 
-// Resumen + gráficos
-let chart1, chart2;
-function actualizar() {
-  const data = viajesFiltrados();
+// ===== NUEVO VIAJE =====
+function actualizarHoy() {
+  listaHoy.innerHTML = "";
+  viajes.filter(hoy).forEach(v => {
+    listaHoy.innerHTML += `
+      <li>
+        ${new Date(v.fecha).toLocaleTimeString()} – 
+        Pax: ${v.pax} – 
+        ${v.pago} ${v.propina > 0 ? `(Propina ${v.propina}€)` : `(Sin propina)`}
+      </li>`;
+  });
+}
+
+// ===== RESUMEN =====
+function actualizarResumen() {
+  const data = filtrar();
   let ef = 0, tar = 0, prop = 0;
 
   data.forEach(v => {
@@ -87,18 +95,60 @@ function actualizar() {
     <p>Jefe: ${ef - prop} €</p>
     <p>Chofer: ${prop} €</p>
   `;
+}
 
-  if (chart1) chart1.destroy();
-  chart1 = new Chart(chartIngresos, {
-    type: "bar",
-    data: { labels: ["Efectivo", "Tarjeta"], datasets: [{ data: [ef, tar] }] }
+// ===== ESTADÍSTICAS =====
+let cPagos, cPaises, cTotal, cMes;
+
+function actualizarEstadisticas() {
+  const pagos = { efectivo: 0, tarjeta: 0 };
+  const paises = {};
+
+  viajes.forEach(v => {
+    pagos[v.pago]++;
+    paises[v.pais] = (paises[v.pais] || 0) + 1;
   });
 
-  if (chart2) chart2.destroy();
-  chart2 = new Chart(chartPagos, {
+  if (cPagos) cPagos.destroy();
+  cPagos = new Chart(chartPagos, {
     type: "pie",
-    data: { labels: ["Efectivo", "Tarjeta"], datasets: [{ data: [ef, tar] }] }
+    data: { labels: ["Efectivo", "Tarjeta"], datasets: [{ data: Object.values(pagos) }] }
+  });
+
+  if (cPaises) cPaises.destroy();
+  cPaises = new Chart(chartPaises, {
+    type: "bar",
+    data: { labels: Object.keys(paises), datasets: [{ data: Object.values(paises) }] }
+  });
+
+  if (cTotal) cTotal.destroy();
+  cTotal = new Chart(chartTotal, {
+    type: "bar",
+    data: { labels: ["Viajes"], datasets: [{ data: [viajes.length] }] }
   });
 }
 
-actualizar();
+// ===== ESTADÍSTICAS MES (NUEVO VIAJE) =====
+function actualizarMes() {
+  const meses = {};
+  viajes.forEach(v => {
+    const m = new Date(v.fecha).toISOString().slice(0,7);
+    meses[m] = (meses[m] || 0) + 1;
+  });
+
+  if (cMes) cMes.destroy();
+  cMes = new Chart(chartMes, {
+    type: "bar",
+    data: { labels: Object.keys(meses), datasets: [{ data: Object.values(meses) }] }
+  });
+}
+
+// ===== GLOBAL =====
+function actualizarTodo() {
+  actualizarHoy();
+  actualizarResumen();
+  actualizarEstadisticas();
+  actualizarMes();
+}
+
+actualizarTodo();
