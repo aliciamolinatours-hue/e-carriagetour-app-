@@ -38,7 +38,7 @@ const countries = [
 ];
 
 // Datos iniciales
-let trips = JSON.parse(localStorage.getItem('taxiTrips')) || [];
+let trips = JSON.parse(localStorage.getItem('carriageTrips')) || [];
 let selectedPax = null;
 let selectedPayment = null;
 let selectedTip = 0;
@@ -229,7 +229,7 @@ function saveTrip() {
     };
     
     trips.push(trip);
-    localStorage.setItem('taxiTrips', JSON.stringify(trips));
+    localStorage.setItem('carriageTrips', JSON.stringify(trips));
     
     loadTrips();
     updateStats();
