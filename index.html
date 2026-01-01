@@ -22,24 +22,8 @@
         </div>
     </header>
     
-    <!-- Navegación por pestañas -->
-    <nav class="tabs-navigation">
-        <div class="container">
-            <div class="tabs">
-                <button class="tab active" data-tab="register">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Registrar</span>
-                </button>
-                <button class="tab" data-tab="summary">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>Resumen</span>
-                </button>
-            </div>
-        </div>
-    </nav>
-    
     <main class="container">
-        <!-- Pestaña de Registro (visible por defecto) -->
+        <!-- Pestaña de Viaje (visible por defecto) -->
         <div id="register-tab" class="tab-content active">
             <section class="form-section">
                 <h2 class="section-title">
@@ -173,7 +157,7 @@
                 </div>
             </section>
         </div>
-        <!-- FIN de la pestaña de Registro -->
+        <!-- FIN de la pestaña de Viaje -->
         
         <!-- INICIO de la pestaña de Resumen -->
         <div id="summary-tab" class="tab-content">
@@ -283,6 +267,20 @@
         </div>
         <!-- FIN de la pestaña de Resumen -->
     </main>
+    
+    <!-- Navegación por pestañas en la parte inferior -->
+    <nav class="bottom-tabs">
+        <div class="tabs-container">
+            <button class="bottom-tab active" data-tab="register">
+                <i class="fas fa-car"></i>
+                <span>Viaje</span>
+            </button>
+            <button class="bottom-tab" data-tab="summary">
+                <i class="fas fa-chart-pie"></i>
+                <span>Resumen</span>
+            </button>
+        </div>
+    </nav>
     
     <footer>
         <div class="container">
