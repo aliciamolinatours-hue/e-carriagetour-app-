@@ -38,11 +38,12 @@ const countries = [
 ];
 
 // Datos iniciales
-let trips = JSON.parse(localStorage.getItem('carriageTrips')) || [];
+let trips = JSON.parse(localStorage.getItem('taxiTrips')) || [];
 let selectedPax = null;
 let selectedPayment = null;
 let selectedTip = 0;
 let currentPaymentType = null;
+
 // Precio fijo por viaje (puedes ajustarlo según tu tarifa)
 const PRICE_PER_TRIP = 70;
 
@@ -53,6 +54,11 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStats();
     setupEventListeners();
     setupCountryAutocomplete();
+    setupTabs();
+    updateMonthStats();
+    
+    // Configurar botón de exportación
+    document.getElementById('export-month').addEventListener('click', exportMonthData);
 });
 
 function updateCurrentDate() {
@@ -255,7 +261,7 @@ function saveTrip() {
     };
     
     trips.push(trip);
-    localStorage.setItem('carriageTrips', JSON.stringify(trips));
+    localStorage.setItem('taxiTrips', JSON.stringify(trips));
     
     loadTrips();
     updateStats();
@@ -265,6 +271,11 @@ function saveTrip() {
     confirmation.style.display = 'flex';
     
     resetForm();
+    
+    // Actualizar el resumen si la pestaña está activa
+    if (document.getElementById('summary-tab').classList.contains('active')) {
+        updateSummary();
+    }
     
     setTimeout(() => {
         confirmation.style.display = 'none';
@@ -334,4 +345,114 @@ function updateStats() {
     document.getElementById('total-trips').textContent = totalTrips;
     document.getElementById('total-pax').textContent = totalPax;
     document.getElementById('total-tips').textContent = totalTips.toFixed(2) + '€';
+}
+
+function updateSummary() {
+    const today = new Date().toISOString().split('T')[0];
+    const todayTrips = trips.filter(trip => trip.date === today);
+    
+    // Viajes por tipo de pago
+    const cashTrips = todayTrips.filter(trip => trip.payment === 'cash');
+    const cardTrips = todayTrips.filter(trip => trip.payment === 'card');
+    
+    // Totales básicos
+    document.getElementById('total-trips-summary').textContent = todayTrips.length;
+    document.getElementById('total-pax-summary').textContent = todayTrips.reduce((sum, trip) => sum + trip.pax, 0);
+    document.getElementById('total-tips-summary').textContent = todayTrips.reduce((sum, trip) => sum + trip.tip, 0).toFixed(2) + '€';
+    
+    // Ingresos en efectivo
+    const cashTripsCount = cashTrips.length;
+    const totalCash = cashTripsCount * PRICE_PER_TRIP;
+    
+    document.getElementById('cash-trips').textContent = cashTripsCount;
+    document.getElementById('total-cash').textContent = totalCash.toFixed(2) + '€';
+    document.getElementById('cash-detail').textContent = `${cashTripsCount} viajes × ${PRICE_PER_TRIP}€ = ${totalCash.toFixed(2)}€`;
+    
+    // Ingresos en tarjeta
+    const cardTripsCount = cardTrips.length;
+    const totalCard = cardTripsCount * PRICE_PER_TRIP;
+    const cardTipsTotal = cardTrips.reduce((sum, trip) => sum + trip.tip, 0);
+    
+    document.getElementById('card-trips').textContent = cardTripsCount;
+    document.getElementById('total-card').textContent = totalCard.toFixed(2) + '€';
+    document.getElementById('card-detail').textContent = `${cardTripsCount} viajes × ${PRICE_PER_TRIP}€ = ${totalCard.toFixed(2)}€`;
+    document.getElementById('card-tips').textContent = cardTipsTotal.toFixed(2) + '€';
+    
+    // Efectivo a entregar
+    const cashToDeliver = totalCash - cardTipsTotal;
+    
+    document.getElementById('cash-to-deliver').textContent = cashToDeliver.toFixed(2) + '€';
+    document.getElementById('delivery-detail').textContent = `${totalCash.toFixed(2)}€ - ${cardTipsTotal.toFixed(2)}€ = ${cashToDeliver.toFixed(2)}€`;
+    
+    // Actualizar estadísticas del mes
+    updateMonthStats();
+}
+
+function updateMonthStats() {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    const monthTrips = trips.filter(trip => {
+        const tripDate = new Date(trip.date);
+        return tripDate.getMonth() === currentMonth && 
+               tripDate.getFullYear() === currentYear;
+    });
+    
+    const monthEarnings = monthTrips.length * PRICE_PER_TRIP;
+    
+    document.getElementById('month-trips').textContent = monthTrips.length;
+    document.getElementById('month-earnings').textContent = monthEarnings.toFixed(2) + '€';
+}
+
+function exportMonthData() {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    // Filtrar viajes del mes actual
+    const monthTrips = trips.filter(trip => {
+        const tripDate = new Date(trip.date);
+        return tripDate.getMonth() === currentMonth && 
+               tripDate.getFullYear() === currentYear;
+    });
+    
+    if (monthTrips.length === 0) {
+        alert('No hay datos para exportar este mes.');
+        return;
+    }
+    
+    // Crear objeto con los datos del mes
+    const exportData = {
+        month: now.toLocaleString('es-ES', { month: 'long', year: 'numeric' }),
+        totalTrips: monthTrips.length,
+        totalPassengers: monthTrips.reduce((sum, trip) => sum + trip.pax, 0),
+        totalCashTrips: monthTrips.filter(t => t.payment === 'cash').length,
+        totalCardTrips: monthTrips.filter(t => t.payment === 'card').length,
+        totalEarnings: monthTrips.length * PRICE_PER_TRIP,
+        totalTips: monthTrips.reduce((sum, trip) => sum + trip.tip, 0),
+        trips: monthTrips
+    };
+    
+    // Convertir a JSON
+    const jsonData = JSON.stringify(exportData, null, 2);
+    
+    // Crear archivo descargable
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `viajes_${now.getFullYear()}_${now.getMonth() + 1}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    // Mostrar mensaje de confirmación
+    const exportMessage = document.getElementById('export-message');
+    exportMessage.style.display = 'flex';
+    
+    setTimeout(() => {
+        exportMessage.style.display = 'none';
+    }, 3000);
 }
