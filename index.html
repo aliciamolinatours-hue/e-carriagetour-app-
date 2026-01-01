@@ -266,6 +266,84 @@
             </section>
         </div>
         <!-- FIN de la pestaña de Resumen -->
+        
+        <!-- INICIO de la pestaña de Estadísticas -->
+        <div id="stats-tab" class="tab-content">
+            <section class="stats-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Resumen de actividad del servicio</span>
+                </h2>
+                <div class="stats-description">
+                    <p>Datos agregados a partir de los tours registrados</p>
+                </div>
+                
+                <!-- KPIs principales -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="total-tours">0</div>
+                        <div class="kpi-label">Tours totales</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="month-tours">0</div>
+                        <div class="kpi-label">Tours este mes</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="total-pax-stats">0</div>
+                        <div class="kpi-label">PAX</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="total-countries">0</div>
+                        <div class="kpi-label">Países</div>
+                    </div>
+                </div>
+                
+                <!-- Distribución por método de pago -->
+                <div class="stats-block">
+                    <h3 class="stats-block-title">
+                        <i class="fas fa-credit-card"></i>
+                        Método de pago
+                    </h3>
+                    <div class="payment-distribution">
+                        <div class="payment-method">
+                            <div class="payment-label">Efectivo</div>
+                            <div class="payment-bar-container">
+                                <div class="payment-bar" id="cash-bar" style="width: 50%"></div>
+                            </div>
+                            <div class="payment-percentage" id="cash-percentage">50%</div>
+                        </div>
+                        <div class="payment-method">
+                            <div class="payment-label">Tarjeta</div>
+                            <div class="payment-bar-container">
+                                <div class="payment-bar" id="card-bar" style="width: 50%"></div>
+                            </div>
+                            <div class="payment-percentage" id="card-percentage">50%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gráfica principal -->
+                <div class="stats-block">
+                    <h3 class="stats-block-title">
+                        <i class="fas fa-chart-line"></i>
+                        Tours por día de la semana
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="weekly-chart"></canvas>
+                    </div>
+                    <div class="chart-explanation" id="chart-explanation">
+                        Cargando datos...
+                    </div>
+                </div>
+                
+                <!-- Última actualización -->
+                <div class="last-update">
+                    <i class="fas fa-sync-alt"></i>
+                    <span id="last-update-text">Actualizado: --:--</span>
+                </div>
+            </section>
+        </div>
+        <!-- FIN de la pestaña de Estadísticas -->
     </main>
     
     <!-- Navegación por pestañas en la parte inferior -->
@@ -278,6 +356,10 @@
             <button class="bottom-tab" data-tab="summary">
                 <i class="fas fa-chart-pie"></i>
                 <span>Resumen</span>
+            </button>
+            <button class="bottom-tab" data-tab="stats">
+                <i class="fas fa-chart-bar"></i>
+                <span>Estadísticas</span>
             </button>
         </div>
     </nav>
