@@ -1,61 +1,89 @@
+* { box-sizing: border-box; }
+
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  font-family: system-ui, sans-serif;
+  background: #f4f6f8;
 }
 
 header {
   background: #0f4c5c;
-  color: #fff;
+  color: white;
   text-align: center;
   padding: 1rem;
 }
 
 main {
   padding: 1rem;
+  padding-bottom: 90px;
 }
 
-.seccion-activa {
+section { display: none; }
+section.active { display: block; }
+
+h2 { margin-top: 0; }
+
+label {
   display: block;
+  margin-bottom: 1rem;
 }
 
-section {
-  display: none;
-}
-
-.menu-inferior {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-around;
-  background: #fff;
-  border-top: 1px solid #ccc;
-}
-
-.menu-inferior button {
-  flex: 1;
-  padding: 1rem;
-  font-size: 1rem;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.btn-grande {
+input, select {
   width: 100%;
-  font-size: 1.2rem;
+  padding: 0.8rem;
+  margin-top: 0.3rem;
+  font-size: 1rem;
+}
+
+.btn-main {
+  width: 100%;
   padding: 1rem;
+  font-size: 1.2rem;
   background: #0f4c5c;
   color: white;
   border: none;
-  margin-top: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 8px;
 }
 
-.confirmacion {
+.ok {
+  text-align: center;
   margin-top: 0.5rem;
   color: green;
-  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.nav-bottom {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  width: 100%;
+  background: white;
+  border-top: 1px solid #ccc;
+}
+
+.nav-bottom button {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  background: none;
+  font-size: 1rem;
+}
+
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.filters button {
+  flex: 1;
+  padding: 0.6rem;
+}
+
+.card {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
 }
