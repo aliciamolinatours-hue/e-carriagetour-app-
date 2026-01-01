@@ -1,154 +1,119 @@
-const PRECIO = 70;
-let viajes = JSON.parse(localStorage.getItem("viajes")) || [];
-let rango = "dia";
-
-// Navegación
-document.querySelectorAll(".nav-bottom button").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-    document.getElementById(btn.dataset.section).classList.add("active");
-    actualizarTodo();
-  };
+document.addEventListener("DOMContentLoaded", () => {
+  renderAll();
 });
 
-// Formulario
-const form = document.getElementById("form-viaje");
-const propina = document.getElementById("propina");
-const propinaCustom = document.getElementById("propinaCustom");
-const ok = document.getElementById("ok");
+let trips = JSON.parse(localStorage.getItem("trips")) || [];
+let currentFilter = "day";
 
-propina.onchange = () =>
-  propinaCustom.style.display = propina.value === "custom" ? "block" : "none";
+function showTab(tab) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.getElementById(`tab-${tab}`).classList.add("active");
+}
 
-form.onsubmit = e => {
+document.getElementById("tripForm").addEventListener("submit", e => {
   e.preventDefault();
 
-  viajes.push({
-    fecha: new Date().toISOString(),
-    pax: +pax.value,
-    pais: pais.value,
-    pago: pago.value,
-    propina: propina.value === "custom" ? +propinaCustom.value || 0 : +propina.value
-  });
+  const trip = {
+    date: new Date(),
+    pax: Number(pax.value),
+    payment: payment.value,
+    tip: Number(tip.value),
+    country: country.value || "N/A"
+  };
 
-  localStorage.setItem("viajes", JSON.stringify(viajes));
-  ok.style.opacity = 1;
-  setTimeout(() => ok.style.opacity = 0, 1200);
-  form.reset();
-  actualizarTodo();
-};
+  trips.push(trip);
+  localStorage.setItem("trips", JSON.stringify(trips));
 
-// Filtros resumen
-document.querySelectorAll("[data-range]").forEach(b =>
-  b.onclick = () => { rango = b.dataset.range; actualizarResumen(); }
-);
-mesSelect.onchange = actualizarResumen;
+  e.target.reset();
+  renderAll();
+});
 
-// ================= FUNCIONES =================
-
-function hoy(v) {
-  return new Date(v.fecha).toDateString() === new Date().toDateString();
+function renderAll() {
+  renderTodayTrips();
+  renderSummary();
+  renderMonthlyStats();
+  renderStats();
 }
 
-function filtrar() {
+function isSameDay(d1, d2) {
+  return d1.toDateString() === d2.toDateString();
+}
+
+function renderTodayTrips() {
+  const ul = document.getElementById("todayTrips");
+  ul.innerHTML = "";
+
+  trips.filter(t => isSameDay(new Date(t.date), new Date()))
+    .forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = `${new Date(t.date).toLocaleTimeString()} | Pax: ${t.pax} | ${t.payment} | Tip: €${t.tip}`;
+      ul.appendChild(li);
+    });
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  renderSummary();
+}
+
+function renderSummary() {
   const now = new Date();
-  return viajes.filter(v => {
-    const f = new Date(v.fecha);
-    if (rango === "dia") return hoy(v);
-    if (rango === "semana") return now - f < 7 * 86400000;
-    if (rango === "mes") {
-      const m = mesSelect.value ? new Date(mesSelect.value) : now;
-      return f.getMonth() === m.getMonth() && f.getFullYear() === m.getFullYear();
-    }
-  });
-}
+  let filtered = trips;
 
-// ===== NUEVO VIAJE =====
-function actualizarHoy() {
-  listaHoy.innerHTML = "";
-  viajes.filter(hoy).forEach(v => {
-    listaHoy.innerHTML += `
-      <li>
-        ${new Date(v.fecha).toLocaleTimeString()} – 
-        Pax: ${v.pax} – 
-        ${v.pago} ${v.propina > 0 ? `(Propina ${v.propina}€)` : `(Sin propina)`}
-      </li>`;
-  });
-}
+  if (currentFilter === "day") {
+    filtered = trips.filter(t => isSameDay(new Date(t.date), now));
+  } else if (currentFilter === "week") {
+    const weekAgo = new Date();
+    weekAgo.setDate(now.getDate() - 7);
+    filtered = trips.filter(t => new Date(t.date) >= weekAgo);
+  } else if (currentFilter === "month") {
+    filtered = trips.filter(t => new Date(t.date).getMonth() === now.getMonth());
+  }
 
-// ===== RESUMEN =====
-function actualizarResumen() {
-  const data = filtrar();
-  let ef = 0, tar = 0, prop = 0;
-
-  data.forEach(v => {
-    if (v.pago === "efectivo") ef += PRECIO;
-    else { tar += PRECIO; prop += v.propina; }
-  });
-
-  summary.innerHTML = `
-    <p>Viajes: ${data.length}</p>
-    <p>Efectivo: ${ef} €</p>
-    <p>Tarjeta: ${tar} €</p>
-    <p>Propinas tarjeta: ${prop} €</p>
-    <hr>
-    <p>Jefe: ${ef - prop} €</p>
-    <p>Chofer: ${prop} €</p>
+  summaryData.innerHTML = `
+    Viajes: ${filtered.length}<br>
+    Pax total: ${filtered.reduce((a,t)=>a+t.pax,0)}<br>
+    Propinas: €${filtered.reduce((a,t)=>a+t.tip,0).toFixed(2)}
   `;
 }
 
-// ===== ESTADÍSTICAS =====
-let cPagos, cPaises, cTotal, cMes;
-
-function actualizarEstadisticas() {
-  const pagos = { efectivo: 0, tarjeta: 0 };
-  const paises = {};
-
-  viajes.forEach(v => {
-    pagos[v.pago]++;
-    paises[v.pais] = (paises[v.pais] || 0) + 1;
+function renderMonthlyStats() {
+  const stats = {};
+  trips.forEach(t => {
+    const m = new Date(t.date).toISOString().slice(0,7);
+    stats[m] = (stats[m] || 0) + 1;
   });
 
-  if (cPagos) cPagos.destroy();
-  cPagos = new Chart(chartPagos, {
-    type: "pie",
-    data: { labels: ["Efectivo", "Tarjeta"], datasets: [{ data: Object.values(pagos) }] }
-  });
-
-  if (cPaises) cPaises.destroy();
-  cPaises = new Chart(chartPaises, {
-    type: "bar",
-    data: { labels: Object.keys(paises), datasets: [{ data: Object.values(paises) }] }
-  });
-
-  if (cTotal) cTotal.destroy();
-  cTotal = new Chart(chartTotal, {
-    type: "bar",
-    data: { labels: ["Viajes"], datasets: [{ data: [viajes.length] }] }
-  });
+  monthlyStats.innerHTML = Object.entries(stats)
+    .map(([m,v]) => `${m}: ${v} viajes`)
+    .join("<br>");
 }
 
-// ===== ESTADÍSTICAS MES (NUEVO VIAJE) =====
-function actualizarMes() {
-  const meses = {};
-  viajes.forEach(v => {
-    const m = new Date(v.fecha).toISOString().slice(0,7);
-    meses[m] = (meses[m] || 0) + 1;
-  });
+function renderStats() {
+  const cash = trips.filter(t => t.payment === "Efectivo").length;
+  const card = trips.filter(t => t.payment === "Tarjeta").length;
 
-  if (cMes) cMes.destroy();
-  cMes = new Chart(chartMes, {
-    type: "bar",
-    data: { labels: Object.keys(meses), datasets: [{ data: Object.values(meses) }] }
-  });
+  const countries = {};
+  trips.forEach(t => countries[t.country] = (countries[t.country] || 0) + 1);
+
+  statsCash.innerHTML = `Efectivo: ${cash}`;
+  statsCard.innerHTML = `Tarjeta: ${card}`;
+  statsTotal.innerHTML = `Total viajes: ${trips.length}`;
+
+  statsCountries.innerHTML = Object.entries(countries)
+    .map(([c,v]) => `${c}: ${v}`)
+    .join("<br>");
 }
 
-// ===== GLOBAL =====
-function actualizarTodo() {
-  actualizarHoy();
-  actualizarResumen();
-  actualizarEstadisticas();
-  actualizarMes();
-}
+function exportCSV() {
+  let csv = "Fecha,Pax,Pago,Propina,País\n";
+  trips.forEach(t => {
+    csv += `${t.date},${t.pax},${t.payment},${t.tip},${t.country}\n`;
+  });
 
-actualizarTodo();
+  const blob = new Blob([csv], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "viajes.csv";
+  a.click();
+}
