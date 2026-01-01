@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Carruaje Eléctrico</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -22,7 +22,7 @@
 
 <main>
 
-<!-- NUEVO VIAJE -->
+<!-- ================= NUEVO VIAJE ================= -->
 <section id="nuevo" class="active">
   <h2>Nuevo Viaje</h2>
 
@@ -44,7 +44,7 @@
 
     <label>Propina
       <select id="propina">
-        <option value="0">0 €</option>
+        <option value="0">Sin propina</option>
         <option value="7">7 €</option>
         <option value="10.5">10,5 €</option>
         <option value="14">14 €</option>
@@ -56,27 +56,35 @@
     <button class="btn-main">Añadir viaje</button>
     <div id="ok" class="ok">✔ Viaje registrado</div>
   </form>
+
+  <h3>Viajes de hoy</h3>
+  <ul id="listaHoy" class="lista"></ul>
+
+  <h3>Estadísticas mensuales</h3>
+  <canvas id="chartMes"></canvas>
 </section>
 
-<!-- RESUMEN -->
+<!-- ================= RESUMEN ================= -->
 <section id="resumen">
   <h2>Resumen</h2>
 
   <div class="filters">
-    <button data-filter="hoy">Hoy</button>
-    <button data-filter="semana">Semana</button>
-    <button data-filter="mes">Mes</button>
-    <button id="exportCSV">Exportar CSV</button>
+    <button data-range="dia">Hoy</button>
+    <button data-range="semana">Semana</button>
+    <button data-range="mes">Mes</button>
+    <input type="month" id="mesSelect">
   </div>
 
   <div id="summary" class="card"></div>
 </section>
 
-<!-- ESTADÍSTICAS -->
+<!-- ================= ESTADÍSTICAS ================= -->
 <section id="estadisticas">
   <h2>Estadísticas</h2>
-  <canvas id="chartIngresos"></canvas>
+
   <canvas id="chartPagos"></canvas>
+  <canvas id="chartPaises"></canvas>
+  <canvas id="chartTotal"></canvas>
 </section>
 
 </main>
