@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Registro de Viajes - Taxi Eléctrico</title>
+    <title>Registro de Viajes - Electric Carriage</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* CSS ELEGANTE PARA APLICACIÓN DE VIAJES */
@@ -825,7 +825,7 @@
         <div class="container">
             <div class="header-content">
                 <div class="header-main">
-                    <h1><i class="fas fa-bolt"></i> Taxi Eléctrico</h1>
+                    <h1><i class="fas fa-bolt"></i> Electric Carriage</h1>
                     <div class="header-subtitle">
                         <span id="current-date"></span>
                         <span class="badge" id="trip-count">0 viajes hoy</span>
@@ -971,7 +971,7 @@
     
     <footer>
         <div class="container">
-            <p>Registro de viajes • Taxi eléctrico</p>
+            <p>Registro de viajes •  Electric Carriage</p>
             <small>Datos guardados localmente en tu dispositivo</small>
         </div>
     </footer>
@@ -1017,7 +1017,7 @@
         ];
 
         // Datos iniciales
-        let trips = JSON.parse(localStorage.getItem('taxiTrips')) || [];
+        let trips = JSON.parse(localStorage.getItem('carriageTrips')) || [];
         let selectedPax = null;
         let selectedPayment = null;
         let selectedTip = 0;
@@ -1208,7 +1208,7 @@
             };
             
             trips.push(trip);
-            localStorage.setItem('taxiTrips', JSON.stringify(trips));
+            localStorage.setItem('carriageTrips', JSON.stringify(trips));
             
             loadTrips();
             updateStats();
